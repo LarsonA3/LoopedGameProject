@@ -11,7 +11,7 @@ public class Zone1Manager : MonoBehaviour
 
 
     public GameObject rooms; //the "folder" under which all rooms are instantiated
-    public GameObject player;
+    public GameObject player; //set to player capsule
 
 
     //room prefab load references
@@ -54,18 +54,34 @@ public class Zone1Manager : MonoBehaviour
 
             //last room -1
             case 6:
+                print("went to final room");
                 //go to final room
+                break;
 
             //final room
             case 7:
+                print("going to next zone");
                 //go to next zone scene
+                break;
 
 
 
-
+            //use random rooms for default case
             default:
                 //use random rooms for default case
-                print("error switching rooms, currentroom is " + currentRoom);
+                int rand = Random.Range(1, 4); //1-3
+                print("switching to random room");
+                switch(rand)
+                {
+                    case 1:
+                        roomToSwitchTo = randomroom1;
+                        break;
+                    default:
+                        print("issue with random rooms choice. maybe u went out of range on random");
+                        roomToSwitchTo = randomroom1;
+                        break;
+                }
+                currentRoom = currentRoom + 1;
                 break;
 
         }
@@ -79,9 +95,17 @@ public class Zone1Manager : MonoBehaviour
             Destroy(rooms.transform.GetChild(i).gameObject);
         }
         //load new room (instantiate into rooms)
-        Instantiate(roomToSwitchTo, rooms.transform);
+        GameObject newroom = Instantiate(roomToSwitchTo, rooms.transform, false);
+        newroom.transform.localPosition = Vector3.zero;
+
+
+
         //set player location
-        player.transform.position = new Vector3(0, 0, 0);
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        player.transform.position = Vector3.zero;
+        Physics.SyncTransforms();
+        if (cc != null) cc.enabled = true;
 
         //unfade black screen
     }
