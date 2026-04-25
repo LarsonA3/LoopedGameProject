@@ -1,0 +1,56 @@
+/* Painting3DFilterElement: 페인팅 필터 패널 스타일 */
+
+/* ========== 루트 컨테이너 ========== */
+.painting3d-filter {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 8px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: var(--umx-bg-surface);
+    border-right-color: var(--umx-bg-surface);
+    border-top-color: var(--umx-bg-surface);
+    border-bottom-color: var(--umx-bg-surface);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+/* ========== 헤더 ========== */
+.painting3d-filter-header {
+}
+
+.painting3d-filter-header__icon {
+}
+
+/* ========== 컨텐츠 영역 ========== */
+.painting3d-filter-content {
+    background-color: var(--umx-bg-content);
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 6px;
+}
+
+/* ========== 필터 토글 ========== */
+.painting3d-filter-toggle {
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+/* ========== 슬라이더 그룹 (토글 On 시에만 표시) ========== */
+.painting3d-filter-slider-group {
+    margin-left: 16px;
+    margin-bottom: 2px;
+}
+
+/* ========== 슬라이더 ========== */
+.painting3d-filter-slider {
+    margin-bottom: 2px;
+}
