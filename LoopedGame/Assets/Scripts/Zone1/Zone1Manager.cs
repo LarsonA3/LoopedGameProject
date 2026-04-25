@@ -23,6 +23,8 @@ public class Zone1Manager : MonoBehaviour
     public GameObject randomroom2;
     public GameObject randomroom3;
 
+    public GameObject finalroom;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -56,6 +58,7 @@ public class Zone1Manager : MonoBehaviour
             case 6:
                 print("went to final room");
                 //go to final room
+                roomToSwitchTo= finalroom;
                 break;
 
             //final room
