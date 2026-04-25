@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class TopDownController : MonoBehaviour
 {
 
-
+    private Collider playerCollider;
     public float moveSpeed = 6f;
     public float gravity = -20f;
     public float stickRotationSpeed = 10f;
@@ -32,6 +32,7 @@ public class TopDownController : MonoBehaviour
         cam = Camera.main;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        playerCollider = GetComponent<Collider>();
     }
 
     void Update()
@@ -61,6 +62,8 @@ public class TopDownController : MonoBehaviour
     }
 
 
+    // ---------------------------
+
     void Trytodash()
     {
         if (Time.time < lastDashTime + dashCooldown) return;
@@ -68,12 +71,51 @@ public class TopDownController : MonoBehaviour
         Vector3 dashDir = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
         if (dashDir == Vector3.zero) dashDir = transform.forward;
 
+        Vector3 destination = FindDashDestination(dashDir);
+
+        //if nothing cancel dash
+        if (destination == transform.position) return;
+
         cc.enabled = false;
-        transform.position += dashDir * dashDistance;
+        transform.position = destination;
         cc.enabled = true;
 
         lastDashTime = Time.time;
     }
+
+    Vector3 FindDashDestination(Vector3 dashDir)
+    {
+        int steps = 10; // how many pts to check along dash path
+        float stepSize = dashDistance / steps;
+        Vector3 lastValid = transform.position;
+
+        for (int i = 1; i <= steps; i++)
+        {
+            Vector3 checkPos = transform.position + dashDir * (stepSize * i);
+
+            if (IsWalkable(checkPos))
+                lastValid = checkPos;
+            else
+                break; // stop first invalid step
+        }
+
+        return lastValid;
+    }
+
+    bool IsWalkable(Vector3 pos)
+    {
+        RaycastHit[] hits = Physics.RaycastAll(pos + Vector3.up * 2f, Vector3.down, 4f);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider == playerCollider) continue; // skip self
+            return hit.collider.CompareTag("WALKABLE PLAYER FLOOR");
+        }
+
+        return false;
+    }
+
+    // ----------------
 
 
     void Rotate()
