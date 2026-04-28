@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 5644810657110228265}
   - component: {fileID: 5909256905203891160}
   - component: {fileID: 4468316465710850875}
-  - component: {fileID: 6162335268074459489}
+  - component: {fileID: 4161798610292230990}
   m_Layer: 8
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -992,7 +992,7 @@ MonoBehaviour:
   gravity: -20
   stickRotationSpeed: 10
   stickDeadzone: 0.2
---- !u!114 &6162335268074459489
+--- !u!114 &4161798610292230990
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1004,15 +1004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170da2d66259b294ab9ba76c622c3480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponAttack
-  weaponTransform: {fileID: 5249824195266178255}
-  weaponHitbox: {fileID: 7434122635886019559}
-  baseRange: 1.5
-  attackArc: 0.4
-  damage: 10
-  attackCooldown: 0.35
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &-5658260921126225263
 MonoBehaviour:
   m_ObjectHideFlags: 0
