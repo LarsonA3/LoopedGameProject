@@ -108,11 +108,11 @@ public class TopDownController : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider == playerCollider) continue; // skip self
-            return hit.collider.CompareTag("WALKABLE PLAYER FLOOR");
+            if (hit.collider == playerCollider) continue;
+            if (hit.collider.CompareTag("WALKABLE PLAYER FLOOR")) return true;
         }
 
-        return false;
+        return false; // no floor found in any hit
     }
 
     // ----------------
