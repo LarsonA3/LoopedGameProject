@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TEST_enemy : MonoBehaviour
+public class TEST_enemy : MonoBehaviour, IDamageable
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
