@@ -7,8 +7,8 @@ public class DoorGoNextZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            print("Entering zone 2");
-            SceneManager.LoadScene("Zone2");
+            Zone1Manager.Instance.nextZone();
+            print("calling next zone...");
         }
     }
 }
