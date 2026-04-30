@@ -44,7 +44,7 @@ public class Zone1Manager : MonoBehaviour
     public GameObject startroomzone4;
 
 
-    private int zone = 1;
+    private int zone = 1; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

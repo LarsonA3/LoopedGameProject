@@ -595,7 +595,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 733772542274298836, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: m_Name
-      value: '[[ Zone1Manager ]]'
+      value: '[[ ZoneManager ]]'
       objectReference: {fileID: 0}
     - target: {fileID: 3053376303879184263, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: m_LocalPosition.x
@@ -661,6 +661,10 @@ PrefabInstance:
       propertyPath: randomroom1
       value: 
       objectReference: {fileID: 106616455068278367, guid: c7e2d1a32cf7b2f4fb38d35f9a33e5e2, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: startroomzone2
+      value: 
+      objectReference: {fileID: 8033005980063341503, guid: d1125d2336361b74aa503e5385bdee3e, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
