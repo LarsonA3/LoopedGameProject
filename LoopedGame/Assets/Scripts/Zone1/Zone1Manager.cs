@@ -38,6 +38,7 @@ public class Zone1Manager : MonoBehaviour
 
 
     public GameObject finalroom;
+    public GameObject finalroom2;
 
     public GameObject startroomzone2;
     public GameObject startroomzone3;
@@ -84,11 +85,6 @@ public class Zone1Manager : MonoBehaviour
                     roomToSwitchTo = finalroom;
                     break;
 
-                //final room
-                case 7:
-                    print("going to next zone");
-                    //go to next zone scene
-                    break;
 
 
 
@@ -116,7 +112,12 @@ public class Zone1Manager : MonoBehaviour
             switch (currentRoom)
             {
 
-
+                //final room
+                case 6:
+                    print("went to final room");
+                    //go to final room
+                    roomToSwitchTo = finalroom2;
+                    break;
 
                 //use random rooms for default case
                 default:

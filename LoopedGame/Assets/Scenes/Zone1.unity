@@ -658,6 +658,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8539406245710646305, guid: 6015dc4bcbf4319429f9e0f15e1a576f, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: finalroom2
+      value: 
+      objectReference: {fileID: 4104972711258884925, guid: 40fee04cfbd348b44b0e4e99feca1a11, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: randomroom1
       value: 
       objectReference: {fileID: 106616455068278367, guid: c7e2d1a32cf7b2f4fb38d35f9a33e5e2, type: 3}
