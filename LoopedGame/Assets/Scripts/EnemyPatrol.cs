@@ -1,53 +1,36 @@
-using System.Runtime.CompilerServices;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using State = GenEnemyStates;
 
-public enum GenEnemyStates
-{
-    SEARCHING,
-    ATTACKING,
-}
 
 public class EnemyPatrol : MonoBehaviour
 {
     public GameObject nodeHost;
     public GameObject target;
-    public State enemyState;
-
     private NavMeshAgent enemyNav;
     private int node;
     private Transform[] points;
     private Transform targetPos;  
     private System.Random rand = new System.Random();
-    private bool attacking = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
         
        points = nodeHost.GetComponentsInChildren<Transform>();
        enemyNav = GetComponent<NavMeshAgent>();
-       Search();
-       
     }
 
     // Update is called once per frame
     void Update()
     {
-        targetPos = target.GetComponent<Transform>();
-        if (!enemyNav.pathPending && enemyNav.remainingDistance < 0.1f && !attacking) {
+        targetPos = target.GetComponent<Transform>(); //update player position
+        var distToPlayer = Vector3.Distance(this.transform.position, targetPos.position);
+        if (!enemyNav.pathPending && enemyNav.remainingDistance < 0.1f && distToPlayer > 7) { //search smoothly if player is not in range
             Search();
         } 
-        else if (Vector3.Distance(this.transform.position, targetPos.position) < 7) {
+        else {
             AttackMode();
-        } else
-        {
-            attacking = false;
-        }
-
-
+        } 
     }
 
     void Search()
@@ -61,7 +44,6 @@ public class EnemyPatrol : MonoBehaviour
     
     public void AttackMode()
     {
-        attacking = true;
         enemyNav.destination = targetPos.position; //target player
         enemyNav.stoppingDistance = 5;
     }
