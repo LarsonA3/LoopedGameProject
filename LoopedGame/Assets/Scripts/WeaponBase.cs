@@ -112,7 +112,7 @@ public class WeaponBase : MonoBehaviour
 
             if (enemyProjectile != null)
             {
-                enemyProjectile.DestroyProjectile();
+                enemyProjectile.TryClear();
             }
             else
             {
