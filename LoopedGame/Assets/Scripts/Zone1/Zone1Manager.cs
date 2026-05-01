@@ -32,9 +32,6 @@ public class Zone1Manager : MonoBehaviour
     public GameObject zone3randomroom2;
     public GameObject zone3randomroom3;
 
-    public GameObject zone4randomroom1;
-    public GameObject zone4randomroom2;
-    public GameObject zone4randomroom3;
 
 
     public GameObject finalroom;
@@ -100,6 +97,12 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = randomroom2;
+                            break;
+                        case 3: 
+                            roomToSwitchTo = randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
                             roomToSwitchTo = randomroom1;
@@ -131,9 +134,15 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = zone2randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = zone2randomroom2;
+                            break;
+                        case 3:
+                            roomToSwitchTo = zone2randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone2randomroom1;
+                            roomToSwitchTo = randomroom1;
                             break;
                     }
                     currentRoom = currentRoom + 1;
@@ -162,9 +171,15 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = zone3randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = zone3randomroom2;
+                            break;
+                        case 3:
+                            roomToSwitchTo = zone3randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone3randomroom1;
+                            roomToSwitchTo = randomroom1;
                             break;
                     }
                     currentRoom = currentRoom + 1;
@@ -177,28 +192,15 @@ public class Zone1Manager : MonoBehaviour
             {
 
                 //final room
-                case 6:
+                case 1:
                     print("went to final room");
                     //go to final room
                     roomToSwitchTo = finalroom4;
                     break;
 
-                //use random rooms for default case
+                //NO DEFAULT ROOMS IN ROOM 4- ONLY LOBBY AND OUTSIDE
                 default:
-                    //use random rooms for default case
-                    int rand = Random.Range(1, 4); //1-3
-                    print("switching to random room");
-                    switch (rand)
-                    {
-                        case 1:
-                            roomToSwitchTo = zone4randomroom1;
-                            break;
-                        default:
-                            print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone4randomroom1;
-                            break;
-                    }
-                    currentRoom = currentRoom + 1;
+                    print("ERROR");
                     break;
             }
         }
