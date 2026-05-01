@@ -97,6 +97,12 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = randomroom2;
+                            break;
+                        case 3: 
+                            roomToSwitchTo = randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
                             roomToSwitchTo = randomroom1;
@@ -128,9 +134,15 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = zone2randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = zone2randomroom2;
+                            break;
+                        case 3:
+                            roomToSwitchTo = zone2randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone2randomroom1;
+                            roomToSwitchTo = randomroom1;
                             break;
                     }
                     currentRoom = currentRoom + 1;
@@ -159,9 +171,15 @@ public class Zone1Manager : MonoBehaviour
                         case 1:
                             roomToSwitchTo = zone3randomroom1;
                             break;
+                        case 2:
+                            roomToSwitchTo = zone3randomroom2;
+                            break;
+                        case 3:
+                            roomToSwitchTo = zone3randomroom3;
+                            break;
                         default:
                             print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone3randomroom1;
+                            roomToSwitchTo = randomroom1;
                             break;
                     }
                     currentRoom = currentRoom + 1;

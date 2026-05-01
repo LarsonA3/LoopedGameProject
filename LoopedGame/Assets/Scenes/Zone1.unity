@@ -708,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: zone3randomroom1
       value: 
-      objectReference: {fileID: 4720940942690903375, guid: c6ccc9b330fcca14fa3ce4fbac8715bc, type: 3}
+      objectReference: {fileID: 1976101782671148079, guid: 2726de80228c5fa45b25e7cc24afb4b1, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: zone3randomroom2
       value: 
