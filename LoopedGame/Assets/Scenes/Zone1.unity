@@ -678,6 +678,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 470302802645486106, guid: 07c21692d0fc1694490242c96665e0cd, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: startroomzone4
+      value: 
+      objectReference: {fileID: 6926062659168185992, guid: 644aa953765e5e848ae6847d51c3454d, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: zone2randomroom1
       value: 
       objectReference: {fileID: 1992406869207101382, guid: b9f6d4cf457a9fd4291a642c0dfa4ae9, type: 3}
