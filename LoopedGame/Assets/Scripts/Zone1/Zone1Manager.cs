@@ -177,28 +177,15 @@ public class Zone1Manager : MonoBehaviour
             {
 
                 //final room
-                case 6:
+                case 1:
                     print("went to final room");
                     //go to final room
                     roomToSwitchTo = finalroom4;
                     break;
 
-                //use random rooms for default case
+                //NO DEFAULT ROOMS IN ROOM 4- ONLY LOBBY AND OUTSIDE
                 default:
-                    //use random rooms for default case
-                    int rand = Random.Range(1, 4); //1-3
-                    print("switching to random room");
-                    switch (rand)
-                    {
-                        case 1:
-                            roomToSwitchTo = zone4randomroom1;
-                            break;
-                        default:
-                            print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = zone4randomroom1;
-                            break;
-                    }
-                    currentRoom = currentRoom + 1;
+                    print("ERROR");
                     break;
             }
         }
