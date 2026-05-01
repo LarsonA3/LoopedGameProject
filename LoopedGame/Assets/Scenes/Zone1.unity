@@ -674,6 +674,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 106616455068278367, guid: c7e2d1a32cf7b2f4fb38d35f9a33e5e2, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: randomroom2
+      value: 
+      objectReference: {fileID: 8161645455805996990, guid: 5265c1a29a65d2741b1959344be95f95, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: randomroom3
+      value: 
+      objectReference: {fileID: 4410581331743430462, guid: 1608cf3f173111c43899489362cc1631, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: startroomzone2
       value: 
       objectReference: {fileID: 8033005980063341503, guid: d1125d2336361b74aa503e5385bdee3e, type: 3}
@@ -689,6 +697,10 @@ PrefabInstance:
       propertyPath: zone2randomroom1
       value: 
       objectReference: {fileID: 1992406869207101382, guid: b9f6d4cf457a9fd4291a642c0dfa4ae9, type: 3}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: zone2randomroom2
+      value: 
+      objectReference: {fileID: 1225194713373187780, guid: 38f9c9947a93b1a4eadc81d6a6345dc5, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: zone3randomroom1
       value: 
