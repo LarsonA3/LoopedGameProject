@@ -32,9 +32,6 @@ public class Zone1Manager : MonoBehaviour
     public GameObject zone3randomroom2;
     public GameObject zone3randomroom3;
 
-    public GameObject zone4randomroom1;
-    public GameObject zone4randomroom2;
-    public GameObject zone4randomroom3;
 
 
     public GameObject finalroom;
