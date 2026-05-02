@@ -10,6 +10,8 @@ public class Zone1Manager : MonoBehaviour
 
     private int currentRoom;
 
+    private int intensity = 1;
+
 
     public GameObject rooms; //the "folder" under which all rooms are instantiated
     public GameObject player; //set to player capsule
@@ -205,6 +207,9 @@ public class Zone1Manager : MonoBehaviour
             }
         }
 
+
+        intensity += 1;
+
         //fade black screen
         //unload previous room (remove all under rooms)
         for (int i = rooms.transform.childCount - 1; i >= 0; i--)
@@ -275,7 +280,14 @@ public class Zone1Manager : MonoBehaviour
 
 
         currentRoom = 1;
+        intensity += 2;
 
     }
+
+
+    public int getIntensity()
+    {
+        return intensity;
+    }   
 
 }

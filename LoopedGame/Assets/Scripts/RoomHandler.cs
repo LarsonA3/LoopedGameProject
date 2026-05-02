@@ -54,7 +54,7 @@ public class RoomHandler : MonoBehaviour
         if (enemyContainer.childCount == 0)
         {
             print("ENEMIES NOW EMPTY");
-            if (doorScript.allowed == false)
+            if (doorScript.allowed == false && doorScript != null)
                 doorScript.Open();
         }
     }
@@ -64,6 +64,8 @@ public class RoomHandler : MonoBehaviour
     void SpawnWave()
     {
         print("spawning wave...");
+
+        //spawn wave based on intensity and ground tags
     }
 }
 
