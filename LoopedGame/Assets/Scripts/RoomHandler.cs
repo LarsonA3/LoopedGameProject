@@ -70,7 +70,7 @@ public class RoomHandler : MonoBehaviour
 
         if (enemyContainer.childCount == 0)
         {
-            print("ENEMIES NOW EMPTY");
+            //print("ENEMIES NOW EMPTY");
 
             if (doorScript != null && !doorScript.allowed)
                 doorScript.Open();

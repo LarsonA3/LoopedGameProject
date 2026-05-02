@@ -160,4 +160,10 @@ public class TopDownController : MonoBehaviour
         Quaternion targetRot = Quaternion.LookRotation(new Vector3(stick.x, 0f, stick.y));
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, stickRotationSpeed * Time.deltaTime);
     }
+
+
+    public void addMoveSpd(float spd)
+    {
+        moveSpeed += spd;
+    }
 }

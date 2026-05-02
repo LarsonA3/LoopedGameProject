@@ -1,45 +1,93 @@
-using NUnit.Framework;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UpgradeManager : MonoBehaviour
 {
-    //actually this script gonna be on gui it makes more sense
+    public List<CardEffect> allCards;
 
-    List<CardEffect> cards;
-    private GameObject player; //this script passes player 
+    //assign inspectr
+    public GameObject[] cardUIObjects;
+    public TMP_Text[] cardTextSlots;
+    public GameObject player;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-        //find player ^, then find all cards in resource to poplate list of cards \/
-        cards = new List<CardEffect>(Resources.LoadAll<CardEffect>("Cards"));
-        print($"Loaded {cards.Count} cards frm resources");
-    }
+    private List<CardEffect> currentRoll = new List<CardEffect>();
+    // track rarity for the selection logic
+    private List<bool> rarityRoll = new List<bool>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnEnable()
     {
+
+        if (allCards == null || allCards.Count == 0)
+        {
+            allCards = new List<CardEffect>(Resources.LoadAll<CardEffect>("Cards"));
+            print("loaded " + allCards.Count);
+        }
+
         GenerateRandomCards();
+
+        // in case cursor breaks somehow
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void GenerateRandomCards()
     {
-        //generate 3 random cards for player to choose from, show them to player using gui.
+        if (allCards.Count == 0)
+        {
+            print("ERROR: No cards found");
+            return;
+        }
+
+        currentRoll.Clear();
+        rarityRoll.Clear();
+        List<CardEffect> pool = new List<CardEffect>(allCards);
+
+        for (int i = 0; i < cardUIObjects.Length; i++)
+        {
+            if (pool.Count == 0) break;
+
+            // Pick random card
+            int index = Random.Range(0, pool.Count);
+            CardEffect selected = pool[index];
+            currentRoll.Add(selected);
+            //pool.RemoveAt(index); //prevents duplicates in the same roll - mgiht keep idk
+
+            // 25% chance for rare crd
+            bool isRare = Random.value <= 0.25f;
+            rarityRoll.Add(isRare);
+            //isRare = true;
+
+            // set names
+            if (i < cardTextSlots.Length && cardTextSlots[i] != null)
+            {
+                cardTextSlots[i].text = selected.name;
+            }
+
+            // set color
+            Image btnImg = cardUIObjects[i].GetComponent<Image>();
+            if (btnImg != null)
+            {
+                btnImg.color = isRare ? Color.lightBlue : Color.white;
+            }
+        }
     }
 
-    public void ApplyCard(CardEffect card)
+
+    public void SelectCard(int index)
     {
-        //upon receiving player input this is called, and applies card effect to player.
+        print("button clicked: " + index);
+
+        if (index < currentRoll.Count)
+        {
+            // pass the rolled rarity
+            currentRoll[index].Apply(player, rarityRoll[index]);
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            gameObject.SetActive(false);
+        }
     }
-
-
-        
-
 }

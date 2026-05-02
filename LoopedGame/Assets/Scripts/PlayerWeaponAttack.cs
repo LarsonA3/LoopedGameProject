@@ -60,10 +60,10 @@ public class PlayerWeaponAttack : MonoBehaviour
         if (weaponTransform == null) { print("[Baton] ERROR — weaponTransform is null"); return; }
 
         canAttack = false;
-        print($"[Baton] Attack fired — sphere at {weaponTransform.position}, radius {currentRange}");
+        //print($"[Baton] Attack fired — sphere at {weaponTransform.position}, radius {currentRange}");
 
         Collider[] hits = Physics.OverlapSphere(weaponTransform.position, currentRange, hitLayers);
-        print($"[Baton] OverlapSphere hit {hits.Length} collider(s)");
+        //print($"[Baton] OverlapSphere hit {hits.Length} collider(s)");
 
         foreach (Collider hit in hits)
         {
@@ -75,16 +75,14 @@ public class PlayerWeaponAttack : MonoBehaviour
             if (dirToTarget.sqrMagnitude < 0.001f) continue; // overlapping exactly, just skip
 
             float dot = Vector3.Dot(transform.forward, dirToTarget.normalized);
-            print($"[Baton] {hit.gameObject.name} — dot: {dot:F2} (need >{attackArc})");
+            //print($"[Baton] {hit.gameObject.name} — dot: {dot:F2} (need >{attackArc})");
             if (dot < attackArc) continue;                    // not in swing arc
 
             IDamageable damageable = hit.GetComponent<IDamageable>();
             if (damageable != null)
                 damageable.TakeDamage(damage);
-            else
-                print($"[Baton] {hit.gameObject.name} passed arc but has no IDamageable");
 
-            print($"[Baton] Hit: {hit.gameObject.name}");
+            //print($"[Baton] Hit: {hit.gameObject.name}");
         }
 
         StartCoroutine(CooldownRoutine());
@@ -99,7 +97,7 @@ public class PlayerWeaponAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
-        print("[Baton] Cooldown done — ready");
+        //print("[Baton] Cooldown done — ready");
     }
 
 
