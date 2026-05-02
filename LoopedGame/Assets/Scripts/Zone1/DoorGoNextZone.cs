@@ -1,31 +1,44 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem; // Required for PlayerInput
+using System.Collections;
 
 public class DoorGoNextZone : MonoBehaviour
 {
-
+    private GameObject cardPicker;
     public bool allowed = true;
+    private bool transitioning = false;
+
+    void Start()
+    {
+        var pickerScript = Object.FindFirstObjectByType<UpgradeManager>(FindObjectsInactive.Include);
+        if (pickerScript != null) cardPicker = pickerScript.gameObject;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (allowed)
+        if (allowed && !transitioning && other.CompareTag("Player"))
         {
-            if (other.gameObject.CompareTag("Player"))
-            {
-                Zone1Manager.Instance.nextZone();
-                print("calling next zone...");
-            }
+            StartCoroutine(HandleZoneTransition(other.gameObject));
         }
     }
 
-    public void Open()
+    IEnumerator HandleZoneTransition(GameObject player)
     {
-        allowed = true;
-        print("opened door");
+        transitioning = true;
+
+        // Find the Player Input component on the Capsule child
+        var input = player.GetComponentInChildren<PlayerInput>();
+        if (input != null) input.enabled = false;
+
+        if (cardPicker != null) cardPicker.SetActive(true);
+
+        yield return new WaitUntil(() => cardPicker.activeSelf == false);
+
+        if (input != null) input.enabled = true;
+
+        Zone1Manager.Instance.nextZone();
     }
 
-    public void Close()
-    {
-        allowed = false;
-        print("closed door");
-    }
+    public void Open() { allowed = true; }
+    public void Close() { allowed = false; }
 }
