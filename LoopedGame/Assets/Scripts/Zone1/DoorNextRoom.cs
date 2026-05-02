@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class DoorNextRoom : MonoBehaviour
 {
+    public bool allowed = true;
+
     void Start()
     {
         
@@ -10,6 +12,7 @@ public class DoorNextRoom : MonoBehaviour
     private bool done = false;
     private void OnTriggerEnter(Collider other)
     {
+        if (!allowed) { return; }
         if (done) { return; }
         if (other.CompareTag("Player"))
         {
@@ -17,5 +20,17 @@ public class DoorNextRoom : MonoBehaviour
             Zone1Manager.Instance.nextRoom();
             done = true;
         }
+    }
+
+    public void Open()
+    {
+        allowed = true;
+        print("opened door");
+    }
+
+    public void Close()
+    {
+        allowed = false;
+        print("closed door");
     }
 }
