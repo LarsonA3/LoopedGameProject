@@ -10,6 +10,9 @@ public class RoomHandler : MonoBehaviour
 
     private Transform enemyContainer;
     private DoorNextRoom doorScript;
+    private DoorGoNextZone goorGoNextZone;
+
+    private bool isBoss = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,14 +36,27 @@ public class RoomHandler : MonoBehaviour
 
 
 
+
+
         // get door and close
         Transform doorTransform = transform.Find("Door");
         if (doorTransform != null)
         {
             doorScript = doorTransform.GetComponent<DoorNextRoom>();
-            doorScript.Close();
-            print("closed door successfully");
-
+            if (doorScript != null)
+            {
+                doorScript.Close();
+                print("closed door successfully");
+            }
+            else
+            {
+                goorGoNextZone = doorTransform.GetComponent<DoorGoNextZone>();
+                if (goorGoNextZone != null)
+                {
+                    goorGoNextZone.Close();
+                    print("closed boss door successfully");
+                }
+            }
         }
         else
             print("DOOR IS NOT IN RIGHT SPOT UNDER ROOM");
@@ -50,12 +66,16 @@ public class RoomHandler : MonoBehaviour
 
     void Update()
     {
+        if (enemyContainer == null) return;
 
         if (enemyContainer.childCount == 0)
         {
             print("ENEMIES NOW EMPTY");
-            if (doorScript.allowed == false && doorScript != null)
+
+            if (doorScript != null && !doorScript.allowed)
                 doorScript.Open();
+            else if (goorGoNextZone != null && !goorGoNextZone.allowed)
+                goorGoNextZone.Open();
         }
     }
 

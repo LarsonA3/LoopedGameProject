@@ -3,12 +3,29 @@ using UnityEngine.SceneManagement;
 
 public class DoorGoNextZone : MonoBehaviour
 {
+
+    public bool allowed = true;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (allowed)
         {
-            Zone1Manager.Instance.nextZone();
-            print("calling next zone...");
+            if (other.gameObject.CompareTag("Player"))
+            {
+                Zone1Manager.Instance.nextZone();
+                print("calling next zone...");
+            }
         }
+    }
+
+    public void Open()
+    {
+        allowed = true;
+        print("opened door");
+    }
+
+    public void Close()
+    {
+        allowed = false;
+        print("closed door");
     }
 }
