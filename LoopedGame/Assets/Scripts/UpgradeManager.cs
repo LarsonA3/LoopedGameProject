@@ -53,7 +53,7 @@ public class UpgradeManager : MonoBehaviour
             int index = Random.Range(0, pool.Count);
             CardEffect selected = pool[index];
             currentRoll.Add(selected);
-            //pool.RemoveAt(index); //prevents duplicates in the same roll - mgiht keep idk
+            //pool.RemoveAt(index); //prevents duplicates in the same roll - mgiht keep idk - i did not keep lol
 
             // 25% chance for rare crd
             bool isRare = Random.value <= 0.25f;
@@ -70,7 +70,7 @@ public class UpgradeManager : MonoBehaviour
             Image btnImg = cardUIObjects[i].GetComponent<Image>();
             if (btnImg != null)
             {
-                btnImg.color = isRare ? Color.lightBlue : Color.white;
+                btnImg.color = isRare ? Color.lightBlue : Color.white; //yes ik ternary operator
             }
         }
     }
