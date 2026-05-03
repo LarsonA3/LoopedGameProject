@@ -10,11 +10,12 @@ public class WeaponBase : MonoBehaviour
     [SerializeField] private float damage = 5f;
     [SerializeField] private float attackCooldown = 0.35f;
     [SerializeField] private float attackRange = 1.5f;
+    [SerializeField] private float attackArc = 0.4f;
     [SerializeField] private float knockbackForce = 2f;
 
-    [Header("Projectile Clearing")]
-    [SerializeField] private bool clearsProjectiles = true;
-    [SerializeField] private float projectileClearRadius = 1.3f;
+    [Header("Projectile Interaction")]
+    [SerializeField] private bool interactsWithProjectiles = true;
+    [SerializeField] private float projectileInteractionRadius = 1.3f;
 
     [Header("References")]
     [SerializeField] private Transform attackPoint;
@@ -26,10 +27,12 @@ public class WeaponBase : MonoBehaviour
     private Transform owner;
     private bool canAttack = true;
 
-    public string WeaponName
-    {
-        get { return weaponName; }
-    }
+    public string WeaponName => weaponName;
+
+    protected Transform Owner => owner;
+    protected Transform AttackPoint => attackPoint;
+    protected LayerMask EnemyLayer => enemyLayer;
+    protected LayerMask ProjectileLayer => projectileLayer;
 
     public void SetOwner(Transform newOwner)
     {
@@ -38,20 +41,44 @@ public class WeaponBase : MonoBehaviour
 
     public virtual void Attack()
     {
-        if (!canAttack) return;
+        if (!canAttack)
+        {
+            Debug.Log("[" + weaponName + "] on cooldown.");
+            return;
+        }
 
         StartCoroutine(AttackRoutine());
+    }
+
+    public virtual void SpecialAttack()
+    {
+        Debug.Log("[" + weaponName + "] has no special ability.");
     }
 
     private IEnumerator AttackRoutine()
     {
         canAttack = false;
 
-        HitEnemies();
-
-        if (clearsProjectiles)
+        if (attackPoint == null)
         {
-            ClearProjectiles();
+            Debug.LogWarning("[" + weaponName + "] has no AttackPoint assigned.");
+            canAttack = true;
+            yield break;
+        }
+
+        HitEnemiesInRadius(
+            attackPoint.position,
+            attackRange,
+            damage,
+            knockbackForce
+        );
+
+        if (interactsWithProjectiles)
+        {
+            InteractWithProjectilesInRadius(
+                attackPoint.position,
+                projectileInteractionRadius
+            );
         }
 
         yield return new WaitForSeconds(attackCooldown);
@@ -59,66 +86,115 @@ public class WeaponBase : MonoBehaviour
         canAttack = true;
     }
 
-    private void HitEnemies()
+    protected void HitEnemiesInRadius(Vector3 center, float radius, float hitDamage, float knockback)
     {
-        if (attackPoint == null)
-        {
-            Debug.LogWarning(weaponName + " has no AttackPoint assigned.");
-            return;
-        }
-
-        Collider[] enemiesHit = Physics.OverlapSphere(
-            attackPoint.position,
-            attackRange,
-            enemyLayer
-        );
+        Collider[] enemiesHit = Physics.OverlapSphere(center, radius, enemyLayer);
 
         foreach (Collider enemy in enemiesHit)
         {
+            if (owner != null && enemy.gameObject == owner.gameObject)
+            {
+                continue;
+            }
+
+            if (!IsInAttackArc(enemy.transform.position))
+            {
+                continue;
+            }
+
             IDamageable damageable = enemy.GetComponent<IDamageable>();
 
             if (damageable != null)
             {
-                damageable.TakeDamage(damage);
+                damageable.TakeDamage(hitDamage);
+            }
+            else
+            {
+                Debug.Log("[" + weaponName + "] " + enemy.gameObject.name + " has no IDamageable.");
             }
 
-            EnemyKnockback knockback = enemy.GetComponent<EnemyKnockback>();
+            EnemyKnockback enemyKnockback = enemy.GetComponent<EnemyKnockback>();
 
-            if (knockback != null && owner != null)
+            if (enemyKnockback != null && owner != null)
             {
                 Vector3 knockbackDirection = enemy.transform.position - owner.position;
-                knockback.ApplyKnockback(knockbackDirection, knockbackForce);
+                knockbackDirection.y = 0f;
+
+                enemyKnockback.ApplyKnockback(knockbackDirection, knockback);
+            }
+
+            Debug.Log("[" + weaponName + "] hit " + enemy.gameObject.name);
+        }
+    }
+
+    protected void InteractWithProjectilesInRadius(Vector3 center, float radius)
+    {
+        Collider[] projectilesHit = Physics.OverlapSphere(center, radius, projectileLayer);
+
+        foreach (Collider projectileCollider in projectilesHit)
+        {
+            if (!IsInAttackArc(projectileCollider.transform.position))
+            {
+                continue;
+            }
+
+            EnemyProjectileBase projectile = projectileCollider.GetComponent<EnemyProjectileBase>();
+
+            if (projectile != null)
+            {
+                OnProjectileHitByAttack(projectile);
             }
         }
     }
 
-    private void ClearProjectiles()
+    protected void ClearProjectilesInRadius(Vector3 center, float radius)
     {
-        if (attackPoint == null)
+        Collider[] projectilesHit = Physics.OverlapSphere(center, radius, projectileLayer);
+
+        foreach (Collider projectileCollider in projectilesHit)
         {
-            Debug.LogWarning(weaponName + " has no AttackPoint assigned.");
-            return;
-        }
+            EnemyProjectileBase projectile = projectileCollider.GetComponent<EnemyProjectileBase>();
 
-        Collider[] projectilesHit = Physics.OverlapSphere(
-            attackPoint.position,
-            projectileClearRadius,
-            projectileLayer
-        );
-
-        foreach (Collider projectile in projectilesHit)
-        {
-            EnemyProjectile enemyProjectile = projectile.GetComponent<EnemyProjectile>();
-
-            if (enemyProjectile != null)
+            if (projectile != null)
             {
-                enemyProjectile.TryClear();
-            }
-            else
-            {
-                Destroy(projectile.gameObject);
+                projectile.TryClear();
             }
         }
+    }
+
+    protected virtual void OnProjectileHitByAttack(EnemyProjectileBase projectile)
+    {
+        projectile.TryClear();
+    }
+
+    protected Vector3 GetForwardDirection()
+    {
+        if (owner != null)
+        {
+            return owner.forward;
+        }
+
+        return transform.forward;
+    }
+
+    private bool IsInAttackArc(Vector3 targetPosition)
+    {
+        if (owner == null)
+        {
+            return true;
+        }
+
+        Vector3 directionToTarget = targetPosition - owner.position;
+        directionToTarget.y = 0f;
+
+        if (directionToTarget.sqrMagnitude < 0.001f)
+        {
+            return false;
+        }
+
+        float dot = Vector3.Dot(owner.forward, directionToTarget.normalized);
+
+        return dot >= attackArc;
     }
 
     private void OnDrawGizmosSelected()
@@ -129,6 +205,6 @@ public class WeaponBase : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(attackPoint.position, projectileClearRadius);
+        Gizmos.DrawWireSphere(attackPoint.position, projectileInteractionRadius);
     }
 }
