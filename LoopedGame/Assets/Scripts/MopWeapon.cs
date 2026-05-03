@@ -6,4 +6,9 @@ public class MopWeapon : WeaponBase
     {
         base.Attack();
     }
+
+    public override void SpecialAttack()
+    {
+        base.SpecialAttack();
+    }
 }
