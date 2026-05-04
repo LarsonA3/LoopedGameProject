@@ -158,32 +158,32 @@ public class RoomHandler : MonoBehaviour
     {
         result = Vector3.zero;
 
-        // grab all walkable floor colliders in the scene
         GameObject[] floors = GameObject.FindGameObjectsWithTag("WALKABLE PLAYER FLOOR");
+        print($"Found {floors.Length} floor objects with tag");
         if (floors.Length == 0) return false;
 
         for (int i = 0; i < maxAttempts; i++)
         {
-            // pick a random floor object
             Collider floorCol = floors[Random.Range(0, floors.Length)].GetComponent<Collider>();
-            if (floorCol == null) continue;
+            if (floorCol == null) { print($"Attempt {i}: no collider on floor object"); continue; }
 
-            // random point within its bounding box
             Bounds b = floorCol.bounds;
             Vector3 randomPoint = new Vector3(
                 Random.Range(b.min.x, b.max.x),
-                b.max.y + 1f,               // start slightly above surface
+                b.max.y + 1f,
                 Random.Range(b.min.z, b.max.z)
             );
 
-            // raycast down to land on the actual surface
-            if (!Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, 5f)) continue;
-            if (!hit.collider.CompareTag("WALKABLE PLAYER FLOOR")) continue;
+            if (!Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, 5f))
+            { print($"Attempt {i}: raycast missed entirely from {randomPoint}"); continue; }
+
+            if (!hit.collider.CompareTag("WALKABLE PLAYER FLOOR"))
+            { print($"Attempt {i}: raycast hit {hit.collider.name} tagged '{hit.collider.tag}' instead of floor"); continue; }
 
             Vector3 candidate = hit.point + Vector3.up * 0.1f;
 
-            // check nothing is already occupying that spot (0.5f radius, adjust to enemy size)
-            if (Physics.CheckSphere(candidate, 0.5f)) continue;
+            LayerMask excludeFloor = ~(1 << hit.collider.gameObject.layer);
+            if (Physics.CheckSphere(candidate, 0.5f, excludeFloor)) continue;
 
             result = candidate;
             return true;
