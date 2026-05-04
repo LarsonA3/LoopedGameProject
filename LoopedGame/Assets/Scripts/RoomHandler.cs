@@ -112,7 +112,7 @@ public class RoomHandler : MonoBehaviour
 
 
 
-
+    
 
 
     void SpawnEnemy(int enemyType)
@@ -181,6 +181,9 @@ public class RoomHandler : MonoBehaviour
             { print($"Attempt {i}: raycast hit {hit.collider.name} tagged '{hit.collider.tag}' instead of floor"); continue; }
 
             Vector3 candidate = hit.point + Vector3.up * 0.1f;
+
+
+            if (Vector3.Distance(candidate, player.transform.position) < 5f) continue; //make sure it isnt too close to plr
 
             LayerMask excludeFloor = ~(1 << hit.collider.gameObject.layer);
             if (Physics.CheckSphere(candidate, 0.5f, excludeFloor)) continue;
