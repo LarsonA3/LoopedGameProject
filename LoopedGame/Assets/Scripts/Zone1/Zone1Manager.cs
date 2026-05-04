@@ -198,11 +198,18 @@ public class Zone1Manager : MonoBehaviour
                     print("went to final room");
                     //go to final room
                     roomToSwitchTo = finalroom4;
+                    currentRoom = 1000;
                     break;
 
-                //NO DEFAULT ROOMS IN ROOM 4- ONLY LOBBY AND OUTSIDE
+                case 1000:
+                    print("FINAL ROOM DETECTED");
+                    break;
+
+                //win game
                 default:
-                    print("ERROR");
+                    print("PLAYER WINS GAME");
+                    //SAVE INFORMATION HERE
+                    resetRun();
                     break;
             }
         }
@@ -288,6 +295,17 @@ public class Zone1Manager : MonoBehaviour
     public int getIntensity()
     {
         return intensity;
-    }   
+    }
+
+
+    public void resetRun()
+    {
+        //save info to file
+        //reset to default values and change scene to main  menu.
+        zone = 1;
+        currentRoom = 1;
+        intensity = 0;
+        
+    }
 
 }

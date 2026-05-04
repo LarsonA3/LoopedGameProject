@@ -14,7 +14,7 @@ public class TopDownController : MonoBehaviour
 
     //dash stuff
     private float dashDistance = 2f;
-    private float dashCooldown = 1f;
+    private float dashCooldown = 1.25f;
 
     private CharacterController cc;
     private Camera cam;
@@ -165,5 +165,15 @@ public class TopDownController : MonoBehaviour
     public void addMoveSpd(float spd)
     {
         moveSpeed += spd;
+    }
+
+    public void reduceDashCD(float amt)
+    {
+        dashCooldown = Mathf.Max(0.1f, dashCooldown - amt); // will never go below 0.1
+    }
+
+    public void increaseDashDist(float amt)
+    {
+        dashDistance += amt;
     }
 }
