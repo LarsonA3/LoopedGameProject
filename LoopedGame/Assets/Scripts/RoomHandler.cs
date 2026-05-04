@@ -100,19 +100,69 @@ public class RoomHandler : MonoBehaviour
 
 
 
-
+    // uses kinda point buy system based on room intensity.
+    // slime = 1 point, cannon = 2 points, launcher = 3 points
     void SpawnWave()
     {
         print("spawning wave...");
-        SpawnEnemy(1);
-        //spawn wave based on intensity and ground tags
+
+        int intensity = Zone1Manager.Instance.getIntensity();
+        int budget = intensity;
+
+        //added wieghts here for variety
+        var enemyTable = new (int type, int cost, int weight, int unlock)[]
+        {
+        (1, 1, 40, 1),
+        (2, 2, 35, 3),
+        (3, 3, 25, 5),
+        };
+
+        System.Collections.Generic.List<int> spawnedTypes = new();
+
+        int attempts = 0;
+        while (budget > 0 && attempts < 50)
+        {
+            attempts++;
+
+            // build affordable + unlocked pool with weights
+            var pool = new System.Collections.Generic.List<(int type, int weight)>();
+            foreach (var e in enemyTable)
+            {
+                if (intensity < e.unlock) continue;
+                if (e.cost > budget) continue;
+
+                // boost slime weight if havent spawned one yet this wave
+                int w = e.type == 1 && !spawnedTypes.Contains(1) ? e.weight + 20 : e.weight;
+                pool.Add((e.type, w));
+            }
+
+            if (pool.Count == 0) break;
+
+            //weighted rand pick
+            int totalWeight = 0;
+            foreach (var p in pool) totalWeight += p.weight;
+
+            int roll = Random.Range(0, totalWeight);
+            int chosen = pool[0].type;
+            int cursor = 0;
+            foreach (var p in pool)
+            {
+                cursor += p.weight;
+                if (roll < cursor) { chosen = p.type; break; }
+            }
+
+            int chosenCost = chosen switch { 1 => 1, 2 => 2, 3 => 3, _ => 99 };
+
+            SpawnEnemy(chosen);
+            spawnedTypes.Add(chosen);
+            budget -= chosenCost;
+        }
     }
 
 
 
 
 
-    
 
 
     void SpawnEnemy(int enemyType)
@@ -141,6 +191,11 @@ public class RoomHandler : MonoBehaviour
         }
 
         GameObject enemy = Instantiate(prefab, spawnPos, Quaternion.identity, enemyContainer);
+
+        // snap to navmesh surface
+        UnityEngine.AI.NavMeshHit navHit;
+        if (UnityEngine.AI.NavMesh.SamplePosition(enemy.transform.position, out navHit, 2f, UnityEngine.AI.NavMesh.AllAreas))
+            enemy.transform.position = navHit.position;
 
         EnemyPatrol patrol = enemy.GetComponent<EnemyPatrol>();
         if (patrol != null)
