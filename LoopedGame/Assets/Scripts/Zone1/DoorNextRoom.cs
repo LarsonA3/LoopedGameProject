@@ -39,4 +39,9 @@ public class DoorNextRoom : MonoBehaviour
 
     public void Open() { allowed = true; }
     public void Close() { allowed = false; }
+
+
+
+
+
 }

@@ -12,6 +12,10 @@ public class RoomHandler : MonoBehaviour
     private DoorNextRoom doorScript;
     private DoorGoNextZone goorGoNextZone;
 
+
+    private GameObject player;
+    private GameObject nodeHost;
+
     private bool isBoss = false;
 
 
@@ -34,6 +38,20 @@ public class RoomHandler : MonoBehaviour
         else
             print("Could not find ([[ Enemies ]]) in root of scene pls place it there or dont delete it");
 
+
+        // get player
+        foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (root.name == "PLAYER") { player = root; break; }
+        }
+        if (player == null) print("PLAYER not found at scene root");
+
+        // get this room's nodes
+        Transform nodesTransform = transform.Find("NODES");
+        if (nodesTransform != null)
+            nodeHost = nodesTransform.gameObject;
+        else
+            print("No NODES child found under this room");
 
 
 
@@ -86,24 +104,39 @@ public class RoomHandler : MonoBehaviour
     void SpawnWave()
     {
         print("spawning wave...");
-
+        SpawnEnemy(1);
         //spawn wave based on intensity and ground tags
     }
-
     void SpawnEnemy(int enemyType)
     {
-        switch (enemyType)
+        string prefabName = enemyType switch
         {
-            case 1:
-                //spawn enemy type 1 slime
-                break;
-            case 2:
-                //spawn enemy type 2 cannon
-                break;
-            case 3:
-                //spawn enemy type 3 launcher
-                break;
+            1 => "Slime",
+            2 => "Cannon",
+            3 => "Launcher",
+            _ => null
+        };
+
+        if (prefabName == null) { print($"No prefab name for enemy type {enemyType}"); return; }
+
+        GameObject prefab = Resources.Load<GameObject>($"Enemies/{prefabName}");
+
+        if (prefab == null) { print($"Could not find prefab at Resources/Enemies/{prefabName}"); return; }
+        if (player == null) { print("Cannot spawn enemy — player reference missing"); return; }
+        if (nodeHost == null) { print("Cannot spawn enemy — nodeHost missing"); return; }
+
+        GameObject enemy = Instantiate(prefab, enemyContainer);
+
+        EnemyPatrol patrol = enemy.GetComponent<EnemyPatrol>();
+        if (patrol != null)
+        {
+            patrol.nodeHost = nodeHost;
+            patrol.target = player;
         }
+
+        EnemyShooter shooter = enemy.GetComponent<EnemyShooter>();
+        if (shooter != null)
+            shooter.SetTarget(player.transform);
     }
 }
 
