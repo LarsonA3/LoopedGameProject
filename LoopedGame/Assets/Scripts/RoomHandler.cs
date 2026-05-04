@@ -81,11 +81,29 @@ public class RoomHandler : MonoBehaviour
 
 
 
+
+
     void SpawnWave()
     {
         print("spawning wave...");
 
         //spawn wave based on intensity and ground tags
+    }
+
+    void SpawnEnemy(int enemyType)
+    {
+        switch (enemyType)
+        {
+            case 1:
+                //spawn enemy type 1 slime
+                break;
+            case 2:
+                //spawn enemy type 2 cannon
+                break;
+            case 3:
+                //spawn enemy type 3 launcher
+                break;
+        }
     }
 }
 

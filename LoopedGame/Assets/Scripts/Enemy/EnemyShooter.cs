@@ -75,4 +75,6 @@ public class EnemyShooter : MonoBehaviour
 
         canFire = true;
     }
+
+    public void SetTarget(Transform t) => target = t;
 }
