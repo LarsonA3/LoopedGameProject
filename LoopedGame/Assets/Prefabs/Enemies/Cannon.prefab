@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 136134310689496180}
   - component: {fileID: 4089775755543188398}
   - component: {fileID: 935644923352119694}
+  - component: {fileID: 6164780932488994360}
   - component: {fileID: 5779428012526883367}
   m_Layer: 0
   m_Name: Cannon
@@ -314,6 +315,19 @@ MonoBehaviour:
   target: {fileID: 0}
   fireCooldown: 0.7
   fireAutomatically: 1
+--- !u!114 &6164780932488994360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4772640242019248110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
+  health: 15
 --- !u!64 &5779428012526883367
 MeshCollider:
   m_ObjectHideFlags: 0
