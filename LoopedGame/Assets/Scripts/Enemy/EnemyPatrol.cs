@@ -4,8 +4,8 @@ using UnityEngine.AI;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    public GameObject nodeHost;
-    public GameObject target;
+    public GameObject nodeHost; // empty game object that contains all nodes the enemy will travel to (parent-inclusive)
+    public GameObject target; //player
     private NavMeshAgent enemyNav;
     private int node;
     private Transform[] points;
@@ -18,9 +18,10 @@ public class EnemyPatrol : MonoBehaviour
         
        points = nodeHost.GetComponentsInChildren<Transform>();
        enemyNav = GetComponent<NavMeshAgent>();
+       //enemyNav.updateUpAxis = false; //prevents nav agent from changing up rotation of object
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         targetPos = target.GetComponent<Transform>(); //update player position
@@ -38,7 +39,6 @@ public class EnemyPatrol : MonoBehaviour
         enemyNav.destination = points[node].position;
         node = (node + rand.Next(0, 24)) % points.Length;
         enemyNav.stoppingDistance = 0;
-
     }
     
     

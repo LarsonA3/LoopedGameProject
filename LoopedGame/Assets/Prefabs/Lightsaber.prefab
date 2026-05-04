@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 878388031432893393}
   - component: {fileID: 5513988275804234901}
   m_Layer: 0
-  m_Name: Handle
+  m_Name: Lightsaber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

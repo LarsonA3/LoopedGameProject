@@ -53,6 +53,7 @@ public class EnemyShooter : MonoBehaviour
         }
 
         Vector3 direction = target.position - firePoint.position;
+        //Vector3 direction = firePoint.forward;
         direction.y = 0f;
 
         EnemyProjectileBase projectile = Instantiate(
