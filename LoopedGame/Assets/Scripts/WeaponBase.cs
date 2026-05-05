@@ -43,6 +43,7 @@ public class WeaponBase : MonoBehaviour
 
     public virtual void Attack()
     {
+        Debug.Log($"[{weaponName}] Attack() called");
         if (Time.time < nextAttackTime)
         {
             Debug.Log("[" + weaponName + "] on cooldown.");
@@ -54,7 +55,7 @@ public class WeaponBase : MonoBehaviour
             Debug.LogWarning("[" + weaponName + "] has no AttackPoint assigned.");
             return;
         }
-
+        Debug.Log($"[{weaponName}] AttackPoint: {attackPoint}");
         nextAttackTime = Time.time + GetFinalAttackCooldown();
 
         HitEnemiesInRadius(
@@ -112,7 +113,7 @@ public class WeaponBase : MonoBehaviour
     protected void HitEnemiesInRadius(Vector3 center, float radius, float hitDamage, float knockback)
     {
         Collider[] enemiesHit = Physics.OverlapSphere(center, radius, enemyLayer);
-
+        Debug.Log($"[{weaponName}] OverlapSphere hit {enemiesHit.Length} colliders. LayerMask value: {enemyLayer.value}");
         foreach (Collider enemy in enemiesHit)
         {
             if (owner != null && enemy.gameObject == owner.gameObject)

@@ -58,4 +58,5 @@ public class EnemyProjectile : MonoBehaviour
             }
         }
     }
+    public float Damage => damage;
 }

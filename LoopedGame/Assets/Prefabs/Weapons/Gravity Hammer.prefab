@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8357760781535470239}
   - component: {fileID: 8248190803377923736}
   - component: {fileID: 3228974735704823926}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gravity Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 393322430571174045}
   - component: {fileID: 8225768170424606460}
   - component: {fileID: 423363661054148752}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}

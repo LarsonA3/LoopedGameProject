@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1564517067939055954}
   - component: {fileID: 4933287338142812555}
   - component: {fileID: 7152093833939321809}
+  - component: {fileID: 5779783507772959581}
   m_Layer: 9
   m_Name: Bounce
   m_TagString: Untagged
@@ -120,6 +121,27 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   maxBounces: 3
+--- !u!135 &5779783507772959581
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125204135747205892}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.010000001
+  m_Center: {x: -0.0000000032596288, y: 0.0000000032596295, z: 9.486769e-20}
 --- !u!1 &2649247957326082809
 GameObject:
   m_ObjectHideFlags: 0

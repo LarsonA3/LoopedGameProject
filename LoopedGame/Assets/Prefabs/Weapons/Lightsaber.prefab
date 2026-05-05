@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 495265151017844368}
   - component: {fileID: 387981835113513025}
   - component: {fileID: 2293434267141468100}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 878388031432893393}
   - component: {fileID: 5513988275804234901}
   - component: {fileID: 7688242081568233573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lightsaber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 1633703391186097304}
   - component: {fileID: 75817316063062825}
   - component: {fileID: 665856482629223962}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7701057655131209372}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

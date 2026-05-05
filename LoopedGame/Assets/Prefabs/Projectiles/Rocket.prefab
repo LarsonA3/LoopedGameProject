@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 8616917504828008234}
   - component: {fileID: 7948838660188140241}
   - component: {fileID: 5847924519129975397}
+  - component: {fileID: 6190683966941784626}
   m_Layer: 9
   m_Name: Rocket
   m_TagString: Untagged
@@ -250,3 +251,24 @@ MonoBehaviour:
   reflectedExplosionDamageMultiplier: 0.5
   explosionRadius: 3
   explosionKnockback: 8
+--- !u!135 &6190683966941784626
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7098460193122868107}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.036427066
+  m_Center: {x: 0.00000006612392, y: 0.0000054836287, z: 0.023879409}
