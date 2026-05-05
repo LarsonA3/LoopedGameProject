@@ -16,7 +16,10 @@ public class EnemyStatus : MonoBehaviour
 
     public void TryStun(float duration)
     {
-        if (isBoss) return;
+        if (isBoss)
+        {
+            return;
+        }
 
         if (stunRoutine != null)
         {

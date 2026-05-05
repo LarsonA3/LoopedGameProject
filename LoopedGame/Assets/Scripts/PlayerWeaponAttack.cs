@@ -3,7 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerWeaponAttack : MonoBehaviour
 {
-    [Header("Current Weapon")]
+    [Header("Weapon Setup")]
+    [SerializeField] private Transform weaponHolder;
     [SerializeField] private WeaponBase currentWeapon;
 
     public WeaponBase CurrentWeapon => currentWeapon;
@@ -74,13 +75,45 @@ public class PlayerWeaponAttack : MonoBehaviour
         currentWeapon.SpecialAttack();
     }
 
-    public void EquipWeapon(WeaponBase newWeapon)
+    public void EquipWeaponPrefab(GameObject weaponPrefab)
     {
-        currentWeapon = newWeapon;
+        if (weaponPrefab == null)
+        {
+            Debug.LogWarning("[PlayerWeaponAttack] Tried to equip a null weapon prefab.");
+            return;
+        }
+
+        if (weaponHolder == null)
+        {
+            Debug.LogWarning("[PlayerWeaponAttack] No WeaponHolder assigned.");
+            return;
+        }
 
         if (currentWeapon != null)
         {
-            currentWeapon.SetOwner(transform);
+            Destroy(currentWeapon.gameObject);
         }
+
+        GameObject newWeaponObject = Instantiate(
+            weaponPrefab,
+            weaponHolder.position,
+            weaponHolder.rotation,
+            weaponHolder
+        );
+
+        newWeaponObject.transform.localPosition = Vector3.zero;
+        newWeaponObject.transform.localRotation = Quaternion.identity;
+
+        WeaponBase newWeapon = newWeaponObject.GetComponent<WeaponBase>();
+
+        if (newWeapon == null)
+        {
+            Debug.LogWarning("[PlayerWeaponAttack] Equipped prefab has no WeaponBase or child weapon script.");
+            Destroy(newWeaponObject);
+            return;
+        }
+
+        currentWeapon = newWeapon;
+        currentWeapon.SetOwner(transform);
     }
 }

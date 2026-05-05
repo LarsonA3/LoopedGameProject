@@ -26,6 +26,7 @@ public class ReturningMaceHead : MonoBehaviour
         float newDamage,
         float newLaunchSpeed,
         float newReturnSpeed,
+        float newTravelTime,
         float newStunChance,
         float newStunDuration,
         LayerMask newEnemyLayer
@@ -37,6 +38,8 @@ public class ReturningMaceHead : MonoBehaviour
         damage = newDamage;
         launchSpeed = newLaunchSpeed;
         returnSpeed = newReturnSpeed;
+        timeBeforeReturn = newTravelTime;
+
         stunChance = newStunChance;
         stunDuration = newStunDuration;
 
@@ -83,13 +86,16 @@ public class ReturningMaceHead : MonoBehaviour
     {
         bool hitEnemyLayer = ((1 << other.gameObject.layer) & enemyLayer) != 0;
 
-        if (!hitEnemyLayer) return;
-
-        IDamageable damageable = other.GetComponent<IDamageable>();
-
-        if (damageable != null)
+        if (!hitEnemyLayer)
         {
-            damageable.TakeDamage(damage);
+            return;
+        }
+
+        EnemyHP enemyHP = other.GetComponent<EnemyHP>();
+
+        if (enemyHP != null)
+        {
+            enemyHP.TakeDamage(damage);
         }
 
         EnemyStatus enemyStatus = other.GetComponent<EnemyStatus>();

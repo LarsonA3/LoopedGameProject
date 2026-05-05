@@ -1,69 +1,59 @@
-using JetBrains.Annotations;
-using System.Runtime.CompilerServices;
-using Tripolygon.UModelerX.Runtime;
 using UnityEngine;
-using UnityEngine.SubsystemsImplementation.Extensions;
 
 public class Zone1Manager : MonoBehaviour
 {
     public static Zone1Manager Instance;
 
     private int currentRoom;
-
     private int intensity = 1;
+    private int zone = 1;
 
+    [Header("Scene References")]
+    public GameObject rooms; // The "folder" under which all rooms are instantiated.
+    public GameObject player; // Set to player capsule.
 
-    public GameObject rooms; //the "folder" under which all rooms are instantiated
-    public GameObject player; //set to player capsule
-
-
-    //room prefab load references
+    [Header("Zone 1 Rooms")]
     public GameObject room1;
     public GameObject room2;
-
-
     public GameObject randomroom1;
     public GameObject randomroom2;
     public GameObject randomroom3;
+    public GameObject finalroom;
 
+    [Header("Zone 2 Rooms")]
+    public GameObject startroomzone2;
     public GameObject zone2randomroom1;
     public GameObject zone2randomroom2;
     public GameObject zone2randomroom3;
+    public GameObject finalroom2;
 
+    [Header("Zone 3 Rooms")]
+    public GameObject startroomzone3;
     public GameObject zone3randomroom1;
     public GameObject zone3randomroom2;
     public GameObject zone3randomroom3;
-
-
-
-    public GameObject finalroom;
-    public GameObject finalroom2;
     public GameObject finalroom3;
+
+    [Header("Zone 4 Rooms")]
+    public GameObject startroomzone4;
     public GameObject finalroom4;
 
-    public GameObject startroomzone2;
-    public GameObject startroomzone3;
-    public GameObject startroomzone4;
-
-
-    private int zone = 1; 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        currentRoom = 1;
-        Instance = this;
-        room1.SetActive(true);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     private GameObject roomToSwitchTo;
+
+    private void Start()
+    {
+        Instance = this;
+
+        currentRoom = 1;
+        zone = 1;
+        intensity = 1;
+
+        if (room1 != null)
+        {
+            room1.SetActive(true);
+        }
+    }
+
     public void nextRoom()
     {
         roomToSwitchTo = null;
@@ -73,184 +63,99 @@ public class Zone1Manager : MonoBehaviour
             switch (currentRoom)
             {
                 case 1:
-                    //go to room 2
                     print("switching to room 2");
                     roomToSwitchTo = room2;
                     currentRoom = 2;
                     break;
 
-                //last room -1
                 case 6:
                     print("went to final room");
-                    //go to final room
                     roomToSwitchTo = finalroom;
                     break;
 
-
-
-
-                //use random rooms for default case
                 default:
-                    //use random rooms for default case
-                    int rand = Random.Range(1, 4); //1-3
-                    print("switching to random room");
-                    switch (rand)
-                    {
-                        case 1:
-                            roomToSwitchTo = randomroom1;
-                            break;
-                        case 2:
-                            roomToSwitchTo = randomroom2;
-                            break;
-                        case 3: 
-                            roomToSwitchTo = randomroom3;
-                            break;
-                        default:
-                            print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = randomroom1;
-                            break;
-                    }
-                    currentRoom = currentRoom + 1;
+                    roomToSwitchTo = GetRandomZone1Room();
+                    currentRoom += 1;
                     break;
             }
-        } // ##############################################
+        }
         else if (zone == 2)
         {
             switch (currentRoom)
             {
-
-                //final room
                 case 6:
-                    print("went to final room");
-                    //go to final room
+                    print("went to zone 2 final room");
                     roomToSwitchTo = finalroom2;
                     break;
 
-                //use random rooms for default case
                 default:
-                    //use random rooms for default case
-                    int rand = Random.Range(1, 4); //1-3
-                    print("switching to random room");
-                    switch (rand)
-                    {
-                        case 1:
-                            roomToSwitchTo = zone2randomroom1;
-                            break;
-                        case 2:
-                            roomToSwitchTo = zone2randomroom2;
-                            break;
-                        case 3:
-                            roomToSwitchTo = zone2randomroom3;
-                            break;
-                        default:
-                            print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = randomroom1;
-                            break;
-                    }
-                    currentRoom = currentRoom + 1;
+                    roomToSwitchTo = GetRandomZone2Room();
+                    currentRoom += 1;
                     break;
             }
-        } // ##############################################
+        }
         else if (zone == 3)
         {
             switch (currentRoom)
             {
-
-                //final room
                 case 6:
-                    print("went to final room");
-                    //go to final room
+                    print("went to zone 3 final room");
                     roomToSwitchTo = finalroom3;
                     break;
 
-                //use random rooms for default case
                 default:
-                    //use random rooms for default case
-                    int rand = Random.Range(1, 4); //1-3
-                    print("switching to random room");
-                    switch (rand)
-                    {
-                        case 1:
-                            roomToSwitchTo = zone3randomroom1;
-                            break;
-                        case 2:
-                            roomToSwitchTo = zone3randomroom2;
-                            break;
-                        case 3:
-                            roomToSwitchTo = zone3randomroom3;
-                            break;
-                        default:
-                            print("issue with random rooms choice. maybe u went out of range on random");
-                            roomToSwitchTo = randomroom1;
-                            break;
-                    }
-                    currentRoom = currentRoom + 1;
+                    roomToSwitchTo = GetRandomZone3Room();
+                    currentRoom += 1;
                     break;
             }
-        } // ##############################################
+        }
         else if (zone == 4)
         {
             switch (currentRoom)
             {
-
-                //final room
                 case 1:
                     print("went to final room");
-                    //go to final room
                     roomToSwitchTo = finalroom4;
                     currentRoom = 1000;
                     break;
 
                 case 1000:
                     print("FINAL ROOM DETECTED");
-                    break;
+                    return;
 
-                //win game
                 default:
                     print("PLAYER WINS GAME");
-                    //SAVE INFORMATION HERE
                     resetRun();
-                    break;
+                    return;
             }
         }
 
+        if (roomToSwitchTo == null)
+        {
+            Debug.LogWarning("[Zone1Manager] roomToSwitchTo is null. Cannot switch rooms.");
+            return;
+        }
 
         intensity += 1;
 
-        //fade black screen
-        //unload previous room (remove all under rooms)
-        for (int i = rooms.transform.childCount - 1; i >= 0; i--)
-        {
-            Destroy(rooms.transform.GetChild(i).gameObject);
-        }
-        //load new room (instantiate into rooms)
-        GameObject newroom = Instantiate(roomToSwitchTo, rooms.transform, false);
-        newroom.transform.localPosition = Vector3.zero;
+        SwitchToRoom(roomToSwitchTo);
+        MovePlayerToRoomStart();
 
-
-
-        //set player location
-        CharacterController cc = player.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = false;
-        player.transform.position = Vector3.zero;
-        Physics.SyncTransforms();
-        if (cc != null) cc.enabled = true;
-
-        //unfade black screen
-
-
-
+        AddScore(100);
     }
 
-
-
-    public void nextZone ()
+    public void nextZone()
     {
         print("next zone...");
 
-        if (zone != 4) { zone = zone + 1; }
+        UnlockWeaponForCompletedZone();
 
-        var roomToSwitchTo = zone switch
+        if (zone != 4)
+        {
+            zone += 1;
+        }
+
+        roomToSwitchTo = zone switch
         {
             2 => startroomzone2,
             3 => startroomzone3,
@@ -258,54 +163,203 @@ public class Zone1Manager : MonoBehaviour
             _ => null
         };
 
-        if (roomToSwitchTo == null) return;
-
-
-
-        //fade black screen
-        //unload previous room (remove all under rooms)
-        for (int i = rooms.transform.childCount - 1; i >= 0; i--)
+        if (roomToSwitchTo == null)
         {
-            Destroy(rooms.transform.GetChild(i).gameObject);
+            Debug.LogWarning("[Zone1Manager] No start room found for zone " + zone);
+            return;
         }
-
-
-        //load new room (instantiate into rooms)
-        GameObject newroom = Instantiate(roomToSwitchTo, rooms.transform, false);
-        newroom.transform.localPosition = Vector3.zero;
-
-
-
-        //set player location
-        CharacterController cc = player.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = false;
-        player.transform.position = Vector3.zero;
-        Physics.SyncTransforms();
-        if (cc != null) cc.enabled = true;
-
-        //unfade black screen
-
 
         currentRoom = 1;
         intensity += 2;
 
-    }
+        SwitchToRoom(roomToSwitchTo);
+        MovePlayerToRoomStart();
 
+        AddScore(500);
+    }
 
     public int getIntensity()
     {
         return intensity;
     }
 
-
     public void resetRun()
     {
-        //save info to file
-        //reset to default values and change scene to main  menu.
+        HScore hScore = null;
+
+        if (player != null)
+        {
+            hScore = player.GetComponentInChildren<HScore>();
+        }
+
+        if (hScore != null)
+        {
+            hScore.FinalScore();
+            hScore.ResetScore();
+        }
+
         zone = 1;
         currentRoom = 1;
         intensity = 0;
-        
+
+        roomToSwitchTo = room1;
+
+        if (roomToSwitchTo != null)
+        {
+            SwitchToRoom(roomToSwitchTo);
+            MovePlayerToRoomStart();
+        }
+
+        StartingWeaponSelector selector =
+            Object.FindFirstObjectByType<StartingWeaponSelector>(FindObjectsInactive.Include);
+
+        if (selector != null)
+        {
+            selector.StartWeaponChoice();
+        }
     }
 
+    private void SwitchToRoom(GameObject newRoomPrefab)
+    {
+        if (rooms == null)
+        {
+            Debug.LogWarning("[Zone1Manager] Rooms container is not assigned.");
+            return;
+        }
+
+        for (int i = rooms.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(rooms.transform.GetChild(i).gameObject);
+        }
+
+        GameObject newRoom = Instantiate(newRoomPrefab, rooms.transform, false);
+        newRoom.transform.localPosition = Vector3.zero;
+    }
+
+    private void MovePlayerToRoomStart()
+    {
+        if (player == null)
+        {
+            Debug.LogWarning("[Zone1Manager] Player is not assigned.");
+            return;
+        }
+
+        CharacterController cc = player.GetComponent<CharacterController>();
+
+        if (cc != null)
+        {
+            cc.enabled = false;
+        }
+
+        player.transform.position = Vector3.zero;
+        Physics.SyncTransforms();
+
+        if (cc != null)
+        {
+            cc.enabled = true;
+        }
+    }
+
+    private GameObject GetRandomZone1Room()
+    {
+        int rand = Random.Range(1, 4);
+
+        switch (rand)
+        {
+            case 1:
+                return randomroom1;
+
+            case 2:
+                return randomroom2;
+
+            case 3:
+                return randomroom3;
+
+            default:
+                return randomroom1;
+        }
+    }
+
+    private GameObject GetRandomZone2Room()
+    {
+        int rand = Random.Range(1, 4);
+
+        switch (rand)
+        {
+            case 1:
+                return zone2randomroom1;
+
+            case 2:
+                return zone2randomroom2;
+
+            case 3:
+                return zone2randomroom3;
+
+            default:
+                return zone2randomroom1;
+        }
+    }
+
+    private GameObject GetRandomZone3Room()
+    {
+        int rand = Random.Range(1, 4);
+
+        switch (rand)
+        {
+            case 1:
+                return zone3randomroom1;
+
+            case 2:
+                return zone3randomroom2;
+
+            case 3:
+                return zone3randomroom3;
+
+            default:
+                return zone3randomroom1;
+        }
+    }
+
+    private void UnlockWeaponForCompletedZone()
+    {
+        if (WeaponUnlockState.Instance == null)
+        {
+            Debug.LogWarning("[Zone1Manager] No WeaponUnlockState found.");
+            return;
+        }
+
+        switch (zone)
+        {
+            case 1:
+                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.StunMace);
+                break;
+
+            case 2:
+                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.BootlegLightsaber);
+                break;
+
+            case 3:
+                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.GravityHammer);
+                break;
+
+            case 4:
+                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.KineticRiotShield);
+                break;
+        }
+    }
+
+    private void AddScore(int amount)
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        HScore hScore = player.GetComponentInChildren<HScore>();
+
+        if (hScore != null)
+        {
+            hScore.IncreaseScore(amount);
+        }
+    }
 }

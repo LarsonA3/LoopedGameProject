@@ -3,13 +3,14 @@ using UnityEngine;
 
 public class StunMaceWeapon : WeaponBase
 {
-    [Header("Detached Mace Head")]
+    [Header("Detached Mace Head Special")]
     [SerializeField] private GameObject maceHeadPrefab;
     [SerializeField] private Transform launchPoint;
 
     [SerializeField] private float detachedDamage = 35f;
     [SerializeField] private float detachedLaunchSpeed = 15f;
     [SerializeField] private float detachedReturnSpeed = 20f;
+    [SerializeField] private float detachedTravelTime = 0.5f;
     [SerializeField] private float detachCooldown = 3f;
 
     [Header("Stun")]
@@ -27,7 +28,7 @@ public class StunMaceWeapon : WeaponBase
     {
         if (!canDetach)
         {
-            Debug.Log("[Stun Mace] Detach head on cooldown.");
+            Debug.Log("[Stun Mace] Head launch is on cooldown.");
             return;
         }
 
@@ -39,7 +40,7 @@ public class StunMaceWeapon : WeaponBase
 
         if (launchPoint == null)
         {
-            Debug.LogWarning("[Stun Mace] No launch point assigned.");
+            Debug.LogWarning("[Stun Mace] No LaunchPoint assigned.");
             return;
         }
 
@@ -66,13 +67,14 @@ public class StunMaceWeapon : WeaponBase
                 detachedDamage,
                 detachedLaunchSpeed,
                 detachedReturnSpeed,
+                detachedTravelTime,
                 stunChance,
                 stunDuration,
                 EnemyLayer
             );
         }
 
-        yield return new WaitForSeconds(detachCooldown);
+        yield return new WaitForSeconds(GetFinalSpecialCooldown(detachCooldown));
 
         canDetach = true;
     }

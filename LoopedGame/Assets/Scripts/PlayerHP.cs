@@ -1,0 +1,147 @@
+using System.Collections;
+using UnityEngine;
+
+public class PlayerHP : MonoBehaviour, IDamageable
+{
+    [Header("Health")]
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth;
+
+    [Header("Damage")]
+    [SerializeField] private float baseInvincibilityTime = 0.3f;
+
+    private bool isDead = false;
+    private bool isInvincible = false;
+
+    private PlayerWeaponAttack weaponAttack;
+
+    private void Awake()
+    {
+        weaponAttack = GetComponent<PlayerWeaponAttack>();
+
+        if (UpgradeState.Instance != null)
+        {
+            maxHealth += UpgradeState.Instance.maxHPBonus;
+        }
+
+        currentHealth = maxHealth;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        if (isInvincible)
+        {
+            return;
+        }
+
+        KineticRiotShieldWeapon shield = GetCurrentShield();
+
+        if (shield != null && shield.IsBlocking)
+        {
+            shield.AbsorbHit(damage);
+            Debug.Log("[PlayerHP] Shield absorbed " + damage + " damage.");
+            return;
+        }
+
+        currentHealth -= damage;
+
+        Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth);
+
+        if (currentHealth <= 0f)
+        {
+            Die();
+            return;
+        }
+
+        StartCoroutine(InvincibilityRoutine());
+    }
+
+    public void AddMaxHealth(float amount)
+    {
+        maxHealth += amount;
+        currentHealth += amount;
+    }
+
+    public void Heal(float amount)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+    }
+
+    private KineticRiotShieldWeapon GetCurrentShield()
+    {
+        if (weaponAttack == null)
+        {
+            return null;
+        }
+
+        if (weaponAttack.CurrentWeapon == null)
+        {
+            return null;
+        }
+
+        return weaponAttack.CurrentWeapon as KineticRiotShieldWeapon;
+    }
+
+    private IEnumerator InvincibilityRoutine()
+    {
+        isInvincible = true;
+
+        float duration = baseInvincibilityTime;
+
+        if (UpgradeState.Instance != null)
+        {
+            duration += UpgradeState.Instance.invincibilityBonus;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        isInvincible = false;
+    }
+
+    private void Die()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+
+        Debug.Log("[PlayerHP] Player died. Resetting run.");
+
+        TopDownController controller = GetComponent<TopDownController>();
+
+        if (controller != null)
+        {
+            controller.enabled = false;
+        }
+
+        PlayerWeaponAttack attack = GetComponent<PlayerWeaponAttack>();
+
+        if (attack != null)
+        {
+            attack.enabled = false;
+        }
+
+        if (Zone1Manager.Instance != null)
+        {
+            Zone1Manager.Instance.resetRun();
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerHP] Could not reset run because Zone1Manager.Instance is null.");
+        }
+    }
+}
+

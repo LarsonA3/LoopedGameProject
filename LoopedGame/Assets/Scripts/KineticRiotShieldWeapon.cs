@@ -73,7 +73,10 @@ public class KineticRiotShieldWeapon : WeaponBase
 
     public void AbsorbHit(float incomingDamage)
     {
-        if (!isBlocking) return;
+        if (!isBlocking)
+        {
+            return;
+        }
 
         storedEnergy += incomingDamage;
         storedEnergy = Mathf.Clamp(storedEnergy, 0f, maxStoredEnergy);
@@ -104,7 +107,7 @@ public class KineticRiotShieldWeapon : WeaponBase
 
         storedEnergy = 0f;
 
-        yield return new WaitForSeconds(throwCooldown);
+        yield return new WaitForSeconds(GetFinalSpecialCooldown(throwCooldown));
 
         canThrow = true;
     }

@@ -69,7 +69,7 @@ public class WeaponBase : MonoBehaviour
         HitEnemiesInRadius(
             attackPoint.position,
             attackRange,
-            damage,
+            GetFinalDamage(),
             knockbackForce
         );
 
@@ -81,7 +81,7 @@ public class WeaponBase : MonoBehaviour
             );
         }
 
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(GetFinalAttackCooldown());
 
         canAttack = true;
     }
@@ -102,15 +102,15 @@ public class WeaponBase : MonoBehaviour
                 continue;
             }
 
-            IDamageable damageable = enemy.GetComponent<IDamageable>();
+            EnemyHP enemyHP = enemy.GetComponent<EnemyHP>();
 
-            if (damageable != null)
+            if (enemyHP != null)
             {
-                damageable.TakeDamage(hitDamage);
+                enemyHP.TakeDamage(hitDamage);
             }
             else
             {
-                Debug.Log("[" + weaponName + "] " + enemy.gameObject.name + " has no IDamageable.");
+                Debug.Log("[" + weaponName + "] " + enemy.gameObject.name + " has no EnemyHP.");
             }
 
             EnemyKnockback enemyKnockback = enemy.GetComponent<EnemyKnockback>();
@@ -177,6 +177,42 @@ public class WeaponBase : MonoBehaviour
         return transform.forward;
     }
 
+    protected float GetFinalSpecialCooldown(float baseCooldown)
+    {
+        float reduction = 0f;
+
+        if (UpgradeState.Instance != null)
+        {
+            reduction = UpgradeState.Instance.specialCooldownReduction;
+        }
+
+        return Mathf.Max(0.1f, baseCooldown - reduction);
+    }
+
+    private float GetFinalDamage()
+    {
+        float bonus = 0f;
+
+        if (UpgradeState.Instance != null)
+        {
+            bonus = UpgradeState.Instance.attackDamageBonus;
+        }
+
+        return damage + bonus;
+    }
+
+    private float GetFinalAttackCooldown()
+    {
+        float reduction = 0f;
+
+        if (UpgradeState.Instance != null)
+        {
+            reduction = UpgradeState.Instance.weaponAttackCooldownReduction;
+        }
+
+        return Mathf.Max(0.05f, attackCooldown - reduction);
+    }
+
     private bool IsInAttackArc(Vector3 targetPosition)
     {
         if (owner == null)
@@ -199,7 +235,10 @@ public class WeaponBase : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (attackPoint == null) return;
+        if (attackPoint == null)
+        {
+            return;
+        }
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);

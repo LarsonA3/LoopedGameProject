@@ -13,8 +13,8 @@ public class TopDownController : MonoBehaviour
     public float stickDeadzone = 0.2f;
 
     //dash stuff
-    private float dashDistance = 2f;
-    private float dashCooldown = 1.25f;
+    [SerializeField] private float dashDistance = 2f;
+    [SerializeField] private float dashCooldown = 1f;
 
     private CharacterController cc;
     private Camera cam;
@@ -33,7 +33,10 @@ public class TopDownController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         playerCollider = GetComponent<Collider>();
+
+        ApplySavedUpgrades();
     }
+
 
     void Update()
     {
@@ -176,4 +179,18 @@ public class TopDownController : MonoBehaviour
     {
         dashDistance += amt;
     }
+
+
+    private void ApplySavedUpgrades()
+    {
+        if (UpgradeState.Instance == null) return;
+
+        moveSpeed += UpgradeState.Instance.moveSpeedBonus;
+        dashDistance += UpgradeState.Instance.dashDistanceBonus;
+
+        dashCooldown -= UpgradeState.Instance.dashCooldownReduction;
+        dashCooldown = Mathf.Max(0.1f, dashCooldown);
+    }
+
+
 }
