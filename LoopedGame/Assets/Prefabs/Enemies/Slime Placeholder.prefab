@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3216467968974921497}
   - component: {fileID: 4599937517921381663}
   - component: {fileID: 4358667742660445572}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Slime Placeholder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7385445135276331065}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

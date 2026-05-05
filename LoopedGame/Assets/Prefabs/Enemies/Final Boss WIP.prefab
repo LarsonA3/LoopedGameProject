@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2212083200259321911}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fire Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4243492483724109016}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fire Point 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 6070148435373182977}
   - component: {fileID: 5159543254442843436}
   - component: {fileID: 6511261054378309401}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Final Boss WIP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
