@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: 0d5c4012949ba9549955f1d08d04c717
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - slimePrefab: {fileID: 964419279979248160, guid: e402912e396ad3f41b41b8a58c998ad9, type: 3}
+  - cannonPrefab: {fileID: 4772640242019248110, guid: 941132d27c0b0c047838c0b563bddb3a, type: 3}
+  - launcherPrefab: {fileID: 8698606636987680358, guid: ee3cab476a9a7c240ba84eacd5b6dd6f, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
