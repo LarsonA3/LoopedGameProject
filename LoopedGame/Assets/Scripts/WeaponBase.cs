@@ -39,15 +39,38 @@ public class WeaponBase : MonoBehaviour
         owner = newOwner;
     }
 
+    private float nextAttackTime = 0f;
+
     public virtual void Attack()
     {
-        if (!canAttack)
+        if (Time.time < nextAttackTime)
         {
             Debug.Log("[" + weaponName + "] on cooldown.");
             return;
         }
 
-        StartCoroutine(AttackRoutine());
+        if (attackPoint == null)
+        {
+            Debug.LogWarning("[" + weaponName + "] has no AttackPoint assigned.");
+            return;
+        }
+
+        nextAttackTime = Time.time + GetFinalAttackCooldown();
+
+        HitEnemiesInRadius(
+            attackPoint.position,
+            attackRange,
+            GetFinalDamage(),
+            knockbackForce
+        );
+
+        if (interactsWithProjectiles)
+        {
+            InteractWithProjectilesInRadius(
+                attackPoint.position,
+                projectileInteractionRadius
+            );
+        }
     }
 
     public virtual void SpecialAttack()

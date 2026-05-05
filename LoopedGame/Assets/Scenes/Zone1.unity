@@ -273,6 +273,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4161798610292230990, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: weaponHolder
+      value: 
+      objectReference: {fileID: 1608099821}
+    - target: {fileID: 4161798610292230990, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: currentWeapon
+      value: 
+      objectReference: {fileID: 4723306006199888841, guid: 7eb0184fa21c57748802a9890ac6f992, type: 3}
     - target: {fileID: 5662218482661770076, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: scoreBox
       value: 
@@ -676,6 +684,11 @@ CanvasRenderer:
 --- !u!1 &1406078395 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+  m_PrefabInstance: {fileID: 355205649}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1608099821 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5249824195266178255, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
   m_PrefabInstance: {fileID: 355205649}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1612058957 stripped
