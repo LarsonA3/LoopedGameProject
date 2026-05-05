@@ -1,23 +1,31 @@
 using UnityEngine;
 using HighScore;
+using TMPro;
 
+//make sure the plyaer has this
 public class HScore : MonoBehaviour
 {
-    public string pName = "Schezo Wegey";
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public TextMeshProUGUI scoreBox;
+    public static string pName = "Schezo Wegey"; //provide option to change this value somewhere
+    public static int pScore = 0;
+
     void Start()
     {
-        //HS.Init(this, "uh (working title)");
+        HS.Init(this, "Looping Game (working title)");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void IncreaseScore(int amount)
     {
-        
+        pScore += amount;
+        print($"Player: {pName}\nHigh Score: {pScore}\n");
+        scoreBox.text = $"Score: {pScore}";
     }
 
-    public void FinalScore(int score) {
-        //HS.SubmitScore(pName, score);
+
+    public void FinalScore() //call this before sending to end screen
+    {
+        HS.SubmitHighScore(this, pName, pScore);
+        print($"Player: {pName}\nHigh Score: {pScore}\n");
     }
 }
 

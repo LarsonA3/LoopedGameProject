@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 7829756456325413862}
   - component: {fileID: 606729162366410703}
   - component: {fileID: 5668643803482424441}
+  - component: {fileID: 2596977602719475827}
   m_Layer: 0
   m_Name: ScoreField
   m_TagString: Untagged
@@ -148,7 +149,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.4999999, w: 0.50000006}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.022736518, y: 0.013921743, z: 0.0069958516}
+  m_LocalScale: {x: 0.017052388, y: 0.016149221, z: 0.0069958516}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8524042485982450565}
@@ -232,3 +233,16 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2596977602719475827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522332496195449161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81caab7fa4463c1408c05857a16ea42f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrazeProjectile
+  grazePoints: 200

@@ -792,6 +792,7 @@ GameObject:
   - component: {fileID: 5909256905203891160}
   - component: {fileID: 4468316465710850875}
   - component: {fileID: 4161798610292230990}
+  - component: {fileID: 5662218482661770076}
   m_Layer: 8
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -1004,6 +1005,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170da2d66259b294ab9ba76c622c3480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponAttack
+  currentWeapon: {fileID: 0}
+--- !u!114 &5662218482661770076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02f495a7bf776f749b1364117f5e5217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HScore
+  pScore: 0
 --- !u!114 &-5658260921126225263
 MonoBehaviour:
   m_ObjectHideFlags: 0
