@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6854523445759696386}
   - component: {fileID: 8309535725598784605}
   - component: {fileID: 3726739748685608}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ScoreField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 9218467977050330910}
   - component: {fileID: 5574492157320451359}
   - component: {fileID: 7965025951535975887}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

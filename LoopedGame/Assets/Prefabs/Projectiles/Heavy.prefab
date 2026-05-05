@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7741476355664417536}
   - component: {fileID: 1534531062759950472}
   - component: {fileID: 2205765798318709262}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Heavy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 606729162366410703}
   - component: {fileID: 5668643803482424441}
   - component: {fileID: 2596977602719475827}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ScoreField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
