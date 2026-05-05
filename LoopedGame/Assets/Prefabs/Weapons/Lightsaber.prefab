@@ -124,6 +124,7 @@ Transform:
   m_Children:
   - {fileID: 1633703391186097304}
   - {fileID: 495265151017844368}
+  - {fileID: 7701057655131209372}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &878388031432893393
@@ -195,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb0379b854b1f204d80a5a23dc0a0164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BootlegLightsaberWeapon
-  weaponName: Base Weapon
+  weaponName: Lightsaber
   damage: 5
   attackCooldown: 0.35
   attackRange: 1.5
@@ -203,7 +204,7 @@ MonoBehaviour:
   knockbackForce: 2
   interactsWithProjectiles: 1
   projectileInteractionRadius: 1.3
-  attackPoint: {fileID: 1633703391186097304}
+  attackPoint: {fileID: 7701057655131209372}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -301,3 +302,34 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6438042508808305513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7701057655131209372}
+  m_Layer: 0
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7701057655131209372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438042508808305513}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -0, z: 0.316}
+  m_LocalScale: {x: 0.06069398, y: 0.17071107, z: 0.060693964}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2763738488832852881}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
