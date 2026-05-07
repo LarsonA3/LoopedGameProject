@@ -2,7 +2,7 @@ Shader "Hidden/UModelerX_TexturePainter_CopyMultiplyAlpha"
 {
     Properties
     {
-        [HideInInspector] [Toggle] _ColorSpaceLinear("Color Space Linear", Float) = 0
+        [HideInInspector] [Toggle] wpnColliderorSpaceLinear("Color Space Linear", Float) = 0
     }
     SubShader
     {
@@ -34,7 +34,7 @@ Shader "Hidden/UModelerX_TexturePainter_CopyMultiplyAlpha"
             };
 
             sampler2D _MainTex;
-            float _ColorSpaceLinear;
+            float wpnColliderorSpaceLinear;
 
             v2f vert(appdata v)
             {
@@ -48,7 +48,7 @@ Shader "Hidden/UModelerX_TexturePainter_CopyMultiplyAlpha"
             {
                 float4 color = tex2D(_MainTex, i.uv);
 
-                if (_ColorSpaceLinear == 1)
+                if (wpnColliderorSpaceLinear == 1)
                 {
                     color.rgb = pow(color.rgb, 1.0 / 2.2);
                 }

@@ -37,7 +37,7 @@ Shader "Hidden/UModelerX_TexturePainter_LayerComposite"
 
             sampler2D _MainTex;
             sampler2D _MaskTex;
-            float4 _Color;
+            float4 wpnCollideror;
             float4 _TilingOffset;
             float _MaskTexType;
             float _Rotation;
@@ -222,7 +222,7 @@ Shader "Hidden/UModelerX_TexturePainter_LayerComposite"
                 float maskValue = _MaskTexType == 1 ? tex2D(_MaskTex, i.uv).r : 1;
 
                 float4 tex = tex2Dlod(_MainTex, float4(i.uv, 0, 0));
-                float4 blend = tex * _Color * maskValue;
+                float4 blend = tex * wpnCollideror * maskValue;
                 float blend_alpha = blend.a;
 
                 if (_BlendMode != 0 && blend_alpha > 0)

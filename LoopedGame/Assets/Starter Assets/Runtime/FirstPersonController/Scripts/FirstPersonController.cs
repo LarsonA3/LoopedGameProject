@@ -66,7 +66,7 @@ namespace StarterAssets
 
 	
 #if ENABLE_INPUT_SYSTEM
-		private PlayerInput _playerInput;
+		private PlayerInput plrInput;
 #endif
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
@@ -79,7 +79,7 @@ namespace StarterAssets
 			get
 			{
 				#if ENABLE_INPUT_SYSTEM
-				return _playerInput.currentControlScheme == "KeyboardMouse";
+				return plrInput.currentControlScheme == "KeyboardMouse";
 				#else
 				return false;
 				#endif
@@ -100,7 +100,7 @@ namespace StarterAssets
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
-			_playerInput = GetComponent<PlayerInput>();
+			plrInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif

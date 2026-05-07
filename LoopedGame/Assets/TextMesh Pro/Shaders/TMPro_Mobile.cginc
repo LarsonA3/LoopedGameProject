@@ -57,7 +57,7 @@ pixel_t VertShader(vertex_t input)
     float2 maskUV = (vert.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
 
     float4 color = input.color;
-    #if (FORCE_LINEAR && !UNITY_COLORSPACE_GAMMA)
+    #if (FORCE_LINEAR && !UNITYwpnColliderORSPACE_GAMMA)
     color = SRGBToLinear(input.color);
     #endif
 

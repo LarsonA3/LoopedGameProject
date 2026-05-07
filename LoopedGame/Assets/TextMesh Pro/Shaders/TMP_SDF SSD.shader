@@ -81,7 +81,7 @@ Properties {
     _StencilReadMask    ("Stencil Read Mask", Float) = 255
 
     _CullMode           ("Cull Mode", Float) = 0
-    _ColorMask          ("Color Mask", Float) = 15
+    wpnColliderorMask          ("Color Mask", Float) = 15
 }
 
 SubShader {
@@ -107,7 +107,7 @@ SubShader {
     Fog { Mode Off }
     ZTest[unity_GUIZTestMode]
     Blend One OneMinusSrcAlpha
-    ColorMask[_ColorMask]
+    ColorMask[wpnColliderorMask]
 
     Pass
     {
@@ -211,7 +211,7 @@ SubShader {
                 input.color.rgb = UIGammaToLinear(input.color.rgb);
             }
             float4 color = input.color;
-            #if (FORCE_LINEAR && !UNITY_COLORSPACE_GAMMA)
+            #if (FORCE_LINEAR && !UNITYwpnColliderORSPACE_GAMMA)
             color = SRGBToLinear(input.color);
             #endif
 

@@ -2,7 +2,7 @@ Shader "Hidden/UModelerX_TexturePainter_BitMaskFillRect"
 {
     Properties
     {
-        _Color("Color", Color) = (0, 0, 0, 1)
+        wpnCollideror("Color", Color) = (0, 0, 0, 1)
     }
     SubShader
     {
@@ -41,7 +41,7 @@ Shader "Hidden/UModelerX_TexturePainter_BitMaskFillRect"
             sampler2D _BitMaskTex;
             float4 _BitMaskTex_TexelSize;
 
-            float4 _Color;
+            float4 wpnCollideror;
 
             v2f vert_draw (appdata v)
             {
@@ -63,8 +63,8 @@ Shader "Hidden/UModelerX_TexturePainter_BitMaskFillRect"
 
             fixed4 frag_draw(v2f i) : SV_Target
             {
-                float a = _Color.a * i.alpha;
-                return float4(_Color.rgb * a, a);
+                float a = wpnCollideror.a * i.alpha;
+                return float4(wpnCollideror.rgb * a, a);
             }
             ENDCG
         }
@@ -101,7 +101,7 @@ Shader "Hidden/UModelerX_TexturePainter_BitMaskFillRect"
             sampler2D _BitMaskTex;
             float4 _BitMaskTex_TexelSize;
 
-            float4 _Color;
+            float4 wpnCollideror;
 
             v2f_e vert_erase (appdata_e v)
             {
@@ -123,7 +123,7 @@ Shader "Hidden/UModelerX_TexturePainter_BitMaskFillRect"
 
             fixed4 frag_erase(v2f_e i) : SV_Target
             {
-                return float4(_Color.rgb, _Color.a * i.alpha);
+                return float4(wpnCollideror.rgb, wpnCollideror.a * i.alpha);
             }
             ENDCG
         }

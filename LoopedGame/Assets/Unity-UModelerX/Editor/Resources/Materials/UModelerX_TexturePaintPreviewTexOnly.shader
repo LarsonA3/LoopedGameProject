@@ -63,7 +63,7 @@ Shader "Hidden/UModelerX_TexturePaintPreviewTexOnly"
                 {
                     c.rgb = c.aaa;
                 }
-#ifdef UNITY_COLORSPACE_GAMMA
+#ifdef UNITYwpnColliderORSPACE_GAMMA
                 return c;
 #else
                 return float4(GammaToLinearSpace(c.rgb), c.a);

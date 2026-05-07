@@ -22,8 +22,8 @@ Shader "Hidden/UModeler_CheckerShader"
             float2 _RectSize;
             float  _CellSize;
             float2 _ViewPivotPix;
-            float3 _ColorA;
-            float3 _ColorB;
+            float3 wpnColliderorA;
+            float3 wpnColliderorB;
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -47,7 +47,7 @@ Shader "Hidden/UModeler_CheckerShader"
                 float2 cell = scrolledPix / max(_CellSize, 1e-5);
                 int parity = ((int)floor(cell.x) + (int)floor(cell.y)) & 1;
 
-                float3 c = (parity == 0) ? _ColorA : _ColorB;
+                float3 c = (parity == 0) ? wpnColliderorA : wpnColliderorB;
                 return float4(c, 1);
             }
             ENDCG

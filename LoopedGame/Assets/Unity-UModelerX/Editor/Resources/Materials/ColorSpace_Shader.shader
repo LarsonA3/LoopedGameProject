@@ -1,7 +1,7 @@
 Shader "Custom/ColorSpace" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
-        [HideInInspector][Toggle] _ColorSpaceGamma ("Color Space Gamma", Float) = 0
+        [HideInInspector][Toggle] wpnColliderorSpaceGamma ("Color Space Gamma", Float) = 0
         [HideInInspector][Toggle] _EnableAlphaChannel ("Enable Alpha Channel", Float) = 1
     }
     SubShader {
@@ -14,7 +14,7 @@ Shader "Custom/ColorSpace" {
             #pragma fragment frag
 
             sampler2D _MainTex;
-            float _ColorSpaceGamma;
+            float wpnColliderorSpaceGamma;
             float _EnableAlphaChannel;
 
             struct appdata_t {
@@ -37,7 +37,7 @@ Shader "Custom/ColorSpace" {
             fixed4 frag (v2f i) : SV_Target {
                 fixed4 color = tex2D(_MainTex, i.uv);
 
-                if (_ColorSpaceGamma == 1)
+                if (wpnColliderorSpaceGamma == 1)
                 {
                     color.rgb = pow(color.rgb, 1.0 / 2.2);
                 }

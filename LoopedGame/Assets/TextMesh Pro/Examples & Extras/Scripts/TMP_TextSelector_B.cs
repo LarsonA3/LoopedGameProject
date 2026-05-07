@@ -478,16 +478,16 @@ namespace TMPro.Examples
 
             // Restore Vertex Colors
             // Get a reference to the vertex colors we need to replace.
-            Color32[] dst_colors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
+            Color32[] dstwpnColliderors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
 
             // Get a reference to the cached / original vertex colors.
-            Color32[] src_colors = m_cachedMeshInfoVertexData[materialIndex].colors32;
+            Color32[] srcwpnColliderors = m_cachedMeshInfoVertexData[materialIndex].colors32;
 
             // Copy the vertex colors from source to destination.
-            dst_colors[vertexIndex + 0] = src_colors[vertexIndex + 0];
-            dst_colors[vertexIndex + 1] = src_colors[vertexIndex + 1];
-            dst_colors[vertexIndex + 2] = src_colors[vertexIndex + 2];
-            dst_colors[vertexIndex + 3] = src_colors[vertexIndex + 3];
+            dstwpnColliderors[vertexIndex + 0] = srcwpnColliderors[vertexIndex + 0];
+            dstwpnColliderors[vertexIndex + 1] = srcwpnColliderors[vertexIndex + 1];
+            dstwpnColliderors[vertexIndex + 2] = srcwpnColliderors[vertexIndex + 2];
+            dstwpnColliderors[vertexIndex + 3] = srcwpnColliderors[vertexIndex + 3];
 
             // Restore UV0S
             // UVS0
@@ -517,12 +517,12 @@ namespace TMPro.Examples
             dst_vertices[lastIndex + 3] = src_vertices[lastIndex + 3];
 
             // Vertex Colors
-            src_colors = m_cachedMeshInfoVertexData[materialIndex].colors32;
-            dst_colors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
-            dst_colors[lastIndex + 0] = src_colors[lastIndex + 0];
-            dst_colors[lastIndex + 1] = src_colors[lastIndex + 1];
-            dst_colors[lastIndex + 2] = src_colors[lastIndex + 2];
-            dst_colors[lastIndex + 3] = src_colors[lastIndex + 3];
+            srcwpnColliderors = m_cachedMeshInfoVertexData[materialIndex].colors32;
+            dstwpnColliderors = m_TextMeshPro.textInfo.meshInfo[materialIndex].colors32;
+            dstwpnColliderors[lastIndex + 0] = srcwpnColliderors[lastIndex + 0];
+            dstwpnColliderors[lastIndex + 1] = srcwpnColliderors[lastIndex + 1];
+            dstwpnColliderors[lastIndex + 2] = srcwpnColliderors[lastIndex + 2];
+            dstwpnColliderors[lastIndex + 3] = srcwpnColliderors[lastIndex + 3];
 
             // UVS0
             src_uv0s = m_cachedMeshInfoVertexData[materialIndex].uvs0;

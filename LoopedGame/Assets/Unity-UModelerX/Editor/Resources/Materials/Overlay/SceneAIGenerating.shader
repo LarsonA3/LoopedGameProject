@@ -2,8 +2,8 @@ Shader "UModeler X/SceneAIGenerating"
 {
     Properties
     {
-        _ColorStart     ("Color Start (0%)",      Color)  = (0.3, 0.3, 1.0, 0.6)
-        _ColorEnd       ("Color End (100%)",      Color)  = (0.3, 0.5, 0.8, 0.6)
+        wpnColliderorStart     ("Color Start (0%)",      Color)  = (0.3, 0.3, 1.0, 0.6)
+        wpnColliderorEnd       ("Color End (100%)",      Color)  = (0.3, 0.5, 0.8, 0.6)
         _Progress       ("Progress",              Range(0,1)) = 0.0
         _MaxProgress    ("Max Color Blend",       Range(0,1)) = 0.2
         _Speed          ("Move Speed",            Float)  = 0.2
@@ -38,8 +38,8 @@ Shader "UModeler X/SceneAIGenerating"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            fixed4 _ColorStart;
-            fixed4 _ColorEnd;
+            fixed4 wpnColliderorStart;
+            fixed4 wpnColliderorEnd;
             float  _Progress;
             float  _MaxProgress;
             float  _Speed;
@@ -158,7 +158,7 @@ Shader "UModeler X/SceneAIGenerating"
                 float finalBright = lerp(brightness, brightness2, _LayerBlend);
 
                 // ── 진행도에 따른 색상 보간 ────────────────────────────────────
-                fixed4 baseColorFull = lerp(_ColorStart, _ColorEnd, min(_Progress, _MaxProgress));
+                fixed4 baseColorFull = lerp(wpnColliderorStart, wpnColliderorEnd, min(_Progress, _MaxProgress));
                 fixed3 baseColor     = baseColorFull.rgb;
 
                 // ── 테두리 발광 ────────────────────────────────────────────────

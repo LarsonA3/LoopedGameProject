@@ -3,7 +3,7 @@ Shader "Hidden/UModelerX_TexturePainter_Canvas2DDisplay"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Tint", Color) = (1,1,1,1)
+        wpnCollideror ("Tint", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -23,7 +23,7 @@ Shader "Hidden/UModelerX_TexturePainter_Canvas2DDisplay"
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
-            float4 _Color;
+            float4 wpnCollideror;
 
             struct appdata
             {
@@ -48,11 +48,11 @@ Shader "Hidden/UModelerX_TexturePainter_Canvas2DDisplay"
             fixed4 frag(v2f i) : SV_Target
             {
                 float4 c = tex2D(_MainTex, i.uv);
-                // _Color.a = 레이어 opacity. premultiplied 데이터는 RGB·A 에 동일 스케일을 곱해야
+                // wpnCollideror.a = 레이어 opacity. premultiplied 데이터는 RGB·A 에 동일 스케일을 곱해야
                 // invariant (rgb = origRgb * a) 가 유지됨.
-                c *= _Color.a;
-                // _Color.rgb 는 선택적 RGB 틴트 — 알파에는 영향 없음.
-                c.rgb *= _Color.rgb;
+                c *= wpnCollideror.a;
+                // wpnCollideror.rgb 는 선택적 RGB 틴트 — 알파에는 영향 없음.
+                c.rgb *= wpnCollideror.rgb;
                 // 페인트 RT는 linear 값을 저장하고 있으며, Unity 에디터 GUI 의 framebuffer 쓰기에서
                 // 필요한 변환은 Unity 가 처리한다. 추가 감마 변환을 적용하면 mid-tone 이 과도하게
                 // 어두워지므로 여기선 conversion 없이 통과시킨다.

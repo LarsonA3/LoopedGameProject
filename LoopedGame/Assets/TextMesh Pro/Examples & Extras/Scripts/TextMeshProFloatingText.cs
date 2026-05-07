@@ -117,7 +117,7 @@ namespace TMPro.Examples
             float current_Count = starting_Count;
 
             Vector3 start_pos = m_floatingText_Transform.position;
-            Color32 start_color = m_textMeshPro.color;
+            Color32 startwpnCollideror = m_textMeshPro.color;
             float alpha = 255;
             int int_counter = 0;
 
@@ -138,7 +138,7 @@ namespace TMPro.Examples
                 m_textMeshPro.text = int_counter.ToString();
                 //m_textMeshPro.SetText("{0}", (int)current_Count);
 
-                m_textMeshPro.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
+                m_textMeshPro.color = new Color32(startwpnCollideror.r, startwpnCollideror.g, startwpnCollideror.b, (byte)alpha);
 
                 // Move the floating text upward each update
                 m_floatingText_Transform.position += new Vector3(0, starting_Count * Time.deltaTime, 0);
@@ -173,7 +173,7 @@ namespace TMPro.Examples
             float current_Count = starting_Count;
 
             Vector3 start_pos = m_floatingText_Transform.position;
-            Color32 start_color = m_textMesh.color;
+            Color32 startwpnCollideror = m_textMesh.color;
             float alpha = 255;
             int int_counter = 0;
 
@@ -193,7 +193,7 @@ namespace TMPro.Examples
                 m_textMesh.text = int_counter.ToString();
                 //Debug.Log("Current Count:" + current_Count.ToString("f2"));
 
-                m_textMesh.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
+                m_textMesh.color = new Color32(startwpnCollideror.r, startwpnCollideror.g, startwpnCollideror.b, (byte)alpha);
 
                 // Move the floating text upward each update
                 m_floatingText_Transform.position += new Vector3(0, starting_Count * Time.deltaTime, 0);

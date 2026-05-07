@@ -81,7 +81,7 @@ Properties {
 	_StencilReadMask	("Stencil Read Mask", Float) = 255
 
 	_CullMode			("Cull Mode", Float) = 0
-	_ColorMask			("Color Mask", Float) = 15
+	wpnColliderorMask			("Color Mask", Float) = 15
 }
 
 SubShader {
@@ -108,7 +108,7 @@ SubShader {
 	Fog { Mode Off }
 	ZTest [unity_GUIZTestMode]
 	Blend One OneMinusSrcAlpha
-	ColorMask [_ColorMask]
+	ColorMask [wpnColliderorMask]
 
 	Pass {
 		CGPROGRAM

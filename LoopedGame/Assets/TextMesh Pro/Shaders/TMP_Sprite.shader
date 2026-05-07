@@ -3,7 +3,7 @@ Shader "TextMeshPro/Sprite"
 	Properties
 	{
         _MainTex            ("Sprite Texture", 2D) = "white" {}
-		_Color              ("Tint", Color) = (1,1,1,1)
+		wpnCollideror              ("Tint", Color) = (1,1,1,1)
 
 		_StencilComp        ("Stencil Comparison", Float) = 8
 		_Stencil            ("Stencil ID", Float) = 0
@@ -12,7 +12,7 @@ Shader "TextMeshPro/Sprite"
 		_StencilReadMask    ("Stencil Read Mask", Float) = 255
 
 		_CullMode           ("Cull Mode", Float) = 0
-		_ColorMask          ("Color Mask", Float) = 15
+		wpnColliderorMask          ("Color Mask", Float) = 15
 		_ClipRect           ("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
@@ -43,7 +43,7 @@ Shader "TextMeshPro/Sprite"
 		ZWrite Off
 		ZTest [unity_GUIZTestMode]
 		Blend SrcAlpha OneMinusSrcAlpha
-		ColorMask [_ColorMask]
+		ColorMask [wpnColliderorMask]
 
 		Pass
 		{
@@ -78,7 +78,7 @@ Shader "TextMeshPro/Sprite"
 			};
 
             sampler2D _MainTex;
-			fixed4 _Color;
+			fixed4 wpnCollideror;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
             float4 _MainTex_ST;
@@ -106,7 +106,7 @@ Shader "TextMeshPro/Sprite"
                 {
                     v.color.rgb = UIGammaToLinear(v.color.rgb);
                 }
-                OUT.color = v.color * _Color;
+                OUT.color = v.color * wpnCollideror;
 				return OUT;
 			}
 

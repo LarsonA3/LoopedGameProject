@@ -148,8 +148,6 @@ public class Zone1Manager : MonoBehaviour
     {
         print("next zone...");
 
-        UnlockWeaponForCompletedZone();
-
         if (zone != 4)
         {
             zone += 1;
@@ -208,14 +206,6 @@ public class Zone1Manager : MonoBehaviour
         {
             SwitchToRoom(roomToSwitchTo);
             MovePlayerToRoomStart();
-        }
-
-        StartingWeaponSelector selector =
-            Object.FindFirstObjectByType<StartingWeaponSelector>(FindObjectsInactive.Include);
-
-        if (selector != null)
-        {
-            selector.StartWeaponChoice();
         }
     }
 
@@ -317,34 +307,6 @@ public class Zone1Manager : MonoBehaviour
 
             default:
                 return zone3randomroom1;
-        }
-    }
-
-    private void UnlockWeaponForCompletedZone()
-    {
-        if (WeaponUnlockState.Instance == null)
-        {
-            Debug.LogWarning("[Zone1Manager] No WeaponUnlockState found.");
-            return;
-        }
-
-        switch (zone)
-        {
-            case 1:
-                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.StunMace);
-                break;
-
-            case 2:
-                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.BootlegLightsaber);
-                break;
-
-            case 3:
-                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.GravityHammer);
-                break;
-
-            case 4:
-                WeaponUnlockState.Instance.UnlockWeapon(WeaponType.KineticRiotShield);
-                break;
         }
     }
 

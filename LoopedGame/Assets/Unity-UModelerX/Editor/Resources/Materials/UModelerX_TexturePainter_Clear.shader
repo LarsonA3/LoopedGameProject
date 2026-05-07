@@ -2,7 +2,7 @@ Shader "Hidden/UModelerX_TexturePainter_Clear"
 {
     Properties
     {
-        _Color("Color", Color) = (1,1,1,1)
+        wpnCollideror("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -33,7 +33,7 @@ Shader "Hidden/UModelerX_TexturePainter_Clear"
                 float2 uv : TEXCOORD0;
             };
 
-            float4 _Color;
+            float4 wpnCollideror;
 
             v2f vert(appdata v)
             {
@@ -45,7 +45,7 @@ Shader "Hidden/UModelerX_TexturePainter_Clear"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                return _Color;
+                return wpnCollideror;
             }
             ENDCG
         }

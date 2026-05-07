@@ -153,7 +153,7 @@
 }
 
 /* UV 설정 열: 세로 방향, 우측 여백 포함, 균등 분배 */
-.uv-settings__col {
+.uv-settings_wpnCollider {
     flex-direction: column;
     flex-grow: 1;
     flex-basis: 0;

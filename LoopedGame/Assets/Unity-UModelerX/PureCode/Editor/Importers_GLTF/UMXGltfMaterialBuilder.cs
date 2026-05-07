@@ -55,7 +55,7 @@ namespace Tripolygon.UModelerX.Editor.Importers.GLTF
             var shader = ResolveShader();
             var material = new Material(shader);
             material.name = "GLTF_Default";
-            SetColorIfPresent(material, new[] { "_BaseColor", "_Color" }, Color.white);
+            SetColorIfPresent(material, new[] { "_BaseColor", "wpnCollideror" }, Color.white);
             return material;
         }
 
@@ -74,7 +74,7 @@ namespace Tripolygon.UModelerX.Editor.Importers.GLTF
             var pbr = source.pbrMetallicRoughness ?? new UMXGltfPbrMetallicRoughness();
 
             var baseColor = ReadColorFactor(pbr.baseColorFactor, Color.white);
-            SetColorIfPresent(material, new[] { "_BaseColor", "_Color" }, baseColor);
+            SetColorIfPresent(material, new[] { "_BaseColor", "wpnCollideror" }, baseColor);
 
             if (pbr.baseColorTexture != null && pbr.baseColorTexture.index >= 0)
             {

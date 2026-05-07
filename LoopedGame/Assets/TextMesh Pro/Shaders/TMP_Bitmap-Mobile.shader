@@ -2,7 +2,7 @@ Shader "TextMeshPro/Mobile/Bitmap" {
 
 Properties {
 	_MainTex		    ("Font Atlas", 2D) = "white" {}
-	_Color		        ("Text Color", Color) = (1,1,1,1)
+	wpnCollideror		        ("Text Color", Color) = (1,1,1,1)
 	_DiffusePower	    ("Diffuse Power", Range(1.0,4.0)) = 1.0
 
 	_VertexOffsetX      ("Vertex OffsetX", float) = 0
@@ -19,7 +19,7 @@ Properties {
 	_StencilReadMask    ("Stencil Read Mask", Float) = 255
 
 	_CullMode           ("Cull Mode", Float) = 0
-	_ColorMask          ("Color Mask", Float) = 15
+	wpnColliderorMask          ("Color Mask", Float) = 15
 }
 
 SubShader {
@@ -42,7 +42,7 @@ SubShader {
 	ZWrite Off
 	Fog { Mode Off }
 	Blend SrcAlpha OneMinusSrcAlpha
-	ColorMask[_ColorMask]
+	ColorMask[wpnColliderorMask]
 
 	Pass {
 		CGPROGRAM
@@ -74,7 +74,7 @@ SubShader {
 		};
 
 		sampler2D 	_MainTex;
-		fixed4		_Color;
+		fixed4		wpnCollideror;
 		float		_DiffusePower;
 
 		uniform float		_VertexOffsetX;
@@ -100,7 +100,7 @@ SubShader {
             }
             OUT.vertex = UnityPixelSnap(UnityObjectToClipPos(vert));
 			OUT.color = v.color;
-			OUT.color *= _Color;
+			OUT.color *= wpnCollideror;
 			OUT.color.rgb *= _DiffusePower;
 			OUT.texcoord0 = v.texcoord0;
 
@@ -146,7 +146,7 @@ SubShader {
 	}
 	Pass {
 		SetTexture [_MainTex] {
-			constantColor [_Color] combine constant * primary, constant * texture
+			constantColor [wpnCollideror] combine constant * primary, constant * texture
 		}
 	}
 }

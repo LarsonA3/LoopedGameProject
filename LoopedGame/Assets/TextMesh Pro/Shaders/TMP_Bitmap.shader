@@ -19,7 +19,7 @@ Properties {
 	_StencilReadMask    ("Stencil Read Mask", Float) = 255
 
 	_CullMode           ("Cull Mode", Float) = 0
-	_ColorMask          ("Color Mask", Float) = 15
+	wpnColliderorMask          ("Color Mask", Float) = 15
 }
 
 SubShader{
@@ -42,7 +42,7 @@ SubShader{
 	ZWrite Off
 	Fog { Mode Off }
 	Blend SrcAlpha OneMinusSrcAlpha
-	ColorMask[_ColorMask]
+	ColorMask[wpnColliderorMask]
 
 	Pass {
 		CGPROGRAM

@@ -34,7 +34,7 @@ Shader "Hidden/UModelerX_TexturePainter_TexturePaintBlend"
             };
 
             sampler2D _MainTex; // alpha 곱해진 rgb
-            float4 _Color;
+            float4 wpnCollideror;
 
             v2f vert(appdata v)
             {
@@ -47,7 +47,7 @@ Shader "Hidden/UModelerX_TexturePainter_TexturePaintBlend"
             fixed4 frag(v2f i) : SV_Target
             {
                 float4 c = tex2D(_MainTex, i.uv);
-                return c * _Color;
+                return c * wpnCollideror;
             }
             ENDCG
         }

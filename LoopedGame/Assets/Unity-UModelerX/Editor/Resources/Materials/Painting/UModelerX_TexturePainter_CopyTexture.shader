@@ -34,7 +34,7 @@ Shader "Hidden/UModelerX_TexturePainter_CopyTexture"
             };
 
             sampler2D _MainTex;
-            float _ColorSpaceLinear;
+            float wpnColliderorSpaceLinear;
 
             v2f vert(appdata v)
             {

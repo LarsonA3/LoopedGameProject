@@ -3,7 +3,7 @@ Shader "Hidden/UModelerX_TexturePainter_FontRender"
     Properties
     {
         _FontTex ("Font Atlas", 2D) = "white" {}
-        _Color ("Text Color", Color) = (0,0,0,1)
+        wpnCollideror ("Text Color", Color) = (0,0,0,1)
     }
     SubShader
     {
@@ -21,7 +21,7 @@ Shader "Hidden/UModelerX_TexturePainter_FontRender"
             #include "UnityCG.cginc"
 
             sampler2D _FontTex;
-            float4 _Color;
+            float4 wpnCollideror;
 
             struct appdata
             {
@@ -46,8 +46,8 @@ Shader "Hidden/UModelerX_TexturePainter_FontRender"
             float4 frag(v2f i) : SV_Target
             {
                 float glyphA = tex2D(_FontTex, i.uv).a;
-                float alpha = step(0.5, glyphA) * _Color.a;
-                return float4(_Color.rgb * alpha, alpha);  // premultiplied alpha
+                float alpha = step(0.5, glyphA) * wpnCollideror.a;
+                return float4(wpnCollideror.rgb * alpha, alpha);  // premultiplied alpha
             }
             ENDCG
         }

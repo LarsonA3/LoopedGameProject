@@ -124,7 +124,7 @@
 }
 
 /* 설정 패널: 왼쪽 열 (50%) */
-.hotspot-settings__col--left {
+.hotspot-settings_wpnCollider--left {
     flex-basis: 50%;
     flex-grow: 0;
     flex-shrink: 1;
@@ -133,7 +133,7 @@
 }
 
 /* 설정 패널: 오른쪽 열 (50%) */
-.hotspot-settings__col--right {
+.hotspot-settings_wpnCollider--right {
     flex-basis: 50%;
     flex-grow: 0;
     flex-shrink: 1;
