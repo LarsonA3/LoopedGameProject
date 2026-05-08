@@ -5,7 +5,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
 {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
+    public static float currentHealth;
 
     [Header("Damage")]
     [SerializeField] private float baseInvincibilityTime = 0.3f;
@@ -29,8 +29,8 @@ public class PlayerHP : MonoBehaviour, IDamageable
     {
         Debug.Log("[PlayerHP] TakeDamage called with: " + damage + " | isDead: " + isDead + " | isInvincible: " + isInvincible);
 
-        if (isDead) { Debug.Log("[PlayerHP] Blocked — already dead."); return; }
-        if (isInvincible) { Debug.Log("[PlayerHP] Blocked — invincible."); return; }
+        if (isDead) { Debug.Log("[PlayerHP] Blocked ï¿½ already dead."); return; }
+        if (isInvincible) { Debug.Log("[PlayerHP] Blocked ï¿½ invincible."); return; }
 
         currentHealth -= damage;
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
@@ -86,7 +86,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
         }
         else
         {
-            Debug.LogWarning("[PlayerHP] Could not reset run — Zone1Manager.Instance is null.");
+            Debug.LogWarning("[PlayerHP] Could not reset run ï¿½ Zone1Manager.Instance is null.");
         }
     }
 
@@ -96,7 +96,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         if (((1 << other.gameObject.layer) & projectileLayer) == 0)
         {
-            ////Debug.Log("[PlayerHP] Layer mismatch — not a projectile layer.");
+            ////Debug.Log("[PlayerHP] Layer mismatch ï¿½ not a projectile layer.");
             return;
         }
 

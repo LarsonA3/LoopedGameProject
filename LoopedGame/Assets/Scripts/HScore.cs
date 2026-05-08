@@ -1,48 +1,47 @@
-// Make sure the player has this.
+using UnityEngine;
 using HighScore;
 using TMPro;
-using UnityEngine;
 
+//make sure the plyaer has this
 public class HScore : MonoBehaviour
 {
     public TextMeshProUGUI scoreBox;
-
-    public static string pName = "Schezo Wegey"; // Provide option to change this value somewhere.
+    public static string pName = "Schezo Wegey"; //provide option to change this value somewhere
     public static int pScore = 0;
 
     void Start()
     {
         HS.Init(this, "Looping Game (working title)");
-        UpdateScoreUI();
+    }
+
+    void Update()
+    {
+        if (pScore < 0)
+        {
+            pScore = 0;
+        }
+
+        scoreBox.text = $"Score: {pScore}";
     }
 
     public void IncreaseScore(int amount)
     {
         pScore += amount;
-
-        print($"Player: {pName}\nScore: {pScore}\n");
-
-        UpdateScoreUI();
+        //print($"Player: {pName}\nHigh Score: {pScore}\n");
+        //scoreBox.text = $"Score: {pScore}";
     }
 
-    public void FinalScore() // Call this before sending to end screen.
+
+    public void FinalScore() //call this before sending to end screen
     {
         HS.SubmitHighScore(this, pName, pScore);
-
-        print($"Player: {pName}\nFinal Score: {pScore}\n");
+        print($"Player: {pName}\nHigh Score: {pScore}\n");
     }
 
     public void ResetScore()
     {
         pScore = 0;
-        UpdateScoreUI();
-    }
-
-    private void UpdateScoreUI()
-    {
-        if (scoreBox != null)
-        {
-            scoreBox.text = $"Score: {pScore}";
-        }
+        //scoreBox.text = $"Score: {pScore}";
     }
 }
+
