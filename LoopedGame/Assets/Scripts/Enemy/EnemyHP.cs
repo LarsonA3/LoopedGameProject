@@ -4,14 +4,19 @@ using UnityEngine.SceneManagement;
 public class EnemyHP : MonoBehaviour
 {
     public float health;
+    private float startingHealth;
     public bool isFinal = false;
 
-    // Update is called once per frame
+    void Start()
+    {
+        startingHealth = health;
+    }
     void Update()
     {
         if (health <= 0)
         {
             Destroy(gameObject);
+            HScore.pScore += (int) startingHealth*5;
             
             // remove this later if final boss script is done in time
             if (isFinal)
