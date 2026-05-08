@@ -20,7 +20,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
     private Weapon weapon;
     [SerializeField] private float heavyHitThreshold = 5f;
-    [SerializeField] private float blockMeterDrainPerDamage = 0.2f;
+    [SerializeField] private float blockMeterDrainPerDamage = 0.03f;
 
     private void Awake()
     {

@@ -121,7 +121,11 @@ public class Weapon : MonoBehaviour
     void Update()
     {
         if (blockCooldownTimer > 0f)
+
             blockCooldownTimer -= Time.deltaTime;
+
+        if (blockDrainCooldownTimer > 0f)
+            blockDrainCooldownTimer -= Time.deltaTime;
 
         UpdateBlock();
         UpdateAttackInput();
@@ -330,9 +334,16 @@ public class Weapon : MonoBehaviour
     }
 
     // called from PlayerHP when a heavy projectile is absorbed
+    private float blockDrainCooldown = 0.3f;
+    private float blockDrainCooldownTimer;
+
     public void DrainBlockMeter(float amount)
     {
+        if (blockDrainCooldownTimer > 0f) return;
+
         blockMeter = Mathf.Max(blockMeter - amount, 0f);
+        blockDrainCooldownTimer = blockDrainCooldown;
+
         if (blockMeter <= 0f && isBlocking)
             ForceEndBlock(stun: true);
     }
