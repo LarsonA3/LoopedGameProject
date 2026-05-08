@@ -213,5 +213,11 @@ public class TopDownController : MonoBehaviour
         dashCooldown = Mathf.Max(0.1f, dashCooldown);
     }
 
+    public void addDashCharge(float amt)
+    {
+        maxdashcharges += (int)amt;
+
+    }
+
 
 }

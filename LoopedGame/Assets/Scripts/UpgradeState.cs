@@ -17,6 +17,7 @@ public class UpgradeState : MonoBehaviour
     public float weaponAttackCooldownReduction;
     public float specialCooldownReduction;
 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
