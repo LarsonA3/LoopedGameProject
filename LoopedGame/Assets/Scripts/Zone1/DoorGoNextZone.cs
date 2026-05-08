@@ -16,10 +16,23 @@ public class DoorGoNextZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!allowed || AreEnemiesPresent())
+        {
+            Debug.Log("Door is locked! Enemies still remain.");
+            return;
+        }
+
         if (allowed && !transitioning && other.CompareTag("Player"))
         {
             StartCoroutine(HandleZoneTransition(other.gameObject));
         }
+    }
+
+    private bool AreEnemiesPresent()
+    {
+        // search for obj w enemy tag
+        GameObject enemy = GameObject.FindWithTag("Enemy");
+        return enemy != null;
     }
 
     IEnumerator HandleZoneTransition(GameObject player)

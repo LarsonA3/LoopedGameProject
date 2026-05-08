@@ -19,8 +19,21 @@ public class DoorNextRoom : MonoBehaviour
         }
     }
 
+    private bool AreEnemiesPresent()
+    {
+        // Search for any object with the "Enemy" tag
+        GameObject enemy = GameObject.FindWithTag("Enemy");
+        return enemy != null;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (!allowed || AreEnemiesPresent())
+        {
+            Debug.Log("Door is locked! Enemies still remain.");
+            return;
+        }
+
         if (!allowed)
         {
             return;
