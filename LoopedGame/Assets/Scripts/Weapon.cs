@@ -14,6 +14,7 @@ public class Weapon : MonoBehaviour
 
     public Transform blockPos;
 
+
     private bool isSwinging;
     private float swingTimer;
     private int swingDirection = 1;
@@ -26,6 +27,7 @@ public class Weapon : MonoBehaviour
     private float damageAmount = 2f;
 
     public Slider blockMeterSlider;
+    public Slider attackReadySlider;
 
     [Header("Block")]
     public float blockMeterMax = 3f;
@@ -119,12 +121,12 @@ public class Weapon : MonoBehaviour
         UpdateBlock();
         UpdateAttackInput();
 
-        if (isSwinging)
-            UpdateSwing();
-        if (isChargingHeavy)
-            UpdateHeavyWindup();
-        if (isHeavySwinging)
-            UpdateHeavySwing();
+        if (isSwinging) UpdateSwing();
+        if (isChargingHeavy) UpdateHeavyWindup();
+        if (isHeavySwinging) UpdateHeavySwing();
+
+        if (attackReadySlider != null)
+            attackReadySlider.value = AttackSliderNormalized;
     }
 
     //this now checks for holding or tapping lmb
@@ -329,4 +331,33 @@ public class Weapon : MonoBehaviour
         if (blockMeter <= 0f && isBlocking)
             ForceEndBlock(stun: true);
     }
+
+
+    // 0 = busy/stunned, 0–1 = charging heavy, 1 = fully ready or mid-swing progress
+    public float AttackSliderNormalized
+    {
+        get
+        {
+            if (isStunned) return 0f;
+
+            // Holding button drain to 0 as charge builds toward heavy threshold
+            if (!isChargingHeavy && !isSwinging && !isHeavySwinging && atkAction.IsPressed())
+                return 1f - Mathf.Clamp01(holdTimer / heavyWindupDuration);
+
+            // Locked into heavy windup hold at 0
+            if (isChargingHeavy) return 0f;
+
+            // Light swing fills 0->1 over swingDuration, hits 1 exactly when you can attack again
+            if (isSwinging)
+                return Mathf.Clamp01(swingTimer / swingDuration);
+
+            // Heavy swing same, over heavySwingDuration
+            if (isHeavySwinging)
+                return Mathf.Clamp01(heavySwingTimer / heavySwingDuration);
+
+            // Idle and ready
+            return 1f;
+        }
+    }
+
 }
