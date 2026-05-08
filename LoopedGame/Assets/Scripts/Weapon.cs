@@ -13,8 +13,6 @@ public class Weapon : MonoBehaviour
     public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public Transform blockPos;
-    private Vector3 blockPosLocal;
-    private Quaternion blockRotLocal;
 
     private bool isSwinging;
     private float swingTimer;
@@ -41,12 +39,29 @@ public class Weapon : MonoBehaviour
     public bool IsBlocking => isBlocking;
     public bool IsStunned => isStunned;
     public float BlockMeterNormalized => blockMeter / blockMeterMax;
+    // locks movement, dash, and block during heavy windup and swing
+    public bool IsHeavyAttacking => isChargingHeavy || isHeavySwinging;
 
     private bool isStunned;
     private float blockMeter;
     private float blockCooldownTimer;
     private Coroutine stunCoroutine;
     private InputAction blockAction;
+
+    // how long the player must hold still before the heavy swing fires
+    public float heavyWindupDuration = 0.5f;
+    // faster and wider than a light swing
+    public float heavySwingDuration = 0.12f;
+    public float heavySwingHalfArc = 100f;
+    public AnimationCurve heavySwingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    private bool isChargingHeavy;
+    private bool isHeavySwinging;
+    private float heavyWindupTimer;
+    private float heavySwingTimer;
+    private int heavySwingDirection = 1;
+    private float heavyDamageAmount;
+    private float holdTimer;
 
     void Awake()
     {
@@ -92,14 +107,8 @@ public class Weapon : MonoBehaviour
         readyLocalPosThing = transform.localPosition;
         readyLocalRotThing = transform.localRotation;
 
-        // Bake BlockPos's transform into parent space once, before anything moves.
-        if (blockPos != null)
-        {
-            blockPosLocal = transform.parent.InverseTransformPoint(blockPos.position);
-            blockRotLocal = Quaternion.Inverse(transform.parent.rotation) * blockPos.rotation;
-        }
-
         blockMeter = blockMeterMax;
+        heavyDamageAmount = damageAmount * 2f;
     }
 
     void Update()
@@ -108,17 +117,148 @@ public class Weapon : MonoBehaviour
             blockCooldownTimer -= Time.deltaTime;
 
         UpdateBlock();
+        UpdateAttackInput();
 
-        if (atkAction.WasPressedThisFrame() && !isSwinging && !isBlocking && !isStunned)
-            StartSwing();
         if (isSwinging)
             UpdateSwing();
+        if (isChargingHeavy)
+            UpdateHeavyWindup();
+        if (isHeavySwinging)
+            UpdateHeavySwing();
     }
 
+    //this now checks for holding or tapping lmb
+    void UpdateAttackInput()
+    {
+        bool busy = isSwinging || isChargingHeavy || isHeavySwinging || isBlocking || isStunned;
+
+        if (atkAction.WasPressedThisFrame() && !busy)
+            holdTimer = 0f;
+
+        if (atkAction.IsPressed() && !busy)
+            holdTimer += Time.deltaTime;
+
+        // light attack
+        if (atkAction.WasReleasedThisFrame() && !busy && holdTimer < heavyWindupDuration)
+            StartSwing();
+
+        // begin heavy windup
+        if (atkAction.IsPressed() && !busy && holdTimer >= heavyWindupDuration)
+            StartHeavyWindup();
+    }
+
+    // LIGHT ATK
+    void StartSwing()
+    {
+        Debug.Log($"[Weapon] Collider enabled: {wpnCollider.enabled}, isTrigger: {wpnCollider.isTrigger}");
+        isSwinging = true;
+        swingTimer = 0f;
+        swingDirection *= -1;
+        if (wpnCollider != null) wpnCollider.enabled = true;
+        // Snap to swing start angle immediately.
+        ApplySwingAngle(-swingHalfArc * swingDirection);
+    }
+
+    void UpdateSwing()
+    {
+        swingTimer += Time.deltaTime;
+        float t = Mathf.Clamp01(swingTimer / swingDuration);
+        float curved = swingCurve.Evaluate(t);
+        float angle = Mathf.Lerp(-swingHalfArc, swingHalfArc, curved) * swingDirection;
+        ApplySwingAngle(angle);
+        Physics.SyncTransforms();
+        if (t >= 1f)
+            EndSwing();
+    }
+
+    void EndSwing()
+    {
+        isSwinging = false;
+        // Disables hitbox, weapon stays at the arc end position
+        if (wpnCollider != null) wpnCollider.enabled = false;
+    }
+
+    // HEAVY ATK
+    void StartHeavyWindup()
+    {
+        isChargingHeavy = true;
+        heavyWindupTimer = 0f;
+        Debug.Log("[Weapon] Heavy attack windup started.");
+    }
+
+    void UpdateHeavyWindup()
+    {
+        heavyWindupTimer += Time.deltaTime;
+        // player released button during windup — cancel
+        if (atkAction.WasReleasedThisFrame())
+        {
+            isChargingHeavy = false;
+            Debug.Log("[Weapon] Heavy attack cancelled.");
+            return;
+        }
+        if (heavyWindupTimer >= heavyWindupDuration)
+        {
+            isChargingHeavy = false;
+            StartHeavySwing();
+        }
+    }
+
+    void StartHeavySwing()
+    {
+        Debug.Log("[Weapon] Heavy swing fired.");
+        isHeavySwinging = true;
+        heavySwingTimer = 0f;
+        heavySwingDirection *= -1;
+        if (wpnCollider != null) wpnCollider.enabled = true;
+        // Snap to swing start angle immediately.
+        ApplySwingAngle(-heavySwingHalfArc * heavySwingDirection);
+    }
+
+    void UpdateHeavySwing()
+    {
+        heavySwingTimer += Time.deltaTime;
+        float t = Mathf.Clamp01(heavySwingTimer / heavySwingDuration);
+        float curved = heavySwingCurve.Evaluate(t);
+        float angle = Mathf.Lerp(-heavySwingHalfArc, heavySwingHalfArc, curved) * heavySwingDirection;
+        ApplySwingAngle(angle);
+        Physics.SyncTransforms();
+        if (t >= 1f)
+            EndHeavySwing();
+    }
+
+    void EndHeavySwing()
+    {
+        isHeavySwinging = false;
+        // Disables hitbox, weapon stays at the arc end position
+        if (wpnCollider != null) wpnCollider.enabled = false;
+        Debug.Log("[Weapon] Heavy swing ended.");
+    }
+
+
+    void ApplySwingAngle(float angleDeg)
+    {
+        Quaternion rot = Quaternion.AngleAxis(angleDeg, Vector3.up);
+        transform.localPosition = rot * readyLocalPosThing;
+        transform.localRotation = rot * readyLocalRotThing;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
+        if (other.CompareTag("Enemy"))
+        {
+            // Handle enemy hit logic here
+            print("detected enemy hit");
+            float dmg = isHeavySwinging ? heavyDamageAmount : damageAmount;
+            other.gameObject.GetComponent<EnemyHP>().TakeDamage(dmg);
+        }
+    }
+
+    // BLOCK
     void UpdateBlock()
     {
         bool wantsBlock = blockAction.IsPressed();
-        bool canBlock = !isStunned && !isSwinging && blockCooldownTimer <= 0f && blockMeter > 0f;
+        bool canBlock = !isStunned && !isSwinging && !IsHeavyAttacking && blockCooldownTimer <= 0f && blockMeter > 0f;
 
         if (wantsBlock && canBlock)
         {
@@ -144,8 +284,8 @@ public class Weapon : MonoBehaviour
 
         if (isBlocking)
         {
-            transform.localPosition = blockPosLocal;
-            transform.localRotation = blockRotLocal;
+            transform.localPosition = readyLocalPosThing + readyLocalRotThing * blockPos.localPosition;
+            transform.localRotation = readyLocalRotThing * blockPos.localRotation;
         }
 
         if (blockMeterSlider != null)
@@ -188,53 +328,5 @@ public class Weapon : MonoBehaviour
         blockMeter = Mathf.Max(blockMeter - amount, 0f);
         if (blockMeter <= 0f && isBlocking)
             ForceEndBlock(stun: true);
-    }
-
-    void StartSwing()
-    {
-        Debug.Log($"[Weapon] Collider enabled: {wpnCollider.enabled}, isTrigger: {wpnCollider.isTrigger}");
-        isSwinging = true;
-        swingTimer = 0f;
-        swingDirection *= -1;
-        if (wpnCollider != null) wpnCollider.enabled = true;
-        // Snap to swing start angle immediately.
-        ApplySwingAngle(-swingHalfArc * swingDirection);
-    }
-
-    void UpdateSwing()
-    {
-        swingTimer += Time.deltaTime;
-        float t = Mathf.Clamp01(swingTimer / swingDuration);
-        float curved = swingCurve.Evaluate(t);
-        float angle = Mathf.Lerp(-swingHalfArc, swingHalfArc, curved) * swingDirection;
-        ApplySwingAngle(angle);
-        Physics.SyncTransforms();
-        if (t >= 1f)
-            EndSwing();
-    }
-
-    void EndSwing()
-    {
-        isSwinging = false;
-        // Disables hitbox, weapon stays at the arc end position
-        if (wpnCollider != null) wpnCollider.enabled = false;
-    }
-
-    void ApplySwingAngle(float angleDeg)
-    {
-        Quaternion rot = Quaternion.AngleAxis(angleDeg, Vector3.up);
-        transform.localPosition = rot * readyLocalPosThing;
-        transform.localRotation = rot * readyLocalRotThing;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
-        if (other.CompareTag("Enemy"))
-        {
-            // Handle enemy hit logic here
-            print("detected enemy hit");
-            other.gameObject.GetComponent<EnemyHP>().TakeDamage(damageAmount);
-        }
     }
 }
