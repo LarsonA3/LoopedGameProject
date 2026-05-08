@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,7 +34,7 @@ public class TopDownController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         playerCollider = GetComponent<Collider>();
-
+        currentDashCharges = maxdashcharges;
         ApplySavedUpgrades();
     }
 
@@ -67,8 +68,14 @@ public class TopDownController : MonoBehaviour
 
     // ---------------------------
 
+    public int maxdashcharges = 1;
+    private bool canDash = true;
+    private int currentDashCharges;
+    public float cooldownAfterChargesExhausted = 3f;
+
     void Trytodash()
     {
+        if (canDash == false) return;
         if (Time.time < lastDashTime + dashCooldown) return;
 
         Vector3 dashDir = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
@@ -84,6 +91,21 @@ public class TopDownController : MonoBehaviour
         cc.enabled = true;
 
         lastDashTime = Time.time;
+
+        currentDashCharges -= 1;
+        if (currentDashCharges <= 0) {
+            currentDashCharges = 0;
+            print("all dash charges exhausted");
+            StartCoroutine(waitForDash());
+            canDash = false;
+        }
+    }
+
+    public IEnumerator waitForDash() {
+        yield return new WaitForSeconds(cooldownAfterChargesExhausted);
+        currentDashCharges = maxdashcharges;
+        canDash = true;
+        print("Dashes refreshed");
     }
 
     Vector3 FindDashDestination(Vector3 dashDir)
@@ -119,7 +141,6 @@ public class TopDownController : MonoBehaviour
     }
 
     // ----------------
-
 
     void Rotate()
     {
