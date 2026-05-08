@@ -26,6 +26,8 @@ public class Weapon : MonoBehaviour
 
     private Collider wpnCollider;
 
+    private bool isBlocking;
+
     private PlayerInput plrInput;
     private InputAction atkAction;
 
@@ -129,7 +131,6 @@ public class Weapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
         if (other.CompareTag("Enemy"))
         {
