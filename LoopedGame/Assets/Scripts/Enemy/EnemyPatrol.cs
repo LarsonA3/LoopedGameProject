@@ -31,7 +31,8 @@ public class EnemyPatrol : MonoBehaviour
         } 
         else {
             AttackMode();
-            gameObject.transform.forward = Vector3.Lerp(this.transform.forward, targetPos.position, Time.deltaTime);
+            Vector3 dirToPlayer = (targetPos.position - transform.position).normalized;
+            transform.forward = Vector3.Lerp(transform.forward, dirToPlayer, Time.deltaTime * 10f);
             //print($"enemy rotation:{}");
         } 
     }

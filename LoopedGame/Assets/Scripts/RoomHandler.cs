@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class RoomHandler : MonoBehaviour
@@ -20,7 +21,7 @@ public class RoomHandler : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    async Task Start()
     {
         //get enemies 'folder' at root level
         GameObject enemyRoot = null;
@@ -42,7 +43,21 @@ public class RoomHandler : MonoBehaviour
         // get player
         foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
         {
-            if (root.name == "PLAYER") { player = root; break; }
+            if (root.name == "PLAYER")
+            {
+                // transform.Find looks for a child by name
+                Transform capsuleTransform = root.transform.Find("PlayerCapsule");
+
+                if (capsuleTransform != null)
+                {
+                    player = capsuleTransform.gameObject;
+                }
+                else
+                {
+                    Debug.LogError("Found PLAYER root, but couldn't find 'PlayerCapsule' child!");
+                }
+                break;
+            }
         }
         if (player == null) print("PLAYER not found at scene root");
 

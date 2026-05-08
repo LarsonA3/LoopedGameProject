@@ -92,16 +92,16 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("[PlayerHP] OnTriggerEnter fired with: " + other.gameObject.name + " on layer: " + LayerMask.LayerToName(other.gameObject.layer));
+        //Debug.Log("[PlayerHP] OnTriggerEnter fired with: " + other.gameObject.name + " on layer: " + LayerMask.LayerToName(other.gameObject.layer));
 
         if (((1 << other.gameObject.layer) & projectileLayer) == 0)
         {
-            Debug.Log("[PlayerHP] Layer mismatch — not a projectile layer.");
+            ////Debug.Log("[PlayerHP] Layer mismatch — not a projectile layer.");
             return;
         }
 
         EnemyProjectileBase projectile = other.GetComponent<EnemyProjectileBase>();
-        Debug.Log("[PlayerHP] EnemyProjectileBase found: " + (projectile != null));
+        //Debug.Log("[PlayerHP] EnemyProjectileBase found: " + (projectile != null));
         if (projectile == null) return;
 
         TakeDamage(projectile.Damage);
