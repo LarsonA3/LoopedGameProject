@@ -18,6 +18,10 @@ public class PlayerHP : MonoBehaviour, IDamageable
     [Header("Layers")]
     [SerializeField] private LayerMask projectileLayer;
 
+
+    [SerializeField] private float heavyHitThreshold = 5f;
+    [SerializeField] private float blockMeterDrainPerDamage = 0.2f;
+
     private void Awake()
     {
         if (UpgradeState.Instance != null)
@@ -94,11 +98,36 @@ public class PlayerHP : MonoBehaviour, IDamageable
     private void OnTriggerEnter(Collider other)
     {
         if (((1 << other.gameObject.layer) & projectileLayer) == 0) return;
-
         EnemyProjectileBase projectile = other.GetComponent<EnemyProjectileBase>();
         if (projectile == null) return;
 
+        // check if block absorbs this projectile
+        Weapon weapon = GetComponentInChildren<Weapon>();
+        if (weapon != null && weapon.IsBlocking && !weapon.IsStunned)
+        {
+            if (IsProjectileInFront(other.transform))
+            {
+                // heavy hits drain the block meter rather than dealing damage
+                if (projectile.Damage >= heavyHitThreshold)
+                    weapon.DrainBlockMeter(projectile.Damage * blockMeterDrainPerDamage);
+
+                projectile.TryClear();
+                return;
+            }
+            // projectile came from behind — block doesn't apply
+        }
+
         TakeDamage(projectile.Damage);
         projectile.TryClear();
+    }
+
+    // true if the projectile is within the player's forward hemisphere
+    private bool IsProjectileInFront(Transform projectileTransform)
+    {
+        Vector3 toProjectile = projectileTransform.position - transform.position;
+        toProjectile.y = 0f;
+        Vector3 forward = transform.forward;
+        forward.y = 0f;
+        return Vector3.Dot(forward.normalized, toProjectile.normalized) > 0f;
     }
 }

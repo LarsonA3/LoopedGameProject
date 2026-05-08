@@ -530,6 +530,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 48246145405806601, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: blockMeterSlider
+      value: 
+      objectReference: {fileID: 461648675}
     - target: {fileID: 144530552329184915, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
       value: 6
