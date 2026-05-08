@@ -9,6 +9,7 @@ public class GrazeProjectile : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player")) {
+            //other.gameObject.
             other.SendMessage("IncreaseScore", grazePoints, SendMessageOptions.DontRequireReceiver);
         }
     }

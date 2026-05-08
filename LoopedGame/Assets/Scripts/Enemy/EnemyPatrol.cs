@@ -25,12 +25,14 @@ public class EnemyPatrol : MonoBehaviour
     void Update()
     {
         targetPos = target.GetComponent<Transform>(); //update player position
-        var distToPlayer = Vector3.Distance(this.transform.position, targetPos.position);
+        var distToPlayer = Vector3.Distance(gameObject.transform.position, targetPos.position);
         if (!enemyNav.pathPending && enemyNav.remainingDistance < 0.1f && distToPlayer > 7) { //search smoothly if player is not in range
             Search();
         } 
         else {
             AttackMode();
+            gameObject.transform.forward = Vector3.Lerp(this.transform.forward, targetPos.position, Time.deltaTime);
+            //print($"enemy rotation:{}");
         } 
     }
 
