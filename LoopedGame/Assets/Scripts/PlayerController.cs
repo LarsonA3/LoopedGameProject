@@ -28,13 +28,14 @@ public class TopDownController : MonoBehaviour
 
     // tracks when exhausted recharge started for slider
     private float exhaustedStartTime;
-
+    private Weapon weapon;
     public void OnMove(InputValue value) => moveInput = value.Get<Vector2>();
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
         cam = Camera.main;
+        weapon = GetComponentInChildren<Weapon>();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         playerCollider = GetComponent<Collider>();
@@ -61,7 +62,8 @@ public class TopDownController : MonoBehaviour
 
     void Move()
     {
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y).normalized * moveSpeed;
+        float speedMultiplier = weapon != null ? weapon.MoveSpeedMultiplier : 1f;
+        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y).normalized * moveSpeed * speedMultiplier;
 
         if (cc.isGrounded) verticalVelocity = -2f;
         else verticalVelocity += gravity * Time.deltaTime;

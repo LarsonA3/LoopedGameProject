@@ -65,6 +65,11 @@ public class Weapon : MonoBehaviour
     private float heavyDamageAmount;
     private float holdTimer;
 
+    public float blockBrokenMoveMultiplier = 0.15f;
+
+    public float MoveSpeedMultiplier => isStunned ? blockBrokenMoveMultiplier : 1f;
+    [SerializeField] private float blockMeterDrainPerDamage = 0.08f;
+
     void Awake()
     {
         plrInput = GetComponentInParent<PlayerInput>();
