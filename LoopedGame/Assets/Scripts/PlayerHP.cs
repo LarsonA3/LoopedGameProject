@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class PlayerHP : MonoBehaviour, IDamageable
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
     public static float currentHealth;
+
+    public static event Action<float, float> OnHealthChanged; // used for ui 
 
     [Header("Damage")]
     [SerializeField] private float baseInvincibilityTime = 0.3f;
@@ -18,22 +21,24 @@ public class PlayerHP : MonoBehaviour, IDamageable
     private void Awake()
     {
         if (UpgradeState.Instance != null)
-        {
             maxHealth += UpgradeState.Instance.maxHPBonus;
-        }
+
         currentHealth = maxHealth;
         Debug.Log("[PlayerHP] Starting HP: " + currentHealth);
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void TakeDamage(float damage)
     {
         Debug.Log("[PlayerHP] TakeDamage called with: " + damage + " | isDead: " + isDead + " | isInvincible: " + isInvincible);
-
-        if (isDead) { Debug.Log("[PlayerHP] Blocked � already dead."); return; }
-        if (isInvincible) { Debug.Log("[PlayerHP] Blocked � invincible."); return; }
+        if (isDead) { Debug.Log("[PlayerHP] Blocked — already dead."); return; }
+        if (isInvincible) { Debug.Log("[PlayerHP] Blocked — invincible."); return; }
 
         currentHealth -= damage;
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0f)
         {
@@ -48,13 +53,14 @@ public class PlayerHP : MonoBehaviour, IDamageable
     {
         maxHealth += amount;
         currentHealth += amount;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void Heal(float amount)
     {
         if (isDead) return;
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     private IEnumerator InvincibilityRoutine()
@@ -62,9 +68,8 @@ public class PlayerHP : MonoBehaviour, IDamageable
         isInvincible = true;
         float duration = baseInvincibilityTime;
         if (UpgradeState.Instance != null)
-        {
             duration += UpgradeState.Instance.invincibilityBonus;
-        }
+
         Debug.Log("[PlayerHP] Invincibility started for " + duration + "s");
         yield return new WaitForSeconds(duration);
         isInvincible = false;
@@ -81,27 +86,16 @@ public class PlayerHP : MonoBehaviour, IDamageable
         if (controller != null) controller.enabled = false;
 
         if (Zone1Manager.Instance != null)
-        {
             Zone1Manager.Instance.resetRun();
-        }
         else
-        {
-            Debug.LogWarning("[PlayerHP] Could not reset run � Zone1Manager.Instance is null.");
-        }
+            Debug.LogWarning("[PlayerHP] Could not reset run — Zone1Manager.Instance is null.");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("[PlayerHP] OnTriggerEnter fired with: " + other.gameObject.name + " on layer: " + LayerMask.LayerToName(other.gameObject.layer));
-
-        if (((1 << other.gameObject.layer) & projectileLayer) == 0)
-        {
-            ////Debug.Log("[PlayerHP] Layer mismatch � not a projectile layer.");
-            return;
-        }
+        if (((1 << other.gameObject.layer) & projectileLayer) == 0) return;
 
         EnemyProjectileBase projectile = other.GetComponent<EnemyProjectileBase>();
-        //Debug.Log("[PlayerHP] EnemyProjectileBase found: " + (projectile != null));
         if (projectile == null) return;
 
         TakeDamage(projectile.Damage);
