@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 4358667742660445572}
   m_Layer: 8
   m_Name: Slime Placeholder
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
   health: 5
+  isFinal: 0
 --- !u!114 &4358667742660445572
 MonoBehaviour:
   m_ObjectHideFlags: 0

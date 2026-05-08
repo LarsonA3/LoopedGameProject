@@ -99,16 +99,16 @@ public class EnemyProjectileBase : MonoBehaviour
 
     protected virtual void TryHitPlayer(Collider other)
     {
-        Debug.Log($"[Projectile] TryHitPlayer called. Hit: {other.gameObject.name} on layer: {LayerMask.LayerToName(other.gameObject.layer)}");
-        Debug.Log($"[Projectile] playerLayer value: {playerLayer.value} | object layer bit: {1 << other.gameObject.layer}");
+        //Debug.Log($"[Projectile] TryHitPlayer called. Hit: {other.gameObject.name} on layer: {LayerMask.LayerToName(other.gameObject.layer)}");
+        //Debug.Log($"[Projectile] playerLayer value: {playerLayer.value} | object layer bit: {1 << other.gameObject.layer}");
 
         bool hitPlayer = ((1 << other.gameObject.layer) & playerLayer) != 0;
-        Debug.Log($"[Projectile] hitPlayer: {hitPlayer}");
+        //Debug.Log($"[Projectile] hitPlayer: {hitPlayer}");
 
         if (!hitPlayer) return;
 
         IDamageable damageable = other.GetComponent<IDamageable>();
-        Debug.Log($"[Projectile] IDamageable found: {damageable != null}");
+        //Debug.Log($"[Projectile] IDamageable found: {damageable != null}");
 
         if (damageable != null)
         {

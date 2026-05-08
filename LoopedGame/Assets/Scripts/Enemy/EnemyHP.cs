@@ -24,5 +24,6 @@ public class EnemyHP : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        print("Enemy took " + damage + " and has " + health + " health remaining");
     }
 }

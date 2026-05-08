@@ -29,6 +29,8 @@ public class Weapon : MonoBehaviour
     private PlayerInput plrInput;
     private InputAction atkAction;
 
+    private float damageAmount = 2f;
+
     void Awake()
     {
         plrInput = GetComponentInParent<PlayerInput>();
@@ -83,6 +85,7 @@ public class Weapon : MonoBehaviour
 
     void StartSwing()
     {
+        Debug.Log($"[Weapon] Collider enabled: {wpnCollider.enabled}, isTrigger: {wpnCollider.isTrigger}");
         isSwinging = true;
         swingTimer = 0f;
         swingDirection *= -1;
@@ -102,6 +105,9 @@ public class Weapon : MonoBehaviour
 
         ApplySwingAngle(angle);
 
+
+        Physics.SyncTransforms();
+
         if (t >= 1f)
             EndSwing();
     }
@@ -119,5 +125,17 @@ public class Weapon : MonoBehaviour
         Quaternion rot = Quaternion.AngleAxis(angleDeg, Vector3.up);
         transform.localPosition = rot * readyLocalPosThing;
         transform.localRotation = rot * readyLocalRotThing;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
+        if (other.CompareTag("Enemy"))
+        {
+            // Handle enemy hit logic here
+            print("detected enemy hit");
+            other.gameObject.GetComponent<EnemyHP>().TakeDamage(damageAmount);
+        }
     }
 }
