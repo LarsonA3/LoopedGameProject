@@ -12,6 +12,10 @@ public class Weapon : MonoBehaviour
     //curve controlling swing speed — flat = constant, ease-in/out = slow at edges
     public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
+    public Transform blockPos;
+    private Vector3 blockPosLocal;
+    private Quaternion blockRotLocal;
+
     private bool isSwinging;
     private float swingTimer;
     private int swingDirection = 1;
@@ -32,8 +36,6 @@ public class Weapon : MonoBehaviour
     // minimum time after releasing block before you can block again (prevents spam)
     public float blockCooldown = 0.5f;
     public float stunDuration = 1f;
-    // 90 degree pose while blocking
-    public Vector3 blockLocalEuler = new Vector3(0f, 90f, 0f);
 
     // public read-only state for TopDownController and PlayerHP
     public bool IsBlocking => isBlocking;
@@ -90,6 +92,13 @@ public class Weapon : MonoBehaviour
         readyLocalPosThing = transform.localPosition;
         readyLocalRotThing = transform.localRotation;
 
+        // Bake BlockPos's transform into parent space once, before anything moves.
+        if (blockPos != null)
+        {
+            blockPosLocal = transform.parent.InverseTransformPoint(blockPos.position);
+            blockRotLocal = Quaternion.Inverse(transform.parent.rotation) * blockPos.rotation;
+        }
+
         blockMeter = blockMeterMax;
     }
 
@@ -135,8 +144,8 @@ public class Weapon : MonoBehaviour
 
         if (isBlocking)
         {
-            transform.localPosition = readyLocalPosThing;
-            transform.localRotation = Quaternion.Euler(blockLocalEuler) * readyLocalRotThing;
+            transform.localPosition = blockPosLocal;
+            transform.localRotation = blockRotLocal;
         }
 
         if (blockMeterSlider != null)
