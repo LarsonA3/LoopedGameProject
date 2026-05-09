@@ -81,7 +81,7 @@ public class Weapon : MonoBehaviour
 
     // Stun applied when the parry window expires without catching anything.
     // Should be longer/worse than a broken block to punish misfires.
-    public float parryMissStunDuration = 1.25   f;
+    public float parryMissStunDuration = 1.25f;
 
     // Projectile prefab to spawn when a parry is successful. The prefab's tag
     // will be overwritten to "Weapon" at runtime so it can damage enemies.
