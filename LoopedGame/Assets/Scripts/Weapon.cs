@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
+    public float heavyKnockbackForce = 12f;
+
     public Transform playerCapsule;
     // degrees from player forward to each side of the arc
     public float swingHalfArc = 60f;
@@ -436,6 +438,21 @@ public class Weapon : MonoBehaviour
         {
             float dmg = isHeavySwinging ? heavyDamageAmount : damageAmount;
             other.gameObject.GetComponent<EnemyHP>().TakeDamage(dmg);
+
+            if (isHeavySwinging)
+            {
+                // Direction away from player, flat on XZ
+                Vector3 knockDir = (other.transform.position - playerCapsule.position);
+                knockDir.y = 0f;
+                knockDir.Normalize();
+
+                EnemyPatrol ep = other.GetComponent<EnemyPatrol>();
+                if (ep != null)
+                    ep.TakeKnockback(knockDir, heavyKnockbackForce);
+
+                if (ScreenImpactEffect.Instance != null)
+                    ScreenImpactEffect.Instance.TriggerImpact();
+            }
         }
     }
 

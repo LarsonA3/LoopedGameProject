@@ -540,8 +540,9 @@ GameObject:
   m_Component:
   - component: {fileID: 832575519}
   - component: {fileID: 832575518}
+  - component: {fileID: 832575520}
   m_Layer: 0
-  m_Name: Global Volume
+  m_Name: ImpactFrameGlobalVol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -563,7 +564,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 10fc4df2da32a41aaa32d77bc913491c, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 279eb5e87d0627e459dda4300f93ec80, type: 2}
 --- !u!4 &832575519
 Transform:
   m_ObjectHideFlags: 0
@@ -579,6 +580,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &832575520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832575517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52236fae9e5fc5c4197de6ae4eb8f96e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenImpactEffect
+  hitStopDuration: 0.06
+  whiteDuration: 0.05
+  bwDuration: 0.05
+  globalVolume: {fileID: 832575518}
 --- !u!1 &1104491677 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 733772542274298836, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
@@ -1224,6 +1241,10 @@ PrefabInstance:
       propertyPath: plrCapsule
       value: 
       objectReference: {fileID: 1406078395}
+    - target: {fileID: 4850465178389895539, guid: d6273eb20f91cb04bb29dbb060414b1c, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5534032507067674543, guid: d6273eb20f91cb04bb29dbb060414b1c, type: 3}
       propertyPath: m_ClearFlags
       value: 2
