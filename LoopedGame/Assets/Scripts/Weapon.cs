@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -5,15 +6,14 @@ using UnityEngine.UI;
 public class Weapon : MonoBehaviour
 {
     public Transform playerCapsule;
-    //degrees from player forward to each side of the arc
+    // degrees from player forward to each side of the arc
     public float swingHalfArc = 60f;
-    //how long full swing takes in seconds
+    // how long full swing takes in seconds
     public float swingDuration = 0.25f;
-    //curve controlling swing speed � flat = constant, ease-in/out = slow at edges
+    // curve controlling swing speed - flat = constant, ease-in/out = slow at edges
     public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public Transform blockPos;
-
 
     private bool isSwinging;
     private float swingTimer;
@@ -70,6 +70,37 @@ public class Weapon : MonoBehaviour
     public float MoveSpeedMultiplier => isStunned ? blockBrokenMoveMultiplier : 1f;
     [SerializeField] private float blockMeterDrainPerDamage = 0.08f;
 
+    // ─── Parry ────────────────────────────────────────────────────────────────
+    [Header("Parry")]
+    // Assign a child GameObject's Collider here. That child also needs a
+    // ParryHitbox component (see ParryHitbox.cs) and should be tagged "Parry".
+    public Collider parryHitboxCollider;
+
+    // How long the parry window stays open.
+    public float parryWindow = 0.25f;
+
+    // Stun applied when the parry window expires without catching anything.
+    // Should be longer/worse than a broken block to punish misfires.
+    public float parryMissStunDuration = 2.5f;
+
+    // Projectile prefab to spawn when a parry is successful. The prefab's tag
+    // will be overwritten to "Weapon" at runtime so it can damage enemies.
+    public GameObject parryProjectilePrefab;
+
+    // Speed multiplier applied to the reflected projectile.
+    public float parryReflectSpeedMultiplier = 1.4f;
+
+    // How much of the block meter a failed parry costs (on top of the stun).
+    public float parryMissBlockMeterCost = 1.5f;
+
+    private bool isParrying;
+    private float parryTimer;
+    private bool parryLanded; // did this parry window catch something?
+
+    // Public so UI / other systems can read it.
+    public bool IsParrying => isParrying;
+    // ──────────────────────────────────────────────────────────────────────────
+
     void Awake()
     {
         plrInput = GetComponentInParent<PlayerInput>();
@@ -103,14 +134,31 @@ public class Weapon : MonoBehaviour
         }
         wpnCollider = GetComponent<Collider>();
         if (wpnCollider == null)
-            Debug.LogWarning("[WeaponController] No Collider found on Weapon � hitbox will not function.", this);
+            Debug.LogWarning("[WeaponController] No Collider found on Weapon - hitbox will not function.", this);
         if (wpnCollider != null)
         {
             wpnCollider.isTrigger = true;
             wpnCollider.enabled = false;
         }
+
+        if (parryHitboxCollider != null)
+        {
+            parryHitboxCollider.isTrigger = true;
+            parryHitboxCollider.enabled = false;
+
+            // Wire up the relay component so we get callbacks.
+            var relay = parryHitboxCollider.GetComponent<ParryHitbox>();
+            if (relay == null)
+                Debug.LogWarning("[WeaponController] parryHitboxCollider has no ParryHitbox component - add ParryHitbox.cs to that child object.", this);
+            else
+                relay.weapon = this;
+        }
+        else
+        {
+            Debug.LogWarning("[WeaponController] parryHitboxCollider is not assigned - parry reflect will not function.", this);
+        }
+
         // Bake the resting transform exactly once from the scene-placed position.
-        // This is the permanent arc center for every swing.
         readyLocalPosThing = transform.localPosition;
         readyLocalRotThing = transform.localRotation;
 
@@ -121,27 +169,164 @@ public class Weapon : MonoBehaviour
     void Update()
     {
         if (blockCooldownTimer > 0f)
-
             blockCooldownTimer -= Time.deltaTime;
 
         if (blockDrainCooldownTimer > 0f)
             blockDrainCooldownTimer -= Time.deltaTime;
 
-        UpdateBlock();
-        UpdateAttackInput();
+        // Parry must be checked first - it takes priority over both attack and block.
+        UpdateParryInput();
+
+        if (!isParrying)
+        {
+            UpdateBlock();
+            UpdateAttackInput();
+        }
 
         if (isSwinging) UpdateSwing();
         if (isChargingHeavy) UpdateHeavyWindup();
         if (isHeavySwinging) UpdateHeavySwing();
+        if (isParrying) UpdateParry();
 
         if (attackReadySlider != null)
             attackReadySlider.value = AttackSliderNormalized;
     }
 
-    //this now checks for holding or tapping lmb
+    // ─── Parry input ──────────────────────────────────────────────────────────
+
+    void UpdateParryInput()
+    {
+        // Trigger when either button is freshly pressed while the other is already held,
+        // or both land on the exact same frame.
+        bool parryTrigger =
+            (atkAction.WasPressedThisFrame() && blockAction.IsPressed()) ||
+            (blockAction.WasPressedThisFrame() && atkAction.IsPressed());
+
+        bool busy = isSwinging || isChargingHeavy || isHeavySwinging ||
+                    isBlocking || isStunned || isParrying;
+
+        if (parryTrigger && !busy)
+            StartParry();
+    }
+
+    void StartParry()
+    {
+        Debug.Log("[Weapon] Parry started.");
+        isParrying = true;
+        parryTimer = 0f;
+        parryLanded = false;
+
+        // Make sure normal attack and block states are cleared.
+        isSwinging = false;
+        isBlocking = false;
+        isChargingHeavy = false;
+        isHeavySwinging = false;
+
+        // Weapon hitbox off, parry hitbox on.
+        if (wpnCollider != null) wpnCollider.enabled = false;
+        if (parryHitboxCollider != null) parryHitboxCollider.enabled = true;
+
+        // Snap to block position for the visual tell.
+        transform.localPosition = readyLocalPosThing + readyLocalRotThing * blockPos.localPosition;
+        transform.localRotation = readyLocalRotThing * blockPos.localRotation;
+    }
+
+    void UpdateParry()
+    {
+        parryTimer += Time.deltaTime;
+
+        if (parryTimer >= parryWindow)
+            EndParry(success: parryLanded);
+    }
+
+    void EndParry(bool success)
+    {
+        isParrying = false;
+        if (parryHitboxCollider != null) parryHitboxCollider.enabled = false;
+
+        if (success)
+        {
+            Debug.Log("[Weapon] Parry successful!");
+            // Clean exit - no penalty, small cooldown so it can't chain immediately.
+            blockCooldownTimer = blockCooldown;
+        }
+        else
+        {
+            Debug.Log("[Weapon] Parry missed - applying punishment.");
+
+            // Drain block meter so missing a parry has compound consequences.
+            blockMeter = Mathf.Max(blockMeter - parryMissBlockMeterCost, 0f);
+
+            // Apply a longer stun than a normal block-break.
+            if (stunCoroutine != null) StopCoroutine(stunCoroutine);
+            stunCoroutine = StartCoroutine(StunRoutine(parryMissStunDuration));
+
+            blockCooldownTimer = blockCooldown;
+        }
+
+        // Return weapon to rest position.
+        transform.localPosition = readyLocalPosThing;
+        transform.localRotation = readyLocalRotThing;
+    }
+
+    // Called by ParryHitbox.cs when something enters the parry collider.
+    public void OnParryContact(Collider other)
+    {
+        if (!isParrying) return;
+
+        Debug.Log($"[Weapon] Parry contact: {other.name} tag: {other.tag}");
+
+        if (other.CompareTag("EnemyProjectile"))
+        {
+            parryLanded = true;
+            ReflectProjectile(other.gameObject);
+
+            // End the parry window immediately on success so the player
+            // can act again without waiting out the full window.
+            EndParry(success: true);
+        }
+    }
+
+    void ReflectProjectile(GameObject projectile)
+    {
+        if (parryProjectilePrefab == null)
+        {
+            Debug.LogWarning("[Weapon] parryProjectilePrefab is not assigned.");
+            return;
+        }
+
+        // Reconstruct incoming direction from projectile toward the player.
+        Vector3 toPlayer = (playerCapsule.position - projectile.transform.position);
+        toPlayer.y = 0f;
+        toPlayer.Normalize();
+
+        projectile.SetActive(false);
+        Destroy(projectile, 0.1f);
+
+        GameObject reflected = Instantiate(
+            parryProjectilePrefab,
+            projectile.transform.position,
+            projectile.transform.rotation
+        );
+
+        reflected.tag = "Weapon";
+
+        // Hand off the reflected direction to the new script.
+        ParriedProjectile proj = reflected.GetComponent<ParriedProjectile>();
+        if (proj != null)
+            proj.direction = -toPlayer; // flip: away from player, toward enemy
+        else
+            Debug.LogWarning("[Weapon] parryProjectilePrefab is missing a ParriedProjectile component.");
+
+        Debug.Log("[Weapon] Projectile reflected!");
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+
     void UpdateAttackInput()
     {
-        bool busy = isSwinging || isChargingHeavy || isHeavySwinging || isBlocking || isStunned;
+        bool busy = isSwinging || isChargingHeavy || isHeavySwinging ||
+                    isBlocking || isStunned || isParrying;
 
         if (atkAction.WasPressedThisFrame() && !busy)
             holdTimer = 0f;
@@ -149,11 +334,11 @@ public class Weapon : MonoBehaviour
         if (atkAction.IsPressed() && !busy)
             holdTimer += Time.deltaTime;
 
-        // light attack
+        // Light attack
         if (atkAction.WasReleasedThisFrame() && !busy && holdTimer < heavyWindupDuration)
             StartSwing();
 
-        // begin heavy windup
+        // Begin heavy windup
         if (atkAction.IsPressed() && !busy && holdTimer >= heavyWindupDuration)
             StartHeavyWindup();
     }
@@ -166,7 +351,6 @@ public class Weapon : MonoBehaviour
         swingTimer = 0f;
         swingDirection *= -1;
         if (wpnCollider != null) wpnCollider.enabled = true;
-        // Snap to swing start angle immediately.
         ApplySwingAngle(-swingHalfArc * swingDirection);
     }
 
@@ -178,14 +362,12 @@ public class Weapon : MonoBehaviour
         float angle = Mathf.Lerp(-swingHalfArc, swingHalfArc, curved) * swingDirection;
         ApplySwingAngle(angle);
         Physics.SyncTransforms();
-        if (t >= 1f)
-            EndSwing();
+        if (t >= 1f) EndSwing();
     }
 
     void EndSwing()
     {
         isSwinging = false;
-        // Disables hitbox, weapon stays at the arc end position
         if (wpnCollider != null) wpnCollider.enabled = false;
     }
 
@@ -200,7 +382,6 @@ public class Weapon : MonoBehaviour
     void UpdateHeavyWindup()
     {
         heavyWindupTimer += Time.deltaTime;
-        // player released button during windup � cancel
         if (atkAction.WasReleasedThisFrame())
         {
             isChargingHeavy = false;
@@ -221,7 +402,6 @@ public class Weapon : MonoBehaviour
         heavySwingTimer = 0f;
         heavySwingDirection *= -1;
         if (wpnCollider != null) wpnCollider.enabled = true;
-        // Snap to swing start angle immediately.
         ApplySwingAngle(-heavySwingHalfArc * heavySwingDirection);
     }
 
@@ -233,18 +413,15 @@ public class Weapon : MonoBehaviour
         float angle = Mathf.Lerp(-heavySwingHalfArc, heavySwingHalfArc, curved) * heavySwingDirection;
         ApplySwingAngle(angle);
         Physics.SyncTransforms();
-        if (t >= 1f)
-            EndHeavySwing();
+        if (t >= 1f) EndHeavySwing();
     }
 
     void EndHeavySwing()
     {
         isHeavySwinging = false;
-        // Disables hitbox, weapon stays at the arc end position
         if (wpnCollider != null) wpnCollider.enabled = false;
         Debug.Log("[Weapon] Heavy swing ended.");
     }
-
 
     void ApplySwingAngle(float angleDeg)
     {
@@ -258,8 +435,6 @@ public class Weapon : MonoBehaviour
         Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
         if (other.CompareTag("Enemy"))
         {
-            // Handle enemy hit logic here
-            print("detected enemy hit");
             float dmg = isHeavySwinging ? heavyDamageAmount : damageAmount;
             other.gameObject.GetComponent<EnemyHP>().TakeDamage(dmg);
         }
@@ -269,12 +444,12 @@ public class Weapon : MonoBehaviour
     void UpdateBlock()
     {
         bool wantsBlock = blockAction.IsPressed();
-        bool canBlock = !isStunned && !isSwinging && !IsHeavyAttacking && blockCooldownTimer <= 0f && blockMeter > 0f;
+        bool canBlock = !isStunned && !isSwinging && !IsHeavyAttacking &&
+                          !isParrying && blockCooldownTimer <= 0f && blockMeter > 0f;
 
         if (wantsBlock && canBlock)
         {
-            if (!isBlocking)
-                StartBlock();
+            if (!isBlocking) StartBlock();
 
             blockMeter -= blockMeterDrainRate * Time.deltaTime;
 
@@ -289,7 +464,7 @@ public class Weapon : MonoBehaviour
             ForceEndBlock(stun: false);
         }
 
-        // recharge meter while not blocking
+        // Recharge meter while not blocking.
         if (!isBlocking && !isStunned)
             blockMeter = Mathf.Min(blockMeter + blockMeterRechargeRate * Time.deltaTime, blockMeterMax);
 
@@ -313,27 +488,27 @@ public class Weapon : MonoBehaviour
     void ForceEndBlock(bool stun)
     {
         isBlocking = false;
-        // enforce cooldown on release so rapid tapping doesn't bypass the meter drain
         blockCooldownTimer = blockCooldown;
 
         if (stun)
         {
             if (stunCoroutine != null) StopCoroutine(stunCoroutine);
-            stunCoroutine = StartCoroutine(StunRoutine());
+            stunCoroutine = StartCoroutine(StunRoutine(stunDuration));
         }
 
         transform.localPosition = readyLocalPosThing;
         transform.localRotation = readyLocalRotThing;
     }
 
-    System.Collections.IEnumerator StunRoutine()
+    // Duration-parameterised so block-break and parry-miss can use different lengths.
+    IEnumerator StunRoutine(float duration)
     {
         isStunned = true;
-        yield return new WaitForSeconds(stunDuration);
+        yield return new WaitForSeconds(duration);
         isStunned = false;
     }
 
-    // called from PlayerHP when a heavy projectile is absorbed
+    // Called from PlayerHP when a heavy projectile is absorbed.
     private float blockDrainCooldown = 0.3f;
     private float blockDrainCooldownTimer;
 
@@ -348,32 +523,26 @@ public class Weapon : MonoBehaviour
             ForceEndBlock(stun: true);
     }
 
-
-    // 0 = busy/stunned, 0�1 = charging heavy, 1 = fully ready or mid-swing progress
+    // 0 = busy/stunned, 0-1 = charging heavy, 1 = fully ready or mid-swing progress
     public float AttackSliderNormalized
     {
         get
         {
             if (isStunned) return 0f;
+            if (isParrying) return 0f;
 
-            // Holding button drain to 0 as charge builds toward heavy threshold
             if (!isChargingHeavy && !isSwinging && !isHeavySwinging && atkAction.IsPressed())
                 return 1f - Mathf.Clamp01(holdTimer / heavyWindupDuration);
 
-            // Locked into heavy windup hold at 0
             if (isChargingHeavy) return 0f;
 
-            // Light swing fills 0->1 over swingDuration, hits 1 exactly when you can attack again
             if (isSwinging)
                 return Mathf.Clamp01(swingTimer / swingDuration);
 
-            // Heavy swing same, over heavySwingDuration
             if (isHeavySwinging)
                 return Mathf.Clamp01(heavySwingTimer / heavySwingDuration);
 
-            // Idle and ready
             return 1f;
         }
     }
-
 }

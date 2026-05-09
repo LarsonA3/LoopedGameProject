@@ -8,6 +8,8 @@ TagManager:
   - WALKABLE PLAYER FLOOR
   - Weapon
   - Enemy
+  - Parry
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
