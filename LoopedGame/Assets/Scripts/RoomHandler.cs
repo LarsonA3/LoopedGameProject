@@ -245,15 +245,21 @@ public class RoomHandler : MonoBehaviour
             );
 
             if (!Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, 5f))
-            { print($"Attempt {i}: raycast missed entirely from {randomPoint}"); continue; }
+            { print($"Attempt {i}: raycast missed from {randomPoint}"); continue; }
 
             if (!hit.collider.CompareTag("WALKABLE PLAYER FLOOR"))
-            { print($"Attempt {i}: raycast hit {hit.collider.name} tagged '{hit.collider.tag}' instead of floor"); continue; }
+            { print($"Attempt {i}: hit '{hit.collider.tag}' not floor"); continue; }
 
             Vector3 candidate = hit.point + Vector3.up * 0.1f;
 
+            // validatte navmesh ebforehand
+            UnityEngine.AI.NavMeshHit navHit;
+            if (!UnityEngine.AI.NavMesh.SamplePosition(candidate, out navHit, 0.5f, UnityEngine.AI.NavMesh.AllAreas))
+            { print($"Attempt {i}: no NavMesh within 0.5f of candidate"); continue; }
 
-            if (Vector3.Distance(candidate, player.transform.position) < 5f) continue; //make sure it isnt too close to plr
+            candidate = navHit.position;
+
+            if (Vector3.Distance(candidate, player.transform.position) < 5f) continue;
 
             LayerMask excludeFloor = ~(1 << hit.collider.gameObject.layer);
             if (Physics.CheckSphere(candidate, 0.5f, excludeFloor)) continue;
