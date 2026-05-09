@@ -81,7 +81,7 @@ public class Weapon : MonoBehaviour
 
     // Stun applied when the parry window expires without catching anything.
     // Should be longer/worse than a broken block to punish misfires.
-    public float parryMissStunDuration = 2.5f;
+    public float parryMissStunDuration = 1.25   f;
 
     // Projectile prefab to spawn when a parry is successful. The prefab's tag
     // will be overwritten to "Weapon" at runtime so it can damage enemies.
@@ -196,14 +196,13 @@ public class Weapon : MonoBehaviour
 
     void UpdateParryInput()
     {
-        // Trigger when either button is freshly pressed while the other is already held,
-        // or both land on the exact same frame.
         bool parryTrigger =
             (atkAction.WasPressedThisFrame() && blockAction.IsPressed()) ||
             (blockAction.WasPressedThisFrame() && atkAction.IsPressed());
 
+        // isBlocking intentionally excluded - parry should interrupt an active block
         bool busy = isSwinging || isChargingHeavy || isHeavySwinging ||
-                    isBlocking || isStunned || isParrying;
+                    isStunned || isParrying;
 
         if (parryTrigger && !busy)
             StartParry();
