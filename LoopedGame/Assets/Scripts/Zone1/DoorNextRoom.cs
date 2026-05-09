@@ -74,6 +74,8 @@ public class DoorNextRoom : MonoBehaviour
             input.enabled = true;
         }
 
+        HScore.pScore += 750;
+
         Zone1Manager.Instance.nextRoom();
     }
 

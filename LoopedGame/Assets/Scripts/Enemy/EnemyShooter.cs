@@ -13,6 +13,7 @@ public class EnemyShooter : MonoBehaviour
     [SerializeField] private bool fireAutomatically = true;
 
     private bool canFire = true;
+    public bool enable = false; //added to toggle shooting on and off outside of. this.
     private EnemyStatus status;
 
     private void Awake()
@@ -22,13 +23,16 @@ public class EnemyShooter : MonoBehaviour
 
     private void Update()
     {
-        if (!fireAutomatically) return;
-
-        if (status != null && status.IsStunned) return;
-
-        if (canFire)
+        if (enable)
         {
-            FireAtTarget();
+            if (!fireAutomatically) return;
+
+            if (status != null && status.IsStunned) return;
+
+            if (canFire)
+            {
+                FireAtTarget();
+            }   
         }
     }
 

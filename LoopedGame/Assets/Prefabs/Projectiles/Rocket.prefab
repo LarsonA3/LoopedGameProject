@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 4990288124153336728}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071069}
-  m_LocalPosition: {x: -2e-15, y: 2e-15, z: 0.0178}
-  m_LocalScale: {x: 0.06738118, y: 0.04823782, z: 0.06738118}
+  m_LocalPosition: {x: -1.3315e-10, y: -4.258e-10, z: 0.0178}
+  m_LocalScale: {x: 0.104307875, y: 0.07467343, z: 0.104307875}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8493140797447474923}
@@ -110,10 +110,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.6552681
+  m_Height: 2.4465542
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0.0000000035956296, y: -0.03325346, z: -0.017449595}
 --- !u!114 &7307528445190014967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 8616917504828008234}
   - component: {fileID: 7948838660188140241}
   - component: {fileID: 5847924519129975397}
-  - component: {fileID: 6190683966941784626}
+  - component: {fileID: 6072032093824362348}
   m_Layer: 9
   m_Name: Rocket
   m_TagString: Untagged
@@ -156,8 +156,8 @@ Transform:
   m_GameObject: {fileID: 7098460193122868107}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 31.84352, y: 31.84352, z: 31.84352}
+  m_LocalPosition: {x: -0.000072399, y: 0.00000088954, z: 0.23498}
+  m_LocalScale: {x: 18.64248, y: 18.64248, z: 18.64248}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7402035208245229661}
@@ -249,10 +249,10 @@ MonoBehaviour:
     m_Bits: 128
   explosionDamage: 20
   reflectedExplosionDamageMultiplier: 0.5
-  explosionRadius: 3
+  explosionRadius: 2
   explosionKnockback: 8
---- !u!135 &6190683966941784626
-SphereCollider:
+--- !u!136 &6072032093824362348
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -269,6 +269,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.036427066
-  m_Center: {x: 0.00000006612392, y: 0.0000054836287, z: 0.023879409}
+  serializedVersion: 2
+  m_Radius: 0.010159258
+  m_Height: 0.07918776
+  m_Direction: 2
+  m_Center: {x: 0.000000063944974, y: -0.0004014026, z: 0.021405768}

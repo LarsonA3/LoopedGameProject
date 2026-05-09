@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour
     public float swingHalfArc = 60f;
     //how long full swing takes in seconds
     public float swingDuration = 0.25f;
-    //curve controlling swing speed — flat = constant, ease-in/out = slow at edges
+    //curve controlling swing speed ï¿½ flat = constant, ease-in/out = slow at edges
     public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public Transform blockPos;
@@ -103,7 +103,7 @@ public class Weapon : MonoBehaviour
         }
         wpnCollider = GetComponent<Collider>();
         if (wpnCollider == null)
-            Debug.LogWarning("[WeaponController] No Collider found on Weapon — hitbox will not function.", this);
+            Debug.LogWarning("[WeaponController] No Collider found on Weapon ï¿½ hitbox will not function.", this);
         if (wpnCollider != null)
         {
             wpnCollider.isTrigger = true;
@@ -200,7 +200,7 @@ public class Weapon : MonoBehaviour
     void UpdateHeavyWindup()
     {
         heavyWindupTimer += Time.deltaTime;
-        // player released button during windup — cancel
+        // player released button during windup ï¿½ cancel
         if (atkAction.WasReleasedThisFrame())
         {
             isChargingHeavy = false;
@@ -349,7 +349,7 @@ public class Weapon : MonoBehaviour
     }
 
 
-    // 0 = busy/stunned, 0–1 = charging heavy, 1 = fully ready or mid-swing progress
+    // 0 = busy/stunned, 0ï¿½1 = charging heavy, 1 = fully ready or mid-swing progress
     public float AttackSliderNormalized
     {
         get

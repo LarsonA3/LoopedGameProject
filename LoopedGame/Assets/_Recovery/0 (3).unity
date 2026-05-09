@@ -169,14 +169,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 1138677887496278699, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1593218506470631593, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 1913134040425809927, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Name
       value: PLAYER
@@ -229,10 +221,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2781804293889889854, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 3967887380564568119, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -257,10 +245,6 @@ PrefabInstance:
       propertyPath: dashCooldownSlider
       value: 
       objectReference: {fileID: 209035013}
-    - target: {fileID: 4610121067946249757, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 5662218482661770076, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: scoreBox
       value: 
@@ -281,17 +265,13 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7529238678870916956, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 7906950928202812709, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8667057381382471931, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
@@ -558,6 +538,52 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832575517}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &851083276
+GameObject:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 851083278}
+  - component: {fileID: 851083277}
+  m_Layer: 0
+  m_Name: UMXCommandServiceCache_2646fe32-3aa3-4284-a5fa-a85910f70260
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &851083277
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851083276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1704387285, guid: 355474d781e5561489e3595e39866770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Tripolygon.UModelerX.Runtime.dll::Tripolygon.UModelerX.Runtime.UMXCommandServiceCache
+  counter: 0
+  commandObjects: []
+--- !u!4 &851083278
+Transform:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851083276}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1249,3 +1275,4 @@ SceneRoots:
   - {fileID: 594634525}
   - {fileID: 3165548493082191604}
   - {fileID: 5623277436661391367}
+  - {fileID: 851083278}
