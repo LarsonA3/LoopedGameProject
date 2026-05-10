@@ -1,7 +1,8 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class UpgradeManager : MonoBehaviour
     public GameObject player;
 
     private List<CardEffect> currentRoll = new List<CardEffect>();
-    private List<bool> rarityRoll = new List<bool>();
+    private List<CardRarity> rarityRoll = new List<CardRarity>();
 
     private void OnEnable()
     {
@@ -48,29 +49,39 @@ public class UpgradeManager : MonoBehaviour
         {
             if (pool.Count == 0)
             {
-                break;
+                cardUIObjects[i].SetActive(false);
+                continue;
             }
 
             int index = Random.Range(0, pool.Count);
             CardEffect selected = pool[index];
+            pool.RemoveAt(index);
 
             currentRoll.Add(selected);
 
-            bool isRare = Random.value <= 0.25f;
-            rarityRoll.Add(isRare);
+            CardRarity rarity = RollRarity();
+            rarityRoll.Add(rarity);
 
             if (i < cardTextSlots.Length && cardTextSlots[i] != null)
             {
-                string rarityText = isRare ? "Rare" : "Common";
-                cardTextSlots[i].text = selected.name + "\n" + rarityText;
+                string displayName = string.IsNullOrEmpty(selected.cardName)
+                    ? selected.name
+                    : selected.cardName;
+
+                cardTextSlots[i].text =
+                    displayName +
+                    "\n" + rarity +
+                    "\n" + selected.description;
             }
 
             Image btnImg = cardUIObjects[i].GetComponent<Image>();
 
             if (btnImg != null)
             {
-                btnImg.color = isRare ? Color.cyan : Color.white;
+                btnImg.color = GetRarityColor(rarity);
             }
+
+            cardUIObjects[i].SetActive(true);
         }
     }
 
@@ -95,5 +106,48 @@ public class UpgradeManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         gameObject.SetActive(false);
+    }
+
+    private CardRarity RollRarity()
+    {
+        float roll = Random.value;
+
+        if (roll < 0.60f)
+        {
+            return CardRarity.Common;
+        }
+        else if (roll < 0.85f)
+        {
+            return CardRarity.Rare;
+        }
+        else if (roll < 0.95f)
+        {
+            return CardRarity.Epic;
+        }
+        else
+        {
+            return CardRarity.Legendary;
+        }
+    }
+
+    private Color GetRarityColor(CardRarity rarity)
+    {
+        switch (rarity)
+        {
+            case CardRarity.Common:
+                return Color.white;
+
+            case CardRarity.Rare:
+                return Color.cyan;
+
+            case CardRarity.Epic:
+                return new Color(0.65f, 0.25f, 1f);
+
+            case CardRarity.Legendary:
+                return new Color(1f, 0.55f, 0f);
+
+            default:
+                return Color.white;
+        }
     }
 }
