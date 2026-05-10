@@ -105,9 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a5f8a0e06439ac439536523232ca257, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeavyEnemyProjectile
-  damage: 10
-  speed: 8
-  lifetime: 5
+  damage: 15
+  speed: 4.5
+  lifetime: 8
   canBeCleared: 1
   canBeReflected: 1
   destroyOnHit: 1

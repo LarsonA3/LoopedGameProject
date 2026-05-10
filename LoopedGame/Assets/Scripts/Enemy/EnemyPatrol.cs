@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,6 +26,7 @@ public class EnemyPatrol : MonoBehaviour
     private System.Random rand = new System.Random();
     private float distToPlayer;
     private Vector3 dirToPlayer;
+    private bool isBoss;
 
     [Header("Knockback")]
     public float knockbackDuration = 0.6f;
@@ -35,20 +37,22 @@ public class EnemyPatrol : MonoBehaviour
         points = nodeHost.GetComponentsInChildren<Transform>();
         enemyNav = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-
+        isBoss = GetComponentInChildren<EnemyHP>().isFinal;
+        node = (node + rand.Next(0, 24)) % points.Length; //avoids swarming behavior -- enemies go to the first node after spawning, which is always the player spwan location
+        ToggleShooting(false);
         if (rb == null)
             Debug.LogError("[EnemyPatrol] Rigidbody required for knockback.", this);
         else
             rb.isKinematic = true; // NavMeshAgent drives movement by default
-
-        node = (node + rand.Next(0, 24)) % points.Length; //avoids swarming behavior -- enemies go to the first node after spawning, which is always the player spawn location
     }
 
     void Update()
     {
         targetPos = target.GetComponent<Transform>(); //update player position
         distToPlayer = Vector3.Distance(gameObject.transform.position, targetPos.position);
-        if (distToPlayer <= 5 && State == State.PATROL)
+
+
+        if ((distToPlayer <= 5 && State == State.PATROL) | isBoss == true)
         {
             State = State.ATTACK;
         }
@@ -59,7 +63,7 @@ public class EnemyPatrol : MonoBehaviour
                 Search();
                 break;
             case State.ATTACK:
-                GetComponent<EnemyShooter>().enable = true;
+                ToggleShooting(true);
                 AttackMode();
                 dirToPlayer = (targetPos.position - transform.position).normalized;
                 transform.forward = Vector3.Lerp(transform.forward, dirToPlayer, Time.deltaTime * enemyNav.speed);
@@ -67,6 +71,7 @@ public class EnemyPatrol : MonoBehaviour
             case State.KNOCKBACK:
                 // Physics is driving -- nothing to do here
                 GetComponent<EnemyShooter>().enable = false;
+                ToggleShooting(false);
                 break;
         }
     }
@@ -84,7 +89,12 @@ public class EnemyPatrol : MonoBehaviour
     public void AttackMode()
     {
         enemyNav.destination = targetPos.position; //target player
-        enemyNav.stoppingDistance = 6;
+        
+        if (isBoss) {
+            enemyNav.stoppingDistance = 20;
+        } else {  
+            enemyNav.stoppingDistance = 6;
+        }
     }
 
     // Called by Weapon.cs on heavy hit
@@ -132,6 +142,15 @@ public class EnemyPatrol : MonoBehaviour
         {
             collision.gameObject.GetComponent<EnemyHP>()?.TakeDamage(5f);
             print("knocked into enemy for 5 dmg");
+        }
+    }
+
+    private void ToggleShooting(bool shoot)
+    {
+        EnemyShooter[] shotList = GetComponents<EnemyShooter>();
+        foreach (EnemyShooter shotPoint in shotList)
+        {
+            shotPoint.enable = shoot;
         }
     }
 }

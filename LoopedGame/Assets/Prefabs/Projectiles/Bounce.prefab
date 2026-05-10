@@ -105,8 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca77cffc138b5d42bb895235be99d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BouncingEnemyProjectile
-  damage: 10
-  speed: 8
+  damage: 5
+  speed: 7
   lifetime: 5
   canBeCleared: 1
   canBeReflected: 1

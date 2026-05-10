@@ -219,9 +219,12 @@ public class RoomHandler : MonoBehaviour
             patrol.target = player;
         }
 
+        //removed target system from EnemyShooter (unused for the forseeable future)
+        /* 
         EnemyShooter shooter = enemy.GetComponent<EnemyShooter>();
         if (shooter != null)
             shooter.SetTarget(player.transform);
+        */
     }
 
     bool TryGetSpawnPoint(out Vector3 result, int maxAttempts = 30)

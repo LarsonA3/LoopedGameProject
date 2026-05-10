@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd9058084937114bb6e7a75dbbf1633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalEnemyProjectile
-  damage: 1
-  speed: 8
+  damage: 2
+  speed: 10
   lifetime: 5
   canBeCleared: 1
   canBeReflected: 1

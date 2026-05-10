@@ -6,7 +6,7 @@ public class EnemyShooter : MonoBehaviour
     [Header("Shooting")]
     [SerializeField] private EnemyProjectileBase projectilePrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Transform target;
+    //[SerializeField] private Transform target;
 
     [Header("Timing")]
     [SerializeField] private float fireCooldown = 1.5f;
@@ -50,11 +50,13 @@ public class EnemyShooter : MonoBehaviour
             return;
         }
 
+        /*
         if (target == null)
         {
             Debug.LogWarning("[EnemyShooter] No target assigned.");
             return;
         }
+        */
 
         //Vector3 direction = target.position - firePoint.position;
         Vector3 direction = firePoint.forward;
@@ -80,5 +82,5 @@ public class EnemyShooter : MonoBehaviour
         canFire = true;
     }
 
-    public void SetTarget(Transform t) => target = t;
+    //public void SetTarget(Transform t) => target = t;
 }
