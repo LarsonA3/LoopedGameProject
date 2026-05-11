@@ -49,6 +49,8 @@ public class DoorGoNextZone : MonoBehaviour
 
         if (input != null) input.enabled = true;
 
+        HScore.pScore += 3000;
+
         Zone1Manager.Instance.nextZone();
     }
 

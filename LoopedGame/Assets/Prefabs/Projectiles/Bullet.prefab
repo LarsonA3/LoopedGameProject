@@ -110,10 +110,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.84833485
+  m_Height: 1.8814881
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.0000000064578796, y: 0.059255984, z: -0.010259948}
 --- !u!114 &3726739748685608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 2348449149204878995}
   m_Layer: 9
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,8 +156,8 @@ Transform:
   m_GameObject: {fileID: 2156533147896944078}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 34.722393, y: 34.722393, z: 34.722393}
+  m_LocalPosition: {x: -0.048123, y: 0, z: 0}
+  m_LocalScale: {x: 27.847706, y: 27.847706, z: 27.847706}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2345238523660881139}
@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd9058084937114bb6e7a75dbbf1633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalEnemyProjectile
-  damage: 1
-  speed: 8
+  damage: 2
+  speed: 10
   lifetime: 5
   canBeCleared: 1
   canBeReflected: 1
@@ -266,5 +266,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.02047884
-  m_Center: {x: 0, y: 0, z: -0.011729066}
+  m_Radius: 0.012685299
+  m_Center: {x: 0, y: -0.00055899314, z: -0.0038167753}

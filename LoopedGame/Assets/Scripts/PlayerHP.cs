@@ -18,33 +18,38 @@ public class PlayerHP : MonoBehaviour, IDamageable
     [Header("Layers")]
     [SerializeField] private LayerMask projectileLayer;
 
+    private Weapon weapon;
+    [SerializeField] private float heavyHitThreshold = 5f;
+    [SerializeField] private float blockMeterDrainPerDamage = 0.03f;
+
     private void Awake()
     {
+        weapon = GetComponentInChildren<Weapon>();
+
         if (UpgradeState.Instance != null)
             maxHealth += UpgradeState.Instance.maxHPBonus;
 
         currentHealth = maxHealth;
-        Debug.Log("[PlayerHP] Starting HP: " + currentHealth);
-
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("[PlayerHP] TakeDamage called with: " + damage + " | isDead: " + isDead + " | isInvincible: " + isInvincible);
-        if (isDead) { Debug.Log("[PlayerHP] Blocked — already dead."); return; }
-        if (isInvincible) { Debug.Log("[PlayerHP] Blocked — invincible."); return; }
+        if (isDead) return;
+        if (isInvincible) return;
+
+        if (weapon != null && weapon.IsBlocking && !weapon.IsStunned)
+        {
+            weapon.DrainBlockMeter(damage * blockMeterDrainPerDamage);
+            Debug.Log("[PlayerHP] Damage blocked, meter drained by: " + damage * blockMeterDrainPerDamage);
+            return;
+        }
 
         currentHealth -= damage;
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
-
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        if (currentHealth <= 0f)
-        {
-            Die();
-            return;
-        }
+        if (currentHealth <= 0f) { Die(); return; }
 
         StartCoroutine(InvincibilityRoutine());
     }
@@ -91,14 +96,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
             Debug.LogWarning("[PlayerHP] Could not reset run — Zone1Manager.Instance is null.");
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (((1 << other.gameObject.layer) & projectileLayer) == 0) return;
 
-        EnemyProjectileBase projectile = other.GetComponent<EnemyProjectileBase>();
-        if (projectile == null) return;
 
-        TakeDamage(projectile.Damage);
-        projectile.TryClear();
-    }
+
 }

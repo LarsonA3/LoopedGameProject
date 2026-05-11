@@ -107,7 +107,7 @@ public class EnemyProjectileBase : MonoBehaviour
 
         if (!hitPlayer) return;
 
-        IDamageable damageable = other.GetComponent<IDamageable>();
+        IDamageable damageable = other.GetComponentInParent<IDamageable>();
         //Debug.Log($"[Projectile] IDamageable found: {damageable != null}");
 
         if (damageable != null)
@@ -126,7 +126,7 @@ public class EnemyProjectileBase : MonoBehaviour
 
         if (!hitEnemy) return;
 
-        IDamageable damageable = other.GetComponent<IDamageable>();
+        IDamageable damageable = other.GetComponentInParent<IDamageable>();
 
         if (damageable != null)
         {

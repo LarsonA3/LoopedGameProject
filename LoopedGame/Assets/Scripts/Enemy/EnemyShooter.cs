@@ -6,13 +6,14 @@ public class EnemyShooter : MonoBehaviour
     [Header("Shooting")]
     [SerializeField] private EnemyProjectileBase projectilePrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private Transform target;
+    //[SerializeField] private Transform target;
 
     [Header("Timing")]
     [SerializeField] private float fireCooldown = 1.5f;
     [SerializeField] private bool fireAutomatically = true;
 
     private bool canFire = true;
+    public bool enable = false; //added to toggle shooting on and off outside of. this.
     private EnemyStatus status;
 
     private void Awake()
@@ -22,13 +23,16 @@ public class EnemyShooter : MonoBehaviour
 
     private void Update()
     {
-        if (!fireAutomatically) return;
-
-        if (status != null && status.IsStunned) return;
-
-        if (canFire)
+        if (enable)
         {
-            FireAtTarget();
+            if (!fireAutomatically) return;
+
+            if (status != null && status.IsStunned) return;
+
+            if (canFire)
+            {
+                FireAtTarget();
+            }   
         }
     }
 
@@ -46,11 +50,13 @@ public class EnemyShooter : MonoBehaviour
             return;
         }
 
+        /*
         if (target == null)
         {
             Debug.LogWarning("[EnemyShooter] No target assigned.");
             return;
         }
+        */
 
         //Vector3 direction = target.position - firePoint.position;
         Vector3 direction = firePoint.forward;
@@ -76,5 +82,5 @@ public class EnemyShooter : MonoBehaviour
         canFire = true;
     }
 
-    public void SetTarget(Transform t) => target = t;
+    //public void SetTarget(Transform t) => target = t;
 }
