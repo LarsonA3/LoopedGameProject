@@ -4,5 +4,5 @@ using Unity.VisualScripting.FullSerializer;
 
 public interface IDamageable
 {
-    void TakeDamage(float amount) { }
+    void TakeDamage(float damage);
 }

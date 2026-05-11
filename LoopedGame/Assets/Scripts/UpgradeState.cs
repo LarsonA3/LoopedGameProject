@@ -32,7 +32,7 @@ public class UpgradeState : MonoBehaviour
     public float parryMissStunReduction;
     public float parryMissMeterCostReduction;
     public float parryReflectSpeed;
-
+    internal float invincibilityBonus;
 
     private void Awake()
     {
@@ -240,7 +240,7 @@ public class UpgradeState : MonoBehaviour
         dashCooldownReduction = 0f;
         dashChargeProgress = 0f;
         maxHPBonus = 0f;
-        invicibilityBonus = 0f;
+        invincibilityBonus = 0f;
         parryWindowBonus = 0f;
         parryMissStunReduction = 0f;
         parryMissMeterCostReduction = 0f;

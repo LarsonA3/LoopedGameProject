@@ -1,236 +1,431 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(CharacterController))]
 public class TopDownController : MonoBehaviour
 {
-    private Collider playerCollider;
+    [Header("Movement")]
     public float moveSpeed = 6f;
-    public float gravity = -20f;
-    public float stickRotationSpeed = 10f;
-    public float stickDeadzone = 0.2f;
+    public float rotationSpeed = 14f;
 
-    [SerializeField] private float dashDistance = 2f;
-    [SerializeField] private float dashCooldown = 1f;
+    [Header("Dash")]
+    public float dashDistance = 5f;
+    public float dashDuration = 0.15f;
+    public float dashCooldown = 1f;
+    public float minimumDashCooldown = 0.5f;
+    public int maxDashCharges = 1;
+    public int absoluteMaxDashCharges = 5;
 
-    private CharacterController cc;
-    private Camera cam;
-    private float verticalVelocity;
-    private Vector2 moveInput;
-    private float lastDashTime = -99f;
+    [Header("Camera")]
+    public Camera playerCamera;
 
-    private bool isGamepad;
+    [Header("Optional UI")]
+    public Slider dashCooldownSlider;
+    public Slider dashChargesSlider;
+    public TMP_Text dashChargeText;
 
-    [SerializeField] private Slider dashCooldownSlider;
-    [SerializeField] private TMP_Text dashChargesText;
-
-    // tracks when exhausted recharge started for slider
-    private float exhaustedStartTime;
+    private CharacterController characterController;
+    private PlayerInput playerInput;
     private Weapon weapon;
-    public void OnMove(InputValue value) => moveInput = value.Get<Vector2>();
 
-    void Start()
+    private InputAction moveAction;
+    private InputAction dashAction;
+
+    private Vector3 moveDirection;
+    private Vector3 dashDirection;
+
+    private bool isDashing;
+    private float dashTimer;
+    private float dashCooldownTimer;
+    private int currentDashCharges;
+    private int dashChargeProgress;
+
+    private float temporaryMoveSpeedMultiplier = 1f;
+    private float temporaryMoveSpeedEndTime;
+
+    public float LastDashTime { get; private set; }
+    public bool IsDashing => isDashing;
+
+    private void Awake()
     {
-        cc = GetComponent<CharacterController>();
-        cam = Camera.main;
+        characterController = GetComponent<CharacterController>();
+        playerInput = GetComponent<PlayerInput>();
         weapon = GetComponentInChildren<Weapon>();
+
+        if (playerInput == null)
+        {
+            Debug.LogError("[TopDownController] No PlayerInput found.");
+            enabled = false;
+            return;
+        }
+
+        moveAction = playerInput.actions.FindAction("Move", true);
+        dashAction = playerInput.actions.FindAction("Dash", true);
+
+        if (moveAction == null)
+        {
+            Debug.LogError("[TopDownController] Input Action 'Move' not found.");
+            enabled = false;
+            return;
+        }
+
+        if (dashAction == null)
+        {
+            Debug.LogError("[TopDownController] Input Action 'Dash' not found.");
+            enabled = false;
+            return;
+        }
+
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+        }
+
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = maxDashCharges;
+    }
+
+    private void Start()
+    {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        playerCollider = GetComponent<Collider>();
-        currentDashCharges = maxdashcharges;
+
         ApplySavedUpgrades();
         UpdateDashUI();
     }
 
-    void Update()
+    private void Update()
     {
-        Move();
-        Rotate();
+        UpdateTemporaryMoveSpeed();
 
-        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
-            isGamepad = false;
+        if (isDashing)
+        {
+            UpdateDash();
+            UpdateDashUI();
+            return;
+        }
 
-        if (Keyboard.current.leftShiftKey.wasPressedThisFrame) Trytodash();
+        UpdateDashCooldown();
 
-        Gamepad pad = Gamepad.current;
-        if (pad != null && pad.buttonSouth.wasPressedThisFrame) Trytodash();
+        if (weapon != null && (weapon.IsStunned || weapon.IsHeavyAttacking))
+        {
+            UpdateDashUI();
+            return;
+        }
 
+        UpdateMovement();
+        UpdateDashInput();
         UpdateDashUI();
     }
 
-    void Move()
+    private void UpdateMovement()
     {
-        float speedMultiplier = weapon != null ? weapon.MoveSpeedMultiplier : 1f;
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y).normalized * moveSpeed * speedMultiplier;
+        Vector2 input = moveAction.ReadValue<Vector2>();
 
-        if (cc.isGrounded) verticalVelocity = -2f;
-        else verticalVelocity += gravity * Time.deltaTime;
+        moveDirection = new Vector3(input.x, 0f, input.y);
 
-        move.y = verticalVelocity;
-        cc.Move(move * Time.deltaTime);
+        if (moveDirection.sqrMagnitude > 1f)
+        {
+            moveDirection.Normalize();
+        }
+
+        float weaponMoveMultiplier = weapon != null ? weapon.MoveSpeedMultiplier : 1f;
+        float finalMoveSpeed = moveSpeed * temporaryMoveSpeedMultiplier * weaponMoveMultiplier;
+
+        characterController.Move(moveDirection * finalMoveSpeed * Time.deltaTime);
+
+        if (moveDirection.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime
+            );
+        }
     }
 
-    // dashing --------------
-
-    public int maxdashcharges = 1;
-    private bool canDash = true;
-    private int currentDashCharges;
-    public float cooldownAfterChargesExhausted = 3f;
-
-    void Trytodash()
+    private void UpdateDashInput()
     {
-        if (!canDash) return;
-        if (Time.time < lastDashTime + dashCooldown) return;
+        if (!dashAction.WasPressedThisFrame())
+        {
+            return;
+        }
 
-        Vector3 dashDir = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-        if (dashDir == Vector3.zero) dashDir = transform.forward;
-
-        Vector3 destination = FindDashDestination(dashDir);
-        if (destination == transform.position) return;
-
-        cc.enabled = false;
-        transform.position = destination;
-        cc.enabled = true;
-
-        lastDashTime = Time.time;
-
-        currentDashCharges -= 1;
         if (currentDashCharges <= 0)
         {
-            currentDashCharges = 0;
-            exhaustedStartTime = Time.time;
-            canDash = false;
-            print("all dash charges exhausted");
-            StartCoroutine(waitForDash());
+            return;
         }
+
+        StartDash();
     }
 
-    public IEnumerator waitForDash()
+    private void StartDash()
     {
-        yield return new WaitForSeconds(cooldownAfterChargesExhausted);
-        currentDashCharges = maxdashcharges;
-        canDash = true;
-        print("Dashes refreshed");
-    }
-
-    Vector3 FindDashDestination(Vector3 dashDir)
-    {
-        int steps = 10;
-        float stepSize = dashDistance / steps;
-        Vector3 lastValid = transform.position;
-
-        for (int i = 1; i <= steps; i++)
+        if (currentDashCharges <= 0)
         {
-            Vector3 checkPos = transform.position + dashDir * (stepSize * i);
-            if (IsWalkable(checkPos))
-                lastValid = checkPos;
-            else
-                break;
+            return;
         }
 
-        return lastValid;
-    }
+        isDashing = true;
+        dashTimer = 0f;
+        LastDashTime = Time.time;
 
-    bool IsWalkable(Vector3 pos)
-    {
-        RaycastHit[] hits = Physics.RaycastAll(pos + Vector3.up * 2f, Vector3.down, 4f);
-        foreach (RaycastHit hit in hits)
+        currentDashCharges = Mathf.Max(0, currentDashCharges - 1);
+
+        if (currentDashCharges < maxDashCharges)
         {
-            if (hit.collider == playerCollider) continue;
-            if (hit.collider.CompareTag("WALKABLE PLAYER FLOOR")) return true;
+            dashCooldownTimer = Mathf.Max(dashCooldown, minimumDashCooldown);
         }
-        return false;
+
+        dashDirection = moveDirection;
+
+        if (dashDirection.sqrMagnitude <= 0.001f)
+        {
+            dashDirection = transform.forward;
+        }
+
+        dashDirection.y = 0f;
+        dashDirection.Normalize();
+
+        PlayerRareCardAbilityController rareCards =
+            GetComponent<PlayerRareCardAbilityController>();
+
+        PlayerEpicCardAbilityController epicCards =
+            GetComponent<PlayerEpicCardAbilityController>();
+
+        PlayerLegendaryCardAbilityController legendaryCards =
+            GetComponent<PlayerLegendaryCardAbilityController>();
+
+        if (rareCards != null)
+        {
+            rareCards.OnDash();
+        }
+
+        if (epicCards != null)
+        {
+            epicCards.OnDash();
+        }
+
+        if (legendaryCards != null)
+        {
+            legendaryCards.OnDash();
+        }
+
+        DashHitbox dashHitbox = GetComponentInChildren<DashHitbox>();
+
+        if (dashHitbox != null)
+        {
+            dashHitbox.BeginDashHitbox();
+        }
     }
 
-    // ------------------dash ui stuff
+    private void UpdateDash()
+    {
+        dashTimer += Time.deltaTime;
 
-    void UpdateDashUI()
+        float telemetryMultiplier = 1f;
+
+        PlayerLegendaryCardAbilityController legendaryCards =
+            GetComponent<PlayerLegendaryCardAbilityController>();
+
+        if (legendaryCards != null)
+        {
+            telemetryMultiplier = legendaryCards.GetWeaponizedTelemetryDashMultiplier();
+        }
+
+        float dashSpeed = (dashDistance * telemetryMultiplier) / dashDuration;
+
+        characterController.Move(dashDirection * dashSpeed * Time.deltaTime);
+
+        if (dashTimer >= dashDuration)
+        {
+            EndDash();
+        }
+    }
+
+    private void EndDash()
+    {
+        isDashing = false;
+
+        DashHitbox dashHitbox = GetComponentInChildren<DashHitbox>();
+
+        if (dashHitbox != null)
+        {
+            dashHitbox.EndDashHitbox();
+        }
+    }
+
+    private void UpdateDashCooldown()
+    {
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = Mathf.Clamp(currentDashCharges, 0, maxDashCharges);
+
+        if (currentDashCharges >= maxDashCharges)
+        {
+            dashCooldownTimer = 0f;
+            return;
+        }
+
+        if (dashCooldownTimer > 0f)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+            return;
+        }
+
+        currentDashCharges = Mathf.Min(currentDashCharges + 1, maxDashCharges);
+
+        if (currentDashCharges < maxDashCharges)
+        {
+            dashCooldownTimer = Mathf.Max(dashCooldown, minimumDashCooldown);
+        }
+        else
+        {
+            dashCooldownTimer = 0f;
+        }
+    }
+
+    private void UpdateDashUI()
     {
         if (dashCooldownSlider != null)
         {
-            float fill;
-
-            if (!canDash)
+            if (currentDashCharges >= maxDashCharges)
             {
-                fill = Mathf.Clamp01((Time.time - exhaustedStartTime) / cooldownAfterChargesExhausted);
-            }
-            else if (Time.time < lastDashTime + dashCooldown)
-            {
-                fill = Mathf.Clamp01((Time.time - lastDashTime) / dashCooldown);
+                dashCooldownSlider.value = 1f;
             }
             else
             {
-                fill = 1f;
-            }
-
-            dashCooldownSlider.value = fill;
-        }
-        //text
-        if (dashChargesText != null)
-            dashChargesText.text = $"{currentDashCharges}/{maxdashcharges}";
-    }
-
-    //  ------- plr rotation
-
-    void Rotate()
-    {
-        Gamepad pad = Gamepad.current;
-        if (pad != null)
-        {
-            Vector2 stick = pad.rightStick.ReadValue();
-            if (stick.magnitude > stickDeadzone)
-            {
-                isGamepad = true;
-                RotateController(stick);
-                return;
+                float safeCooldown = Mathf.Max(dashCooldown, minimumDashCooldown);
+                dashCooldownSlider.value = 1f - Mathf.Clamp01(dashCooldownTimer / safeCooldown);
             }
         }
 
-        if (isGamepad) return;
-        RotateMOUSE();
-    }
-
-    void RotateMOUSE()
-    {
-        if (Mouse.current == null) return;
-
-        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Plane groundPlane = new Plane(Vector3.up, transform.position);
-
-        if (groundPlane.Raycast(ray, out float distance))
+        if (dashChargesSlider != null)
         {
-            Vector3 lookPoint = ray.GetPoint(distance);
-            lookPoint.y = transform.position.y;
-            Vector3 dir = lookPoint - transform.position;
-            if (dir.sqrMagnitude > 0.01f)
-                transform.rotation = Quaternion.LookRotation(dir);
+            dashChargesSlider.maxValue = maxDashCharges;
+            dashChargesSlider.value = currentDashCharges;
+        }
+
+        if (dashChargeText != null)
+        {
+            dashChargeText.text = currentDashCharges + " / " + maxDashCharges;
         }
     }
 
-    void RotateController(Vector2 stick)
+    public void ReduceCurrentDashCooldown(float amount)
     {
-        Quaternion targetRot = Quaternion.LookRotation(new Vector3(stick.x, 0f, stick.y));
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, stickRotationSpeed * Time.deltaTime);
+        dashCooldownTimer = Mathf.Max(0f, dashCooldownTimer - amount);
     }
 
-    // ugprades ---------------
+    public void SetTemporaryMoveSpeedMultiplier(float multiplier, float duration)
+    {
+        temporaryMoveSpeedMultiplier = Mathf.Max(0.1f, multiplier);
 
-    public void addMoveSpd(float spd) => moveSpeed += spd;
+        if (duration <= 0f)
+        {
+            temporaryMoveSpeedEndTime = 0f;
+            return;
+        }
 
-    public void reduceDashCD(float amt) => dashCooldown = Mathf.Max(0.1f, dashCooldown - amt);
+        temporaryMoveSpeedEndTime = Time.time + duration;
+    }
 
-    public void increaseDashDist(float amt) => dashDistance += amt;
+    private void UpdateTemporaryMoveSpeed()
+    {
+        if (temporaryMoveSpeedMultiplier == 1f)
+        {
+            return;
+        }
 
-    public void addDashCharge(float amt) => maxdashcharges += (int)amt;
+        if (temporaryMoveSpeedEndTime <= 0f)
+        {
+            temporaryMoveSpeedMultiplier = 1f;
+            return;
+        }
+
+        if (Time.time >= temporaryMoveSpeedEndTime)
+        {
+            temporaryMoveSpeedMultiplier = 1f;
+            temporaryMoveSpeedEndTime = 0f;
+        }
+    }
 
     private void ApplySavedUpgrades()
     {
-        if (UpgradeState.Instance == null) return;
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+
+        if (UpgradeState.Instance == null)
+        {
+            currentDashCharges = maxDashCharges;
+            return;
+        }
 
         moveSpeed += UpgradeState.Instance.moveSpeedBonus;
         dashDistance += UpgradeState.Instance.dashDistanceBonus;
-        dashCooldown = Mathf.Max(0.1f, dashCooldown - UpgradeState.Instance.dashCooldownReduction);
+        dashCooldown = Mathf.Max(minimumDashCooldown, dashCooldown - UpgradeState.Instance.dashCooldownReduction);
+
+        int savedDashProgress = Mathf.FloorToInt(UpgradeState.Instance.dashChargeProgress);
+
+        while (savedDashProgress >= 5 && maxDashCharges < absoluteMaxDashCharges)
+        {
+            savedDashProgress -= 5;
+            maxDashCharges++;
+        }
+
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = maxDashCharges;
+    }
+
+    public void AddMoveSpeed(float amount)
+    {
+        moveSpeed += amount;
+    }
+
+    public void IncreaseDashDistance(float amount)
+    {
+        dashDistance += amount;
+    }
+
+    public void ReduceDashCooldown(float amount)
+    {
+        dashCooldown = Mathf.Max(minimumDashCooldown, dashCooldown - amount);
+    }
+
+    public void AddDashChargeProgress(int amount)
+    {
+        dashChargeProgress += amount;
+
+        while (dashChargeProgress >= 5 && maxDashCharges < absoluteMaxDashCharges)
+        {
+            dashChargeProgress -= 5;
+            maxDashCharges++;
+            currentDashCharges++;
+        }
+
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = Mathf.Clamp(currentDashCharges, 0, maxDashCharges);
+    }
+
+    public void ResetRunMovementState()
+    {
+        isDashing = false;
+        dashTimer = 0f;
+        dashCooldownTimer = 0f;
+
+        maxDashCharges = Mathf.Clamp(maxDashCharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = maxDashCharges;
+
+        temporaryMoveSpeedMultiplier = 1f;
+        temporaryMoveSpeedEndTime = 0f;
+
+        moveDirection = Vector3.zero;
+        dashDirection = Vector3.zero;
+
+        UpdateDashUI();
+
+        Debug.Log("[TopDownController] Run movement state reset.");
     }
 }
