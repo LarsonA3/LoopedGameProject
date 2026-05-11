@@ -78,7 +78,7 @@ public class EnemyPatrol : MonoBehaviour
 
     void Search()
     {
-        if (!enemyNav.pathPending && enemyNav.remainingDistance < 1.6f) //if statement
+        if (!enemyNav.pathPending && enemyNav.remainingDistance < 1.6f) //for smooth transitions between nodes
         {
             enemyNav.destination = points[node].position;
             node = (node + rand.Next(0, 24)) % points.Length;

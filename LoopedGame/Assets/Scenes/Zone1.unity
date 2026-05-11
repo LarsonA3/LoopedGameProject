@@ -277,6 +277,10 @@ PrefabInstance:
       propertyPath: scoreBox
       value: 
       objectReference: {fileID: 1193607306}
+    - target: {fileID: 5662218482661770076, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5909256905203891160, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Enabled
       value: 1

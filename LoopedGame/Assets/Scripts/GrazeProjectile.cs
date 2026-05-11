@@ -14,6 +14,17 @@ public class GrazeProjectile : MonoBehaviour
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            newHP = PlayerHP.currentHealth;
+            if (oldHP > newHP)
+                other.SendMessage("IncreaseScore", -(grazePoints/4), SendMessageOptions.DontRequireReceiver);
+        }
+
+    }
+
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Player")) { 
@@ -21,11 +32,7 @@ public class GrazeProjectile : MonoBehaviour
             if (oldHP == newHP)
             {
                 other.SendMessage("IncreaseScore", grazePoints, SendMessageOptions.DontRequireReceiver);        
-            } else if (oldHP > newHP)
-            {
-                other.SendMessage("IncreaseScore", -(grazePoints/4), SendMessageOptions.DontRequireReceiver);
             }
-
         }
     }
 }
