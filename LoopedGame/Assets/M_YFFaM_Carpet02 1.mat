@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7721327463392152475
+--- !u!114 &-231983065890972201
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_YFAM_WoodFlooring
+  m_Name: M_YFFaM_Carpet02 1
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -41,11 +41,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 4996d856ce008be408bf766624d45070, type: 3}
-        m_Scale: {x: 3.02, y: 9.48}
+        m_Texture: {fileID: 2800000, guid: ce1fc232fd6a50f42ba76c9d283404ae, type: 3}
+        m_Scale: {x: 14.2, y: 29.67}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 5090aea5c5c87d940831c7662c62cb62, type: 3}
+        m_Texture: {fileID: 2800000, guid: 97cfb38938f234847903e747c9068c95, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -65,11 +65,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4996d856ce008be408bf766624d45070, type: 3}
-        m_Scale: {x: 3.02, y: 9.48}
+        m_Texture: {fileID: 2800000, guid: ce1fc232fd6a50f42ba76c9d283404ae, type: 3}
+        m_Scale: {x: 14.2, y: 29.67}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: f9bf971f3d9844341b4a7a8edcc654bb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9b3c399e76f0cea4f95f8855f005b318, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -77,11 +77,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: 1f80a16c2ebdfc149aee0be80baf16bc, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 2800000, guid: f9bf971f3d9844341b4a7a8edcc654bb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9b3c399e76f0cea4f95f8855f005b318, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -114,12 +114,12 @@ Material:
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
-    - _Glossiness: 0.171
+    - _Glossiness: 1
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Parallax: 0.01
+    - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
