@@ -3195,7 +3195,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8465343436328852732
 Transform:
   m_ObjectHideFlags: 0
@@ -3228,11 +3228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33d03581a92c99543bd7e45d03a73fc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomHandler
-  enemyContainer: {fileID: 0}
-  player: {fileID: 0}
-  roomDoor: {fileID: 0}
-  roomDoorCollider: {fileID: 0}
-  cardPicker: {fileID: 0}
 --- !u!114 &876300575221465022
 MonoBehaviour:
   m_ObjectHideFlags: 0

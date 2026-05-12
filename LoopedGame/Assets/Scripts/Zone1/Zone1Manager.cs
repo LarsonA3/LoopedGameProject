@@ -209,6 +209,93 @@ public class Zone1Manager : MonoBehaviour
         }
     }
 
+    public void ResetAfterPlayerDeath()
+    {
+        Debug.Log("[Zone1Manager] Player death reset started.");
+
+        Time.timeScale = 1f;
+
+        zone = 1;
+        currentRoom = 1;
+        intensity = 1;
+
+        // Clear score/run-only state if desired
+        HScore hScore = null;
+
+        if (player != null)
+        {
+            hScore = player.GetComponentInChildren<HScore>();
+        }
+
+        if (hScore != null)
+        {
+            hScore.FinalScore();
+            hScore.ResetScore();
+        }
+
+        // Load first room
+        roomToSwitchTo = room1;
+
+        if (roomToSwitchTo != null)
+        {
+            SwitchToRoom(roomToSwitchTo);
+            MovePlayerToRoomStart();
+        }
+        else
+        {
+            Debug.LogWarning("[Zone1Manager] Room1 is not assigned.");
+        }
+
+        // Reset player health/movement/weapon
+        if (player != null)
+        {
+            PlayerHP hp = player.GetComponent<PlayerHP>();
+
+            if (hp != null)
+            {
+                hp.ReviveAt(Vector3.zero, 100f);
+            }
+
+            TopDownController controller = player.GetComponent<TopDownController>();
+
+            if (controller != null)
+            {
+                controller.ResetRunMovementState();
+            }
+
+            Weapon weapon = player.GetComponentInChildren<Weapon>();
+
+            if (weapon != null)
+            {
+                weapon.ResetRunWeaponState();
+            }
+
+            PlayerRareCardAbilityController rareCards = player.GetComponent<PlayerRareCardAbilityController>();
+
+            if (rareCards != null)
+            {
+                rareCards.ResetRunState();
+            }
+
+            PlayerEpicCardAbilityController epicCards = player.GetComponent<PlayerEpicCardAbilityController>();
+
+            if (epicCards != null)
+            {
+                epicCards.ResetRunState();
+            }
+
+            PlayerLegendaryCardAbilityController legendaryCards = player.GetComponent<PlayerLegendaryCardAbilityController>();
+
+            if (legendaryCards != null)
+            {
+                legendaryCards.ResetRunLegendaryFlags();
+            }
+        }
+
+        Debug.Log("[Zone1Manager] Player death reset complete.");
+    }
+
+
     private void SwitchToRoom(GameObject newRoomPrefab)
     {
         if (rooms == null)

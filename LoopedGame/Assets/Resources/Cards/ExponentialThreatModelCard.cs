@@ -1,16 +1,14 @@
 using UnityEngine;
 
-public class ExponentialThreatModelCard : MonoBehaviour
+[CreateAssetMenu(fileName = "Exponential Threat Model", menuName = "Cards/Legendary/Exponential Threat Model")]
+public class ExponentialThreatModelCard : AbilityCardEffect
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    protected override AbilityUpgradeType AbilityType => AbilityUpgradeType.ExponentialThreatModel;
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        cardName = "Exponential Threat Model";
+        description =
+            "Every enemy killed in a room increases your damage for the rest of that room.";
     }
 }

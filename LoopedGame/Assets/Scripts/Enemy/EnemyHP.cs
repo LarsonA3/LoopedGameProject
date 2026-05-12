@@ -74,7 +74,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         Debug.Log("[EnemyHP] " + gameObject.name + " died.");
 
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     private void NotifyCardControllers()
