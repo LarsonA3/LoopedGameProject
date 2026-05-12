@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &373489914 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8372859852280681164, guid: ed017e34a57fdbd47a22e2a9ea25b851, type: 3}
+  m_PrefabInstance: {fileID: 4684946161344969264}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &574820800
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,6 +529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HScore
   scoreBox: {fileID: 0}
+  nameBox: {fileID: 373489914}
 --- !u!4 &1849219018
 Transform:
   m_ObjectHideFlags: 0
@@ -950,10 +962,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[[ ControlsMenuCanvas ]]'
       objectReference: {fileID: 0}
-    - target: {fileID: 4205741522669525818, guid: ed017e34a57fdbd47a22e2a9ea25b851, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6802936817508493371, guid: ed017e34a57fdbd47a22e2a9ea25b851, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -962,6 +970,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8090496421424823703, guid: ed017e34a57fdbd47a22e2a9ea25b851, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1849219017}
     - target: {fileID: 8615984958132348230, guid: ed017e34a57fdbd47a22e2a9ea25b851, type: 3}
       propertyPath: mainMenu
       value: 

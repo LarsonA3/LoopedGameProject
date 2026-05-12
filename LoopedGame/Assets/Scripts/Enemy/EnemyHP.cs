@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class EnemyHP : MonoBehaviour
 {
     public float health;
+    public GameObject healthPickup;
     private float startingHealth;
     public bool isFinal = false;
 
@@ -15,6 +16,7 @@ public class EnemyHP : MonoBehaviour
     {
         if (health <= 0)
         {
+            GameObject healthDropInst = Instantiate(healthPickup, position:gameObject.transform.position, rotation:gameObject.transform.rotation);
             Destroy(gameObject);
             HScore.pScore += (int) startingHealth*5;
             

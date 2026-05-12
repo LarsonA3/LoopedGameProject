@@ -16,6 +16,7 @@ public class RoomHandler : MonoBehaviour
 
     private GameObject player;
     private GameObject nodeHost;
+    private GameObject healthItem; //added for health restoration
 
     private bool isBoss = false;
 
@@ -39,6 +40,15 @@ public class RoomHandler : MonoBehaviour
         else
             print("Could not find ([[ Enemies ]]) in root of scene pls place it there or dont delete it");
 
+        //get health pickup
+        foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (root.name == "HealthDrop")
+            {
+                healthItem = root;
+                break;
+            }
+        }
 
         // get player
         foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
@@ -217,6 +227,13 @@ public class RoomHandler : MonoBehaviour
         {
             patrol.nodeHost = nodeHost;
             patrol.target = player;
+        }
+
+        //adds health pickup prefab to load on enemy death
+        EnemyHP enemyHP = enemy.GetComponent<EnemyHP>();
+        if (enemyHP != null)
+        {
+            enemyHP.healthPickup = healthItem;
         }
 
         //removed target system from EnemyShooter (unused for the forseeable future)

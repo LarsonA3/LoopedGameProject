@@ -13,6 +13,7 @@ public class Weapon : MonoBehaviour
     // how long full swing takes in seconds
     public float swingDuration = 0.25f;
     // curve controlling swing speed - flat = constant, ease-in/out = slow at edges
+    public float damageAmount = 2f; //made public for use in the custom shader
     public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public Transform blockPos;
@@ -26,7 +27,6 @@ public class Weapon : MonoBehaviour
     private bool isBlocking;
     private PlayerInput plrInput;
     private InputAction atkAction;
-    private float damageAmount = 2f;
 
     public Slider blockMeterSlider;
     public Slider attackReadySlider;
