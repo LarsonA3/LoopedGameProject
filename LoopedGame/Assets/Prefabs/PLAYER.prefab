@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1433235074814912242}
   - component: {fileID: 8088367458008004339}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerFollowCamera
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 7113655399467363348}
   - component: {fileID: 526688614056721737}
   - component: {fileID: 2356673161554573263}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Lightsaber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7410195966148075548}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BlockPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2542520660723433126}
   - component: {fileID: 373906955532631723}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PLAYER
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4721086600887236140}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 3806476853475133592}
   - component: {fileID: 3869335467882401622}
   - component: {fileID: 5844103609698491126}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -543,7 +543,7 @@ GameObject:
   - component: {fileID: 9065907507792936354}
   - component: {fileID: 3684497868326109283}
   - component: {fileID: 4646610636314841089}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,7 +629,7 @@ GameObject:
   - component: {fileID: 8232471037990848419}
   - component: {fileID: 1291987078713958807}
   - component: {fileID: 3419622677711562023}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: UI_EventSystem
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -775,7 +775,7 @@ GameObject:
   - component: {fileID: 6315702984473063699}
   - component: {fileID: 93973001980384536}
   - component: {fileID: 8163593004708770566}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -865,7 +865,8 @@ GameObject:
   - component: {fileID: 5249824195266178255}
   - component: {fileID: 48246145405806601}
   - component: {fileID: 9133931739623780848}
-  m_Layer: 6
+  - component: {fileID: 8336158297715985275}
+  m_Layer: 10
   m_Name: Weapon
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -967,10 +968,10 @@ MonoBehaviour:
     m_RotationOrder: 4
   blockBrokenMoveMultiplier: 0.15
   blockMeterDrainPerDamage: 0.08
-  parryHitboxCollider: {fileID: 0}
+  parryHitboxCollider: {fileID: 8555596551800221837}
   parryWindow: 0.15
-  parryMissStunDuration: 2.5
-  parryProjectilePrefab: {fileID: 0}
+  parryMissStunDuration: 1
+  parryProjectilePrefab: {fileID: 125204135747205892, guid: 6ac55e7cc1c9aeb459858fb9ce91109d, type: 3}
   parryReflectSpeedMultiplier: 1.4
   parryMissBlockMeterCost: 1.5
 --- !u!65 &9133931739623780848
@@ -994,6 +995,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.657418, z: 3.212521}
   m_Center: {x: 0, y: 1.4117712, z: 1.9707291}
+--- !u!54 &8336158297715985275
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667057381382471931}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9168806091702625043
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,6 +1037,11 @@ GameObject:
   - component: {fileID: 5909256905203891160}
   - component: {fileID: 4468316465710850875}
   - component: {fileID: 5662218482661770076}
+  - component: {fileID: 1148876286132650868}
+  - component: {fileID: 6995792346800491877}
+  - component: {fileID: 8900498414262289665}
+  - component: {fileID: 930281890772346221}
+  - component: {fileID: 2308444394012964383}
   m_Layer: 6
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -1223,12 +1256,106 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9168806091702625043}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02f495a7bf776f749b1364117f5e5217, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HScore
   scoreBox: {fileID: 0}
+  nameBox: {fileID: 0}
+--- !u!114 &1148876286132650868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11becafed6ab7246b65e5063548197a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
+  maxHealth: 100
+  baseInvincibilityTime: 0.3
+  projectileLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  heavyHitThreshold: 5
+  blockMeterDrainPerDamage: 0.2
+--- !u!54 &6995792346800491877
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &8900498414262289665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ee2f5caf594f04eb6e590277d9b7e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseScript
+  pauseScreen: {fileID: 0}
+  hScoreObj: {fileID: 0}
+--- !u!114 &930281890772346221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c84728c746baa46a7dcf5386ee32c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHeal
+--- !u!135 &2308444394012964383
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.4860578
+  m_Center: {x: 0, y: 0.98605776, z: 0}
 --- !u!1001 &472289232873078433
 PrefabInstance:
   m_ObjectHideFlags: 0

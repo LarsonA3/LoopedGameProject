@@ -22,7 +22,7 @@ public class Weapon : MonoBehaviour
     public float heavyKnockbackForce = 12f;
 
     [Header("Damage")]
-    [SerializeField] private float damageAmount = 2f;
+    public float damageAmount = 2f;
     [SerializeField] private float heavyDamageAmount = 4f;
 
     [Header("Block")]

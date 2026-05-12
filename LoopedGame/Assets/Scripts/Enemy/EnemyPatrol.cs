@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Rendering;
 using State = EnemyFsm;
 
 public enum EnemyFsm

@@ -1,10 +1,15 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyHP : MonoBehaviour, IDamageable
 {
     [Header("Health")]
     public float maxHealth = 10f;
     [SerializeField] private float currentHealth;
+
+    public GameObject healthPickup;
+    private float startingHealth;
+    public bool isFinal = false;
 
     [Header("Enemy Type")]
     public bool isBoss;
@@ -18,6 +23,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
     private void Awake()
     {
+        startingHealth = maxHealth;
         currentHealth = maxHealth;
         isDead = false;
     }
@@ -73,6 +79,19 @@ public class EnemyHP : MonoBehaviour, IDamageable
         NotifyCardControllers();
 
         Debug.Log("[EnemyHP] " + gameObject.name + " died.");
+
+        if (healthPickup != null)
+        {
+            Instantiate(healthPickup, transform.position, transform.rotation);
+        }
+
+        HScore.pScore += (int)startingHealth * 5;
+
+        if (isFinal)
+        {
+            SceneManager.LoadScene("WinGame");
+            return;
+        }
 
         Destroy(gameObject);
     }
@@ -195,6 +214,4 @@ public class EnemyHP : MonoBehaviour, IDamageable
             patrol.SlowFor(slowPercent, duration);
         }
     }
-
 }
-
