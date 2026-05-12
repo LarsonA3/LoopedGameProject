@@ -11,6 +11,8 @@ public class TopDownController : MonoBehaviour
     public float gravity = -20f;
     public float stickRotationSpeed = 10f;
     public float stickDeadzone = 0.2f;
+    private float baseMoveSpeed;
+    private Coroutine temporaryMoveSpeedRoutine;
 
     [SerializeField] private float dashDistance = 2f;
     [SerializeField] private float dashCooldown = 1f;
@@ -19,6 +21,7 @@ public class TopDownController : MonoBehaviour
     private Camera cam;
     private float verticalVelocity;
     private Vector2 moveInput;
+    public float LastDashTime => lastDashTime;
     private float lastDashTime = -99f;
 
     private bool isGamepad;
@@ -41,6 +44,7 @@ public class TopDownController : MonoBehaviour
         playerCollider = GetComponent<Collider>();
         currentDashCharges = maxdashcharges;
         ApplySavedUpgrades();
+        baseMoveSpeed = moveSpeed;
         UpdateDashUI();
     }
 
@@ -76,13 +80,17 @@ public class TopDownController : MonoBehaviour
 
     public int maxdashcharges = 1;
     private bool canDash = true;
+    private bool isDashing;
     private int currentDashCharges;
     public float cooldownAfterChargesExhausted = 3f;
+    public int absoluteMaxDashCharges = 5; // hard cap prevents any UI overflow
+    public int dashChargeProgress;
 
     void Trytodash()
     {
         if (!canDash) return;
         if (Time.time < lastDashTime + dashCooldown) return;
+        isDashing = true;
 
         Vector3 dashDir = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
         if (dashDir == Vector3.zero) dashDir = transform.forward;
@@ -95,6 +103,7 @@ public class TopDownController : MonoBehaviour
         cc.enabled = true;
 
         lastDashTime = Time.time;
+        isDashing = false;
 
         currentDashCharges -= 1;
         if (currentDashCharges <= 0)
@@ -102,6 +111,7 @@ public class TopDownController : MonoBehaviour
             currentDashCharges = 0;
             exhaustedStartTime = Time.time;
             canDash = false;
+            isDashing = false;
             print("all dash charges exhausted");
             StartCoroutine(waitForDash());
         }
@@ -217,13 +227,68 @@ public class TopDownController : MonoBehaviour
 
     // ugprades ---------------
 
-    public void addMoveSpd(float spd) => moveSpeed += spd;
+    public void addMoveSpd(float amount) => moveSpeed += amount;
 
-    public void reduceDashCD(float amt) => dashCooldown = Mathf.Max(0.1f, dashCooldown - amt);
+    public void reduceDashCD(float amount) => dashCooldown = Mathf.Max(0.1f, dashCooldown - amount);
 
-    public void increaseDashDist(float amt) => dashDistance += amt;
+    public void increaseDashDist(float amount) => dashDistance += amount;
 
-    public void addDashCharge(float amt) => maxdashcharges += (int)amt;
+    public void addDashCharge(float amount)
+    {
+        maxdashcharges = Mathf.Clamp(maxdashcharges + (int)amount, 1, absoluteMaxDashCharges);
+        currentDashCharges = Mathf.Clamp(currentDashCharges + (int)amount, 0, maxdashcharges);
+        UpdateDashUI();
+    }
+
+    public void ReduceDashCooldown(float amount)
+    {
+        reduceDashCD(amount);
+    }
+
+    public void IncreaseDashDistance(float amount)
+    {
+        increaseDashDist(amount);
+    }
+
+    public void AddMoveSpeed(float amount)
+    {
+        addMoveSpd(amount);
+    }
+
+    public bool IsDashing => isDashing;
+
+    public void AddDashChargeProgress(int amount)
+    {
+        dashChargeProgress += amount;
+        
+        while (dashChargeProgress >= 5 && maxdashcharges < absoluteMaxDashCharges) 
+        {
+            dashChargeProgress -= 5;
+            maxdashcharges++;
+            currentDashCharges++;
+        }
+
+        maxdashcharges = Mathf.Clamp(maxdashcharges, 1, absoluteMaxDashCharges);
+        currentDashCharges = Mathf.Clamp(currentDashCharges, 0, maxdashcharges);
+    }
+
+    public void SetTemporaryMoveSpeedMultiplier(float multiplier, float duration)
+    {
+        if (temporaryMoveSpeedRoutine != null)
+        {
+            StopCoroutine(temporaryMoveSpeedRoutine);
+        }
+
+        temporaryMoveSpeedRoutine = StartCoroutine(TemporaryMoveSpeedRoutine(multiplier, duration));
+    }
+
+    private IEnumerator TemporaryMoveSpeedRoutine(float multiplier, float duration)
+    {
+        moveSpeed *= baseMoveSpeed * Mathf.Max(0.1f, multiplier);
+        yield return new WaitForSeconds(duration);
+        moveSpeed = baseMoveSpeed;
+        temporaryMoveSpeedRoutine = null;
+    }
 
     private void ApplySavedUpgrades()
     {
@@ -232,5 +297,31 @@ public class TopDownController : MonoBehaviour
         moveSpeed += UpgradeState.Instance.moveSpeedBonus;
         dashDistance += UpgradeState.Instance.dashDistanceBonus;
         dashCooldown = Mathf.Max(0.1f, dashCooldown - UpgradeState.Instance.dashCooldownReduction);
+    }
+
+    public void ResetRunMovementState()
+    {
+        verticalVelocity = 0;
+        moveInput = Vector2.zero;
+
+        lastDashTime = -99f;
+        currentDashCharges = maxdashcharges;
+        canDash = true;
+        exhaustedStartTime = 0f;
+
+        isGamepad = false;
+        if (temporaryMoveSpeedRoutine != null)
+        {
+            StopCoroutine(temporaryMoveSpeedRoutine);
+            temporaryMoveSpeedRoutine = null;
+        }
+
+        if (baseMoveSpeed > 0f)
+        {
+            moveSpeed = baseMoveSpeed;
+        }
+
+        UpdateDashUI();
+        Debug.Log("[TopDownController] Run movement state reset.");
     }
 }
