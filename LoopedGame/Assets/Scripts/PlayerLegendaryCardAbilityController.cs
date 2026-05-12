@@ -15,6 +15,7 @@ public class PlayerLegendaryCardAbilityController : MonoBehaviour
 {
     private PlayerHP playerHP;
     private Weapon weapon;
+    public CardRarity cardRarity;
     private TopDownController controller;
 
     // Emergency Repairs

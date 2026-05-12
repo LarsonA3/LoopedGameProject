@@ -8,6 +8,7 @@ public class SyntheticSurvivalInstinctCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Synthetic Survival Instinct";
+        cardRarity = CardRarity.Legendary;
         description =
             "When you would take lethal damage, automatically consume block meter to reduce the damage.";
     }

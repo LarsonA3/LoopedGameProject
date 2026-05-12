@@ -8,6 +8,7 @@ public class ParryCapacitorCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Parry Capacitor";
+        cardRarity = CardRarity.Epic;
         description =
             "Successful parries restore block meter.";
     }

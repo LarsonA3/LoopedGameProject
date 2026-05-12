@@ -59,7 +59,7 @@ public class UpgradeManager : MonoBehaviour
 
             currentRoll.Add(selected);
 
-            CardRarity rarity = RollRarity();
+            CardRarity rarity = selected.cardRarity;
             rarityRoll.Add(rarity);
 
             if (i < cardTextSlots.Length && cardTextSlots[i] != null)

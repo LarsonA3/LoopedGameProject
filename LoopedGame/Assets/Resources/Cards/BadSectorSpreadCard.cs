@@ -8,6 +8,7 @@ public class BadSectorSpreadCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Bad Sector Spread";
+        cardRarity = CardRarity.Epic;
         description =
             "When an enemy dies, nearby enemies take damage based on the dead enemy's maximum HP. This effect cannot replicate itself.";
     }

@@ -8,6 +8,7 @@ public class UnstableMotorTimingCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Unstable Motor Timing";
+        cardRarity = CardRarity.Rare;
         description = "Light attacks have a chance to instantly make the next light attack faster.";
     }
 }

@@ -8,6 +8,7 @@ public class FailurePointPrioritizerCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Failure Point Prioritizer";
+        cardRarity = CardRarity.Rare;
         description = "Weapon attacks have a chance to stun non-boss enemies.";
     }
 }

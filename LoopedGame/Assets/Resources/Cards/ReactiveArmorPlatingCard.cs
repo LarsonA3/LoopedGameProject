@@ -8,6 +8,7 @@ public class ReactiveArmorPlatingCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Reactive Armor Plating";
+        cardRarity = CardRarity.Rare;
         description = "After taking damage, the next hit you take is reduced.";
     }
 }

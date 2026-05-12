@@ -8,6 +8,7 @@ public class ProjectileReformattingCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Projectile Reformatting";
+        cardRarity = CardRarity.Epic;
         description =
             "Parried projectiles target the nearest enemy instead of only reflecting straight forward.";
     }

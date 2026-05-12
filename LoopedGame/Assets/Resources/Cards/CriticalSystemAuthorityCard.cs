@@ -8,6 +8,7 @@ public class CriticalSystemAuthorityCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Critical System Authority";
+        cardRarity = CardRarity.Legendary;
         description =
             "While below 25% HP, all damage you deal is increased and all damage you take is reduced.";
     }

@@ -8,6 +8,7 @@ public class RetaliationSubroutineCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Retaliation Subroutine";
+        cardRarity = CardRarity.Rare;
         description = "After taking damage, your next weapon attack within 3 seconds deals bonus damage.";
     }
 }

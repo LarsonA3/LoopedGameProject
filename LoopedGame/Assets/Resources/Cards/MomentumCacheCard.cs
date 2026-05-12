@@ -8,6 +8,7 @@ public class MomentumCacheCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Momentum Cache";
+        cardRarity = CardRarity.Rare;
         description = "If you attack within 1 second after dashing, that attack deals bonus damage.";
     }
 }

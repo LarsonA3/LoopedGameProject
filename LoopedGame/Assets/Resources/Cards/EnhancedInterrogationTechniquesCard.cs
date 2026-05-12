@@ -8,6 +8,7 @@ public class EnhancedInterrogationTechniquesCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Enhanced Interrogation Techniques";
+        cardRarity = CardRarity.Epic;
         description =
             "Weapon hits apply a damage-over-time effect that stacks up to 5 times.";
     }

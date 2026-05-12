@@ -8,6 +8,7 @@ public class CollisionOverrideCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Collision Override";
+        cardRarity = CardRarity.Rare;
         description = "Dashing into an enemy deals damage and lightly knocks them back.";
     }
 }

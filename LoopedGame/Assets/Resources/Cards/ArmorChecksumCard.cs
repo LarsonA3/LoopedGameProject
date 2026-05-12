@@ -8,6 +8,7 @@ public class ArmorChecksumCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Armor Checksum";
+        cardRarity = CardRarity.Rare;
         description = "If you have not taken damage for 10 seconds, your next hit taken is reduced.";
     }
 }

@@ -8,6 +8,7 @@ public class ImpactMemoryCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Impact Memory";
+        cardRarity = CardRarity.Epic;
         description =
             "Each blocked hit increases your next heavy attack damage.";
     }

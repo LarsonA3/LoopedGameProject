@@ -8,6 +8,7 @@ public class DashShockwaveCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Dash Shockwave";
+        cardRarity = CardRarity.Epic;
         description =
             "Dashing releases a small shockwave that damages nearby enemies.";
     }

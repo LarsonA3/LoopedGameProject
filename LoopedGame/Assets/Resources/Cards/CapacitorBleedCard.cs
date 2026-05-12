@@ -8,6 +8,7 @@ public class CapacitorBleedCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Capacitor Bleed";
+        cardRarity = CardRarity.Epic;
         description =
             "When you take damage, release an electrical pulse that damages nearby enemies.";
     }

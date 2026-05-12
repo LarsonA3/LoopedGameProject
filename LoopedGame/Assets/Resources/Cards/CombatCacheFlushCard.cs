@@ -9,6 +9,7 @@ public class CombatCacheFlushCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Combat Cache Flush";
+        cardRarity = CardRarity.Rare;
         description = "Clearing a room restores HP.";
     }
 }

@@ -8,6 +8,7 @@ public class KineticBrakeCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Kinetic Brake";
+        cardRarity = CardRarity.Rare;
         description = "While blocking, nearby enemies are slowed.";
     }
 }

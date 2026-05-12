@@ -8,6 +8,7 @@ public class ImpactMemoryBufferCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Impact Memory Buffer";
+        cardRarity = CardRarity.Rare;
         description = "Taking damage stores part of that damage as bonus damage for your next weapon attack.";
     }
 }

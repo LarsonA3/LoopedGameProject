@@ -8,6 +8,7 @@ public class RedlineGovernorCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Redline Governor";
+        cardRarity = CardRarity.Epic;
         description =
             "While below 25% HP, weapon damage increases.";
     }

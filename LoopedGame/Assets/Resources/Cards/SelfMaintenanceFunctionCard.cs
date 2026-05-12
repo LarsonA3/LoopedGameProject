@@ -8,6 +8,7 @@ public class SelfMaintenanceFunctionCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Self-Maintenance Function";
+        cardRarity = CardRarity.Epic;
         description =
             "When your HP drops below half its maximum, regenerate 1 HP per second until your HP reaches half its maximum.";
     }

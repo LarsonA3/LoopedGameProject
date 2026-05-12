@@ -8,6 +8,7 @@ public class ParryRebootShortcutCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Parry Reboot Shortcut";
+        cardRarity = CardRarity.Epic;
         description =
             "A successful parry instantly clears block cooldown and restores block meter.";
     }

@@ -8,6 +8,7 @@ public class EmergencyRepairsCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Emergency Repairs";
+        cardRarity = CardRarity.Legendary;
         description =
             "When your HP drops to 0, survive instead and recover to 10 HP. This can occur only once per run.";
     }

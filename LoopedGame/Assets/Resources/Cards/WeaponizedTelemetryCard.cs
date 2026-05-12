@@ -8,6 +8,7 @@ public class WeaponizedTelemetryCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Weaponized Telemetry";
+        cardRarity = CardRarity.Legendary;
         description =
             "The game tracks your most-used combat action in a room. On room clear, that action gets empowered for the next room.";
     }

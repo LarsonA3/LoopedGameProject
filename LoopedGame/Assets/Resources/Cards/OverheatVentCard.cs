@@ -8,6 +8,7 @@ public class OverheatVentCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Overheat Vent";
+        cardRarity = CardRarity.Rare;
         description = "Every 5 weapon hits releases a heat burst around you.";
     }
 }

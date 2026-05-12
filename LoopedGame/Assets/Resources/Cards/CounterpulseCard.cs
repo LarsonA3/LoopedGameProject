@@ -8,6 +8,7 @@ public class CounterpulseCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Counterpulse";
+        cardRarity = CardRarity.Epic;
         description =
             "Successful parries emit a damaging pulse around you.";
     }

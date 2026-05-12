@@ -8,6 +8,7 @@ public class ShieldedDiagnosticsCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Shielded Diagnostics";
+        cardRarity = CardRarity.Rare;
         description = "While blocking, slowly repair yourself if you have not taken damage recently.";
     }
 }

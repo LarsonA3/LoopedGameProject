@@ -8,6 +8,7 @@ public class ContactDebuggerCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Contact Debugger";
+        cardRarity = CardRarity.Rare;
         description = "Light attacks mark enemies. Heavy attacks against marked enemies deal bonus damage.";
     }
 }

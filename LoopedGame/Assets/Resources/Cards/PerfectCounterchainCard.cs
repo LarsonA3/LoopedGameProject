@@ -8,6 +8,7 @@ public class PerfectCounterchainCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Perfect Counterchain";
+        cardRarity = CardRarity.Legendary;
         description =
             "A successful parry empowers your next weapon attack within 2 seconds, causing bonus damage and a damage pulse around the target.";
     }

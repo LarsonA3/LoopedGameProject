@@ -8,6 +8,7 @@ public class EvasiveRecalculationCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Evasive Recalculation";
+        cardRarity = CardRarity.Rare;
         description = "After dashing, gain temporary damage reduction.";
     }
 }

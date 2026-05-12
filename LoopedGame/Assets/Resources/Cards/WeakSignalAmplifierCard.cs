@@ -8,6 +8,7 @@ public class WeakSignalAmplifierCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Weak Signal Amplifier";
+        cardRarity = CardRarity.Rare;
         description = "Enemies below 25% HP take increased weapon damage.";
     }
 }

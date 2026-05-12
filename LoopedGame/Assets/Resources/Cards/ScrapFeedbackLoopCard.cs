@@ -8,6 +8,7 @@ public class ScrapFeedbackLoopCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Scrap Feedback Loop";
+        cardRarity = CardRarity.Epic;
         description =
             "Killing an enemy heals you.";
     }

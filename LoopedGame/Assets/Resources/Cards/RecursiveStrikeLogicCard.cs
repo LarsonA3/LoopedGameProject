@@ -8,6 +8,7 @@ public class RecursiveStrikeLogicCard : AbilityCardEffect
     private void OnEnable()
     {
         cardName = "Recursive Strike Logic";
+        cardRarity = CardRarity.Rare;
         description = "Hitting the same enemy 3 times in a row makes the third hit deal bonus damage.";
     }
 }

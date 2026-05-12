@@ -89,6 +89,8 @@ public abstract class CardEffect : ScriptableObject
 {
     public string cardName;
 
+    public CardRarity cardRarity;
+
     [TextArea]
     public string description;
 
