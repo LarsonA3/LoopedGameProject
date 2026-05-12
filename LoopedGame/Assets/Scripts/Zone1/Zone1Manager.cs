@@ -7,6 +7,7 @@ public class Zone1Manager : MonoBehaviour
     private int currentRoom;
     private int intensity = 1;
     private int zone = 1;
+    public GameObject enemies;
 
     [Header("Scene References")]
     public GameObject rooms; // The "folder" under which all rooms are instantiated.
@@ -199,6 +200,7 @@ public class Zone1Manager : MonoBehaviour
             hScore.ResetScore();
         }
 
+
         zone = 1;
         currentRoom = 1;
         intensity = 1;
@@ -221,6 +223,9 @@ public class Zone1Manager : MonoBehaviour
         zone = 1;
         currentRoom = 1;
         intensity = 1;
+
+        for (int i = enemies.transform.childCount - 1; i >= 0; i--)
+            Destroy(enemies.transform.GetChild(i).gameObject);
 
         // Clear score/run-only state if desired
         HScore hScore = null;

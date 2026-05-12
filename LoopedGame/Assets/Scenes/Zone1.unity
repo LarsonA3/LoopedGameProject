@@ -1289,6 +1289,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1406078395}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      propertyPath: enemies
+      value: 
+      objectReference: {fileID: 594634524}
+    - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: finalroom
       value: 
       objectReference: {fileID: 8539406245710646305, guid: 6015dc4bcbf4319429f9e0f15e1a576f, type: 3}
