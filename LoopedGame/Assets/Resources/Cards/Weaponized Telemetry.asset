@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Weaponized Telemetry
   m_EditorClassIdentifier: Assembly-CSharp::WeaponizedTelemetryCard
   cardName: Weaponized Telemetry
+  cardRarity: 3
   description: The game tracks your most-used combat action in a room. On room clear,
     that action gets empowered for the next room.

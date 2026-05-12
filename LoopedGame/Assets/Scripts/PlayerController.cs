@@ -67,7 +67,7 @@ public class TopDownController : MonoBehaviour
     void Move()
     {
         float speedMultiplier = weapon != null ? weapon.MoveSpeedMultiplier : 1f;
-        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y).normalized * moveSpeed * speedMultiplier;
+        Vector3 move = new Vector3(moveInput.x, 0f, moveInput.y).normalized * moveSpeed * speedMultiplier * temporaryMoveSpeedMultiplier;
 
         if (cc.isGrounded) verticalVelocity = -2f;
         else verticalVelocity += gravity * Time.deltaTime;
@@ -85,6 +85,8 @@ public class TopDownController : MonoBehaviour
     public float cooldownAfterChargesExhausted = 3f;
     public int absoluteMaxDashCharges = 5; // hard cap prevents any UI overflow
     public int dashChargeProgress;
+    private float temporaryMoveSpeedMultiplier = 1f;
+    private float temporaryMoveSpeedEndTime;
 
     void Trytodash()
     {
@@ -274,20 +276,27 @@ public class TopDownController : MonoBehaviour
 
     public void SetTemporaryMoveSpeedMultiplier(float multiplier, float duration)
     {
-        if (temporaryMoveSpeedRoutine != null)
-        {
-            StopCoroutine(temporaryMoveSpeedRoutine);
-        }
-
-        temporaryMoveSpeedRoutine = StartCoroutine(TemporaryMoveSpeedRoutine(multiplier, duration));
+            temporaryMoveSpeedMultiplier = Mathf.Clamp(multiplier, 0.1f, 2.5f);
+            temporaryMoveSpeedEndTime = Time.time + duration;
     }
 
-    private IEnumerator TemporaryMoveSpeedRoutine(float multiplier, float duration)
+        public void UpdateTemporaryMoveSpeedMultiplier(float multiplier, float duration)
     {
-        moveSpeed *= baseMoveSpeed * Mathf.Max(0.1f, multiplier);
-        yield return new WaitForSeconds(duration);
-        moveSpeed = baseMoveSpeed;
-        temporaryMoveSpeedRoutine = null;
+        if (temporaryMoveSpeedMultiplier == 1f)
+        {
+            return;
+        }
+
+        if (Time.time >= temporaryMoveSpeedEndTime)
+        {
+            temporaryMoveSpeedMultiplier = 1f;
+            temporaryMoveSpeedEndTime = 0f;
+        }
+        else
+        {
+            temporaryMoveSpeedMultiplier = Mathf.Clamp(multiplier, 0.1f, 2.5f);
+            temporaryMoveSpeedEndTime = Time.time + duration;
+        }
     }
 
     private void ApplySavedUpgrades()

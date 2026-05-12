@@ -331,6 +331,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1406078412}
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078422}
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078421}
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078420}
     - targetCorrespondingSourceObject: {fileID: 8667057381382471931, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1608099824}
@@ -688,6 +697,43 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1406078420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f57b2eae055c11f48bed0c15f5098186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLegendaryCardAbilityController
+  cardRarity: 0
+--- !u!114 &1406078421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9192adf293cf11549977d98299cbfe8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEpicCardAbilityController
+--- !u!114 &1406078422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b24f4662d339548ae867d6d92cd2e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRareCardAbilityController
 --- !u!4 &1494402210 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7410195966148075548, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
@@ -860,12 +906,32 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 493995779}
+    - target: {fileID: 1266522005239644286, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266522005239644286, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1490109162633596683, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
       propertyPath: m_Name
       value: '[[ Card Picker ]]'
       objectReference: {fileID: 0}
     - target: {fileID: 1490109162633596683, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1701582214444029281, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1701582214444029281, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1701582214444029281, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_enableAutoSizing
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3075890468058421746, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
@@ -947,6 +1013,14 @@ PrefabInstance:
     - target: {fileID: 3075890468058421746, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771476981944899632, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771476981944899632, guid: 7fea1d7284a6e324794c6ee13483d604, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
