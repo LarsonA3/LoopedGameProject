@@ -38,30 +38,49 @@ public class PlayerHP : MonoBehaviour, IDamageable
             invincibilityTime += UpgradeState.Instance.invincibilityBonus;
         }
 
-        currentHealth = Mathf.Clamp(maxHealth, 0f, maxHealth);
+        currentHealth = maxHealth;
+        isDead = false;
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     private void Update()
     {
-        if (invincibilityTimer > 0f)
-        {
-            invincibilityTimer -= Time.deltaTime;
+        UpdateInvincibility();
+    }
 
-            if (invincibilityTimer <= 0f)
-            {
-                normalInvincible = false;
-            }
+    private void UpdateInvincibility()
+    {
+        if (invincibilityTimer <= 0f)
+        {
+            return;
+        }
+
+        invincibilityTimer -= Time.deltaTime;
+
+        if (invincibilityTimer <= 0f)
+        {
+            normalInvincible = false;
+            invincibilityTimer = 0f;
         }
     }
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("[PlayerHP] TakeDamage called for damage: " + damage + ". Current HP: " + currentHealth + "/" + maxHealth);
-        if (isDead) return;
-        if (damage <= 0f) return;
-        if (normalInvincible || cardInvincible) return;
+        if (isDead)
+        {
+            return;
+        }
+
+        if (damage <= 0f)
+        {
+            return;
+        }
+
+        if (normalInvincible || cardInvincible)
+        {
+            return;
+        }
 
         PlayerRareCardAbilityController rareCards =
             GetComponent<PlayerRareCardAbilityController>();
@@ -77,7 +96,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
             weapon.DrainBlockMeter(damage * blockMeterDrainPerDamage);
             weapon.OnBlockedHit(damage);
 
-            Debug.Log("[PlayerHP] Damage blocked. Block meter drained by: " + damage * blockMeterDrainPerDamage);
+            Debug.Log("[PlayerHP] Damage blocked. Incoming damage: " + damage);
 
             return;
         }
@@ -92,25 +111,22 @@ public class PlayerHP : MonoBehaviour, IDamageable
             damage = legendaryCards.ModifyIncomingDamage(damage);
         }
 
-        if (currentHealth - damage <= 0f)
+        if (currentHealth - damage <= 0f && legendaryCards != null)
         {
-            if (legendaryCards != null)
-            {
-                bool survived = legendaryCards.TryPreventLethalDamage(ref damage);
+            bool survived = legendaryCards.TryPreventLethalDamage(ref damage);
 
-                if (survived)
-                {
-                    OnHealthChanged?.Invoke(currentHealth, maxHealth);
-                    StartInvincibility();
-                    return;
-                }
+            if (survived)
+            {
+                OnHealthChanged?.Invoke(currentHealth, maxHealth);
+                StartInvincibility();
+                return;
             }
         }
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
-        Debug.Log("[PlayerHP] Current HP After Hit: " + currentHealth + "/" + maxHealth);
+        Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
@@ -146,17 +162,29 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
     public void Heal(float amount)
     {
-        if (isDead) return;
-        if (amount <= 0f) return;
+        if (isDead)
+        {
+            return;
+        }
+
+        if (amount <= 0f)
+        {
+            return;
+        }
 
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        Debug.Log("[PlayerHP] Player healed for " + amount + ". HP: " + currentHealth + "/" + maxHealth);
     }
 
     public void AddMaxHealth(float amount)
     {
-        if (amount <= 0f) return;
+        if (amount <= 0f)
+        {
+            return;
+        }
 
         maxHealth += amount;
         currentHealth += amount;
@@ -168,7 +196,10 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
     public void AddInvincibilityFrames(float amount)
     {
-        if (amount <= 0f) return;
+        if (amount <= 0f)
+        {
+            return;
+        }
 
         invincibilityTime += amount;
     }
@@ -190,9 +221,19 @@ public class PlayerHP : MonoBehaviour, IDamageable
         cardInvincible = value;
     }
 
+    public void ClearAllInvincibility()
+    {
+        normalInvincible = false;
+        cardInvincible = false;
+        invincibilityTimer = 0f;
+    }
+
     private void Die()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            return;
+        }
 
         isDead = true;
         currentHealth = 0f;
@@ -235,17 +276,21 @@ public class PlayerHP : MonoBehaviour, IDamageable
         isDead = false;
         currentHealth = Mathf.Clamp(healthAmount, 1f, maxHealth);
 
+        ClearAllInvincibility();
+
         CharacterController characterController = GetComponent<CharacterController>();
 
         if (characterController != null)
         {
             characterController.enabled = false;
             transform.position = position;
+            Physics.SyncTransforms();
             characterController.enabled = true;
         }
         else
         {
             transform.position = position;
+            Physics.SyncTransforms();
         }
 
         if (controller != null)
@@ -262,6 +307,6 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
-        Debug.Log("[PlayerHP] Player revived.");
+        Debug.Log("[PlayerHP] Player revived at " + position + " with HP: " + currentHealth);
     }
 }

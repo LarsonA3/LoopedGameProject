@@ -1,16 +1,13 @@
 using UnityEngine;
 
-public class TerminationProtocolCard : MonoBehaviour
+[CreateAssetMenu(fileName = "Termination Protocol", menuName = "Cards/Rare/Termination Protocol")]
+public class TerminationProtocolCard : AbilityCardEffect
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    protected override AbilityUpgradeType AbilityType => AbilityUpgradeType.TerminationProtocol;
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        cardName = "Termination Protocol";
+        description = "Killing 2 enemies within 5 seconds boosts weapon damage by 20% for 5 seconds. Killing another enemy during the buff refreshes the duration.";
     }
 }

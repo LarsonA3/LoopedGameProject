@@ -37,7 +37,7 @@ public class EnemyPatrol : MonoBehaviour
         points = nodeHost.GetComponentsInChildren<Transform>();
         enemyNav = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        isBoss = GetComponentInChildren<EnemyHP>().isFinal;
+        isBoss = GetComponentInChildren<EnemyHP>().IsBoss;
         node = (node + rand.Next(0, 24)) % points.Length; //avoids swarming behavior -- enemies go to the first node after spawning, which is always the player spwan location
         ToggleShooting(false);
         if (rb == null)
@@ -153,4 +153,90 @@ public class EnemyPatrol : MonoBehaviour
             shotPoint.enable = shoot;
         }
     }
+
+
+    private Coroutine stunRoutine;
+    private Coroutine slowRoutine;
+    private float originalSpeed = -1f;
+
+    public void StunFor(float duration)
+    {
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        if (stunRoutine != null)
+        {
+            StopCoroutine(stunRoutine);
+        }
+
+        stunRoutine = StartCoroutine(StunRoutine(duration));
+    }
+
+    private IEnumerator StunRoutine(float duration)
+    {
+        State previousState = State;
+
+        State = State.KNOCKBACK;
+
+        if (enemyNav != null && enemyNav.enabled)
+        {
+            enemyNav.isStopped = true;
+        }
+
+        ToggleShooting(false);
+
+        yield return new WaitForSeconds(duration);
+
+        if (enemyNav != null && enemyNav.enabled)
+        {
+            enemyNav.isStopped = false;
+        }
+
+        State = State.ATTACK;
+
+        stunRoutine = null;
+    }
+
+    public void SlowFor(float slowPercent, float duration)
+    {
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        if (enemyNav == null)
+        {
+            return;
+        }
+
+        if (slowRoutine != null)
+        {
+            StopCoroutine(slowRoutine);
+        }
+
+        slowRoutine = StartCoroutine(SlowRoutine(slowPercent, duration));
+    }
+
+    private IEnumerator SlowRoutine(float slowPercent, float duration)
+    {
+        if (originalSpeed < 0f)
+        {
+            originalSpeed = enemyNav.speed;
+        }
+
+        float clampedSlow = Mathf.Clamp01(slowPercent);
+        enemyNav.speed = originalSpeed * (1f - clampedSlow);
+
+        yield return new WaitForSeconds(duration);
+
+        if (enemyNav != null)
+        {
+            enemyNav.speed = originalSpeed;
+        }
+
+        slowRoutine = null;
+    }
+
 }
