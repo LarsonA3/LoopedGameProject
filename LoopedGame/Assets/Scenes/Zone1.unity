@@ -730,11 +730,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &1612058957 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4351672895187908355, guid: 465c376ebbcc394468df269dbdc7a397, type: 3}
-  m_PrefabInstance: {fileID: 6906802891609858116}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1612058958 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5880670062594719442, guid: 465c376ebbcc394468df269dbdc7a397, type: 3}
@@ -1280,7 +1275,7 @@ PrefabInstance:
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: room1
       value: 
-      objectReference: {fileID: 1612058957}
+      objectReference: {fileID: 4351672895187908355, guid: 465c376ebbcc394468df269dbdc7a397, type: 3}
     - target: {fileID: 6562429079526705551, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       propertyPath: room2
       value: 

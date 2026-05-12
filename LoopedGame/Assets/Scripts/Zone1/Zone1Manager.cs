@@ -48,9 +48,12 @@ public class Zone1Manager : MonoBehaviour
         zone = 1;
         intensity = 1;
 
-        if (room1 != null)
+        roomToSwitchTo = room1;
+
+        if (roomToSwitchTo != null)
         {
-            room1.SetActive(true);
+            SwitchToRoom(roomToSwitchTo);
+            MovePlayerToRoomStart();
         }
     }
 
@@ -198,7 +201,7 @@ public class Zone1Manager : MonoBehaviour
 
         zone = 1;
         currentRoom = 1;
-        intensity = 0;
+        intensity = 1;
 
         roomToSwitchTo = room1;
 
