@@ -91,7 +91,10 @@ public class PlayerHP : MonoBehaviour, IDamageable
         if (controller != null) controller.enabled = false;
 
         if (Zone1Manager.Instance != null)
+        {
             Zone1Manager.Instance.resetRun();
+            Zone1Manager.Instance.ResetAfterPlayerDeath();
+        }
         else
             Debug.LogWarning("[PlayerHP] Could not reset run — Zone1Manager.Instance is null.");
     }
