@@ -177,6 +177,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1148876286132650868, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: healthSlider
+      value: 
+      objectReference: {fileID: 1429526139}
     - target: {fileID: 1593218506470631593, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -1177,6 +1181,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ee2f5caf594f04eb6e590277d9b7e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseScript
+--- !u!114 &1429526139 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8482553990445921460, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
+  m_PrefabInstance: {fileID: 5623277436661391367}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1 &1612058957 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4351672895187908355, guid: 465c376ebbcc394468df269dbdc7a397, type: 3}

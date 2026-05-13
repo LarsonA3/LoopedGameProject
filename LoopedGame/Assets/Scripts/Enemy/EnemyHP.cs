@@ -1,36 +1,217 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EnemyHP : MonoBehaviour
+public class EnemyHP : MonoBehaviour, IDamageable
 {
-    public float health;
+    [Header("Health")]
+    public float maxHealth = 10f;
+    [SerializeField] private float currentHealth;
+
     public GameObject healthPickup;
     private float startingHealth;
     public bool isFinal = false;
 
-    void Start()
+    [Header("Enemy Type")]
+    public bool isBoss;
+    public bool IsBoss => isBoss;
+
+    private bool isDead;
+
+    public float CurrentHP => currentHealth;
+    public float MaxHP => maxHealth;
+    public bool IsDead => isDead;
+
+    private void Awake()
     {
-        startingHealth = health;
+        startingHealth = maxHealth;
+        currentHealth = maxHealth;
+        isDead = false;
     }
-    void Update()
+
+    private void OnEnable()
     {
-        if (health <= 0)
+        if (currentHealth <= 0f)
         {
-            GameObject healthDropInst = Instantiate(healthPickup, position:gameObject.transform.position, rotation:gameObject.transform.rotation);
-            Destroy(gameObject);
-            HScore.pScore += (int) startingHealth*5;
-            
-            // remove this later if final boss script is done in time
-            if (isFinal)
-            {
-                SceneManager.LoadScene("WinGame");
-            }
+            currentHealth = maxHealth;
         }
+
+        isDead = false;
     }
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        print("Enemy took " + damage + " and has " + health + " health remaining");
+        TakeDamage(damage, null);
+    }
+
+    public void TakeDamage(float damage, GameObject source)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        if (damage <= 0f)
+        {
+            return;
+        }
+
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        Debug.Log("[EnemyHP] " + gameObject.name + " took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
+
+        if (currentHealth <= 0f)
+        {
+            Die(source);
+        }
+    }
+
+    private void Die(GameObject source)
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+        currentHealth = 0f;
+
+        NotifyCardControllers();
+
+        Debug.Log("[EnemyHP] " + gameObject.name + " died.");
+
+        if (healthPickup != null)
+        {
+            Instantiate(healthPickup, transform.position, transform.rotation);
+        }
+
+        HScore.pScore += (int)startingHealth * 5;
+
+        if (isFinal)
+        {
+            SceneManager.LoadScene("WinGame");
+            return;
+        }
+
+        Destroy(gameObject);
+    }
+
+    private void NotifyCardControllers()
+    {
+        PlayerRareCardAbilityController rareCards = FindObjectOfType<PlayerRareCardAbilityController>();
+
+        if (rareCards != null)
+        {
+            rareCards.OnEnemyKilled(this);
+        }
+
+        PlayerEpicCardAbilityController epicCards = FindObjectOfType<PlayerEpicCardAbilityController>();
+
+        if (epicCards != null)
+        {
+            epicCards.OnEnemyKilled(this);
+        }
+
+        PlayerLegendaryCardAbilityController legendaryCards = FindObjectOfType<PlayerLegendaryCardAbilityController>();
+
+        if (legendaryCards != null)
+        {
+            legendaryCards.OnEnemyKilled(this);
+        }
+    }
+
+    public void ResetHealth()
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+
+        gameObject.SetActive(true);
+
+        Debug.Log("[EnemyHP] Reset health for " + gameObject.name);
+    }
+
+    public float GetHealthPercent()
+    {
+        if (maxHealth <= 0f)
+        {
+            return 0f;
+        }
+
+        return currentHealth / maxHealth;
+    }
+
+    public bool IsBelowHealthPercent(float percent)
+    {
+        return GetHealthPercent() <= percent;
+    }
+
+    public void StunFor(float duration)
+    {
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInParent<EnemyPatrol>();
+        }
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInChildren<EnemyPatrol>();
+        }
+
+        if (patrol != null)
+        {
+            patrol.StunFor(duration);
+        }
+    }
+
+    public void KnockbackFrom(Vector3 sourcePosition, float force)
+    {
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInParent<EnemyPatrol>();
+        }
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInChildren<EnemyPatrol>();
+        }
+
+        if (patrol != null)
+        {
+            Vector3 direction = transform.position - sourcePosition;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= 0.001f)
+            {
+                direction = transform.forward;
+            }
+
+            direction.Normalize();
+
+            patrol.TakeKnockback(direction, force);
+        }
+    }
+
+    public void SlowFor(float slowPercent, float duration)
+    {
+        EnemyPatrol patrol = GetComponent<EnemyPatrol>();
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInParent<EnemyPatrol>();
+        }
+
+        if (patrol == null)
+        {
+            patrol = GetComponentInChildren<EnemyPatrol>();
+        }
+
+        if (patrol != null)
+        {
+            patrol.SlowFor(slowPercent, duration);
+        }
     }
 }

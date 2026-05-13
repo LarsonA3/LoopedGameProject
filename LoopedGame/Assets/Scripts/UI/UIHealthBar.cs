@@ -1,34 +1,44 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class UIHealthBar : MonoBehaviour
+public class PlayerHealthUI : MonoBehaviour
 {
+    public PlayerHP playerHP;
+    public Slider healthSlider;
 
-    [SerializeField] private Slider slider;
-
-    [SerializeField] private TMP_Text labelText;
-
-    void OnEnable()
+    private void Start()
     {
-        PlayerHP.OnHealthChanged += HandleHealthChanged;
-    }
-
-    void OnDisable()
-    {
-        PlayerHP.OnHealthChanged -= HandleHealthChanged;
-    }
-
-    void HandleHealthChanged(float current, float max)
-    {
-        if (slider != null)
+        if (playerHP == null)
         {
-            slider.minValue = 0f;
-            slider.maxValue = max;
-            slider.value = current;
+            playerHP = FindObjectOfType<PlayerHP>();
         }
 
-        if (labelText != null)
-            labelText.text = $"{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+        if (playerHP == null)
+        {
+            Debug.LogWarning("[PlayerHealthUI] No PlayerHP found.");
+            return;
+        }
+
+        playerHP.OnHealthChanged += UpdateHealthUI;
+        UpdateHealthUI(playerHP.CurrentHP, playerHP.MaxHP);
+    }
+
+    private void OnDestroy()
+    {
+        if (playerHP != null)
+        {
+            playerHP.OnHealthChanged -= UpdateHealthUI;
+        }
+    }
+
+    private void UpdateHealthUI(float currentHP, float maxHP)
+    {
+        if (healthSlider == null)
+        {
+            return;
+        }
+
+        healthSlider.maxValue = maxHP;
+        healthSlider.value = currentHP;
     }
 }

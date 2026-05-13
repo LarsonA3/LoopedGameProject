@@ -5,142 +5,139 @@ using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
-    public float heavyKnockbackForce = 12f;
-
+    [Header("References")]
     public Transform playerCapsule;
-    // degrees from player forward to each side of the arc
-    public float swingHalfArc = 60f;
-    // how long full swing takes in seconds
-    public float swingDuration = 0.25f;
-    // curve controlling swing speed - flat = constant, ease-in/out = slow at edges
-    public float damageAmount = 2f; //made public for use in the custom shader
-    public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-
     public Transform blockPos;
 
-    private bool isSwinging;
-    private float swingTimer;
-    private int swingDirection = 1;
-    private Vector3 readyLocalPosThing;
-    private Quaternion readyLocalRotThing;
-    private Collider wpnCollider;
-    private bool isBlocking;
-    private PlayerInput plrInput;
-    private InputAction atkAction;
+    [Header("Light Attack")]
+    public float swingHalfArc = 60f;
+    public float swingDuration = 0.25f;
+    public AnimationCurve swingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
-    public Slider blockMeterSlider;
-    public Slider attackReadySlider;
+    [Header("Heavy Attack")]
+    public float heavyWindupDuration = 0.5f;
+    public float heavySwingDuration = 0.12f;
+    public float heavySwingHalfArc = 100f;
+    public AnimationCurve heavySwingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    public float heavyKnockbackForce = 12f;
+
+    [Header("Damage")]
+    public float damageAmount = 2f;
+    [SerializeField] private float heavyDamageAmount = 4f;
 
     [Header("Block")]
     public float blockMeterMax = 3f;
     public float blockMeterRechargeRate = 1f;
     public float blockMeterDrainRate = 0.4f;
-    // minimum time after releasing block before you can block again (prevents spam)
     public float blockCooldown = 0.5f;
-    public float stunDuration = 1f;
+    public float blockBreakStunDuration = 1f;
+    public float blockBrokenMoveMultiplier = 0.15f;
 
-    // public read-only state for TopDownController and PlayerHP
-    public bool IsBlocking => isBlocking;
-    public bool IsStunned => isStunned;
-    public float BlockMeterNormalized => blockMeter / blockMeterMax;
-    // locks movement, dash, and block during heavy windup and swing
-    public bool IsHeavyAttacking => isChargingHeavy || isHeavySwinging;
+    [SerializeField] private float blockMeterDrainPerDamage = 0.08f;
 
-    private bool isStunned;
-    private float blockMeter;
-    private float blockCooldownTimer;
-    private Coroutine stunCoroutine;
+    [Header("Parry")]
+    public Collider parryHitboxCollider;
+    public float parryWindow = 0.25f;
+    public float parryMissStunDuration = 0.25f;
+    public GameObject parryProjectilePrefab;
+    public float parryReflectSpeedMultiplier = 1.4f;
+    public float parryMissBlockMeterCost = 1.5f;
+
+    [Header("UI")]
+    public Slider blockMeterSlider;
+    public Slider attackReadySlider;
+
+    private PlayerInput playerInput;
+    private InputAction attackAction;
     private InputAction blockAction;
 
-    // how long the player must hold still before the heavy swing fires
-    public float heavyWindupDuration = 0.5f;
-    // faster and wider than a light swing
-    public float heavySwingDuration = 0.12f;
-    public float heavySwingHalfArc = 100f;
-    public AnimationCurve heavySwingCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    private Collider weaponCollider;
+
+    private Vector3 readyLocalPosition;
+    private Quaternion readyLocalRotation;
+
+    private bool isSwinging;
+    private float swingTimer;
+    private int swingDirection = 1;
 
     private bool isChargingHeavy;
     private bool isHeavySwinging;
     private float heavyWindupTimer;
     private float heavySwingTimer;
     private int heavySwingDirection = 1;
-    private float heavyDamageAmount;
     private float holdTimer;
 
-    public float blockBrokenMoveMultiplier = 0.15f;
-
-    public float MoveSpeedMultiplier => isStunned ? blockBrokenMoveMultiplier : 1f;
-    [SerializeField] private float blockMeterDrainPerDamage = 0.08f;
-
-    // ─── Parry ────────────────────────────────────────────────────────────────
-    [Header("Parry")]
-    // Assign a child GameObject's Collider here. That child also needs a
-    // ParryHitbox component (see ParryHitbox.cs) and should be tagged "Parry".
-    public Collider parryHitboxCollider;
-
-    // How long the parry window stays open.
-    public float parryWindow = 0.25f;
-
-    // Stun applied when the parry window expires without catching anything.
-    // Should be longer/worse than a broken block to punish misfires.
-    public float parryMissStunDuration = 0.25f;
-
-    // Projectile prefab to spawn when a parry is successful. The prefab's tag
-    // will be overwritten to "Weapon" at runtime so it can damage enemies.
-    public GameObject parryProjectilePrefab;
-
-    // Speed multiplier applied to the reflected projectile.
-    public float parryReflectSpeedMultiplier = 1.4f;
-
-    // How much of the block meter a failed parry costs (on top of the stun).
-    public float parryMissBlockMeterCost = 1.5f;
+    private bool isBlocking;
+    private bool isStunned;
+    private float blockMeter;
+    private float blockCooldownTimer;
+    private Coroutine stunCoroutine;
 
     private bool isParrying;
     private float parryTimer;
-    private bool parryLanded; // did this parry window catch something?
+    private bool parryLanded;
 
-    // Public so UI / other systems can read it.
+    private float temporaryNextLightSpeedMultiplier = 1f;
+    private float nextHeavyWindupMultiplier = 1f;
+
+    private float blockDrainCooldown = 0.3f;
+    private float blockDrainCooldownTimer;
+
+    public bool IsBlocking => isBlocking;
+    public bool IsStunned => isStunned;
     public bool IsParrying => isParrying;
-    // ──────────────────────────────────────────────────────────────────────────
+    public bool IsHeavyAttacking => isChargingHeavy || isHeavySwinging;
+    public float BlockMeterNormalized => blockMeterMax <= 0f ? 0f : blockMeter / blockMeterMax;
+    public float MoveSpeedMultiplier => isStunned ? blockBrokenMoveMultiplier : 1f;
 
-    void Awake()
+    private void Awake()
     {
-        plrInput = GetComponentInParent<PlayerInput>();
-        if (plrInput == null)
+        playerInput = GetComponentInParent<PlayerInput>();
+
+        if (playerInput == null)
         {
-            Debug.LogError("[WeaponController] No PlayerInput component found.");
+            Debug.LogError("[Weapon] No PlayerInput component found in parent.");
             enabled = false;
             return;
         }
-        atkAction = plrInput.actions.FindAction("Attack", true);
-        if (atkAction == null)
+
+        attackAction = playerInput.actions.FindAction("Attack", true);
+        blockAction = playerInput.actions.FindAction("Block", true);
+
+        if (attackAction == null)
         {
-            Debug.LogError("[WeaponController] 'Attack' not found. Check if the Action Name is spelled exactly 'Attack' (case sensitive).", this);
+            Debug.LogError("[Weapon] Input Action 'Attack' not found.");
             enabled = false;
+            return;
         }
-        blockAction = plrInput.actions.FindAction("Block", true);
+
         if (blockAction == null)
         {
-            Debug.LogError("[WeaponController] 'Block' not found. Check if the Action Name is spelled exactly 'Block' (case sensitive).", this);
+            Debug.LogError("[Weapon] Input Action 'Block' not found.");
             enabled = false;
+            return;
         }
     }
 
-    void Start()
+    private void Start()
     {
         if (playerCapsule == null)
         {
-            Debug.LogError("[WeaponController] playerCapsule is not assigned!", this);
+            Debug.LogError("[Weapon] playerCapsule is not assigned.");
             enabled = false;
             return;
         }
-        wpnCollider = GetComponent<Collider>();
-        if (wpnCollider == null)
-            Debug.LogWarning("[WeaponController] No Collider found on Weapon - hitbox will not function.", this);
-        if (wpnCollider != null)
+
+        weaponCollider = GetComponent<Collider>();
+
+        if (weaponCollider == null)
         {
-            wpnCollider.isTrigger = true;
-            wpnCollider.enabled = false;
+            Debug.LogWarning("[Weapon] No Collider found on Weapon. Hitbox will not work.");
+        }
+        else
+        {
+            weaponCollider.isTrigger = true;
+            weaponCollider.enabled = false;
         }
 
         if (parryHitboxCollider != null)
@@ -148,35 +145,41 @@ public class Weapon : MonoBehaviour
             parryHitboxCollider.isTrigger = true;
             parryHitboxCollider.enabled = false;
 
-            // Wire up the relay component so we get callbacks.
-            var relay = parryHitboxCollider.GetComponent<ParryHitbox>();
+            ParryHitbox relay = parryHitboxCollider.GetComponent<ParryHitbox>();
+
             if (relay == null)
-                Debug.LogWarning("[WeaponController] parryHitboxCollider has no ParryHitbox component - add ParryHitbox.cs to that child object.", this);
+            {
+                Debug.LogWarning("[Weapon] parryHitboxCollider has no ParryHitbox component.");
+            }
             else
+            {
                 relay.weapon = this;
+            }
         }
         else
         {
-            Debug.LogWarning("[WeaponController] parryHitboxCollider is not assigned - parry reflect will not function.", this);
+            Debug.LogWarning("[Weapon] parryHitboxCollider is not assigned. Parry reflect will not function.");
         }
 
-        // Bake the resting transform exactly once from the scene-placed position.
-        readyLocalPosThing = transform.localPosition;
-        readyLocalRotThing = transform.localRotation;
+        readyLocalPosition = transform.localPosition;
+        readyLocalRotation = transform.localRotation;
 
         blockMeter = blockMeterMax;
-        heavyDamageAmount = damageAmount * 2f;
+        heavyDamageAmount = Mathf.Max(heavyDamageAmount, damageAmount * 2f);
     }
 
-    void Update()
+    private void Update()
     {
         if (blockCooldownTimer > 0f)
+        {
             blockCooldownTimer -= Time.deltaTime;
+        }
 
         if (blockDrainCooldownTimer > 0f)
+        {
             blockDrainCooldownTimer -= Time.deltaTime;
+        }
 
-        // Parry must be checked first - it takes priority over both attack and block.
         UpdateParryInput();
 
         if (!isParrying)
@@ -185,361 +188,624 @@ public class Weapon : MonoBehaviour
             UpdateAttackInput();
         }
 
-        if (isSwinging) UpdateSwing();
-        if (isChargingHeavy) UpdateHeavyWindup();
-        if (isHeavySwinging) UpdateHeavySwing();
-        if (isParrying) UpdateParry();
+        if (isSwinging)
+        {
+            UpdateSwing();
+        }
+
+        if (isChargingHeavy)
+        {
+            UpdateHeavyWindup();
+        }
+
+        if (isHeavySwinging)
+        {
+            UpdateHeavySwing();
+        }
+
+        if (isParrying)
+        {
+            UpdateParry();
+        }
+
+        if (blockMeterSlider != null)
+        {
+            blockMeterSlider.value = BlockMeterNormalized;
+        }
 
         if (attackReadySlider != null)
+        {
             attackReadySlider.value = AttackSliderNormalized;
-    }
-
-    // ─── Parry input ──────────────────────────────────────────────────────────
-
-    void UpdateParryInput()
-    {
-        bool parryTrigger =
-            (atkAction.WasPressedThisFrame() && blockAction.IsPressed()) ||
-            (blockAction.WasPressedThisFrame() && atkAction.IsPressed());
-
-        // isBlocking intentionally excluded - parry should interrupt an active block
-        bool busy = isSwinging || isChargingHeavy || isHeavySwinging ||
-                    isStunned || isParrying;
-
-        if (parryTrigger && !busy)
-            StartParry();
-    }
-
-    void StartParry()
-    {
-        Debug.Log("[Weapon] Parry started.");
-        isParrying = true;
-        parryTimer = 0f;
-        parryLanded = false;
-
-        // Make sure normal attack and block states are cleared.
-        isSwinging = false;
-        isBlocking = false;
-        isChargingHeavy = false;
-        isHeavySwinging = false;
-
-        // Weapon hitbox off, parry hitbox on.
-        if (wpnCollider != null) wpnCollider.enabled = false;
-        if (parryHitboxCollider != null) parryHitboxCollider.enabled = true;
-
-        // Snap to block position for the visual tell.
-        transform.localPosition = readyLocalPosThing + readyLocalRotThing * blockPos.localPosition;
-        transform.localRotation = readyLocalRotThing * blockPos.localRotation;
-    }
-
-    void UpdateParry()
-    {
-        parryTimer += Time.deltaTime;
-
-        if (parryTimer >= parryWindow)
-            EndParry(success: parryLanded);
-    }
-
-    void EndParry(bool success)
-    {
-        isParrying = false;
-        if (parryHitboxCollider != null) parryHitboxCollider.enabled = false;
-
-        if (success)
-        {
-            Debug.Log("[Weapon] Parry successful!");
-            // Clean exit - no penalty, small cooldown so it can't chain immediately.
-            blockCooldownTimer = blockCooldown;
-        }
-        else
-        {
-            Debug.Log("[Weapon] Parry missed - applying punishment.");
-
-            // Drain block meter so missing a parry has compound consequences.
-            blockMeter = Mathf.Max(blockMeter - parryMissBlockMeterCost, 0f);
-
-            // Apply a longer stun than a normal block-break.
-            if (stunCoroutine != null) StopCoroutine(stunCoroutine);
-            stunCoroutine = StartCoroutine(StunRoutine(parryMissStunDuration));
-
-            blockCooldownTimer = blockCooldown;
-        }
-
-        // Return weapon to rest position.
-        transform.localPosition = readyLocalPosThing;
-        transform.localRotation = readyLocalRotThing;
-    }
-
-    // Called by ParryHitbox.cs when something enters the parry collider.
-    public void OnParryContact(Collider other)
-    {
-        if (!isParrying) return;
-
-        Debug.Log($"[Weapon] Parry contact: {other.name} tag: {other.tag}");
-
-        if (other.CompareTag("EnemyProjectile"))
-        {
-            parryLanded = true;
-            ReflectProjectile(other.gameObject);
-
-            // End the parry window immediately on success so the player
-            // can act again without waiting out the full window.
-            EndParry(success: true);
         }
     }
 
-    void ReflectProjectile(GameObject projectile)
+    private void UpdateAttackInput()
     {
-        if (parryProjectilePrefab == null)
+        bool busy =
+            isSwinging ||
+            isChargingHeavy ||
+            isHeavySwinging ||
+            isBlocking ||
+            isStunned ||
+            isParrying;
+
+        if (attackAction.WasPressedThisFrame() && !busy)
         {
-            Debug.LogWarning("[Weapon] parryProjectilePrefab is not assigned.");
-            return;
-        }
-
-        // Reconstruct incoming direction from projectile toward the player.
-        Vector3 toPlayer = (playerCapsule.position - projectile.transform.position);
-        toPlayer.y = 0f;
-        toPlayer.Normalize();
-
-        projectile.SetActive(false);
-        Destroy(projectile, 0.1f);
-
-        GameObject reflected = Instantiate(
-            parryProjectilePrefab,
-            projectile.transform.position,
-            projectile.transform.rotation
-        );
-
-        reflected.tag = "Weapon";
-
-        // Hand off the reflected direction to the new script.
-        ParriedProjectile proj = reflected.GetComponent<ParriedProjectile>();
-        if (proj != null)
-            proj.direction = -toPlayer; // flip: away from player, toward enemy
-        else
-            Debug.LogWarning("[Weapon] parryProjectilePrefab is missing a ParriedProjectile component.");
-
-        Debug.Log("[Weapon] Projectile reflected!");
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-
-    void UpdateAttackInput()
-    {
-        bool busy = isSwinging || isChargingHeavy || isHeavySwinging ||
-                    isBlocking || isStunned || isParrying;
-
-        if (atkAction.WasPressedThisFrame() && !busy)
             holdTimer = 0f;
+        }
 
-        if (atkAction.IsPressed() && !busy)
+        if (attackAction.IsPressed() && !busy)
+        {
             holdTimer += Time.deltaTime;
+        }
 
-        // Light attack
-        if (atkAction.WasReleasedThisFrame() && !busy && holdTimer < heavyWindupDuration)
+        if (attackAction.WasReleasedThisFrame() && !busy && holdTimer < heavyWindupDuration)
+        {
             StartSwing();
+        }
 
-        // Begin heavy windup
-        if (atkAction.IsPressed() && !busy && holdTimer >= heavyWindupDuration)
+        if (attackAction.IsPressed() && !busy && holdTimer >= heavyWindupDuration)
+        {
             StartHeavyWindup();
+        }
     }
 
-    // LIGHT ATK
-    void StartSwing()
+    private void StartSwing()
     {
-        Debug.Log($"[Weapon] Collider enabled: {wpnCollider.enabled}, isTrigger: {wpnCollider.isTrigger}");
         isSwinging = true;
         swingTimer = 0f;
         swingDirection *= -1;
-        if (wpnCollider != null) wpnCollider.enabled = true;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = true;
+        }
+
         ApplySwingAngle(-swingHalfArc * swingDirection);
     }
 
-    void UpdateSwing()
+    private void UpdateSwing()
     {
+        float effectiveDuration = swingDuration;
+
+        if (temporaryNextLightSpeedMultiplier != 1f)
+        {
+            effectiveDuration *= Mathf.Clamp(temporaryNextLightSpeedMultiplier, 0.1f, 1f);
+        }
+
         swingTimer += Time.deltaTime;
-        float t = Mathf.Clamp01(swingTimer / swingDuration);
+
+        float t = Mathf.Clamp01(swingTimer / effectiveDuration);
         float curved = swingCurve.Evaluate(t);
         float angle = Mathf.Lerp(-swingHalfArc, swingHalfArc, curved) * swingDirection;
+
         ApplySwingAngle(angle);
         Physics.SyncTransforms();
-        if (t >= 1f) EndSwing();
+
+        if (t >= 1f)
+        {
+            EndSwing();
+        }
     }
 
-    void EndSwing()
+    private void EndSwing()
     {
         isSwinging = false;
-        if (wpnCollider != null) wpnCollider.enabled = false;
+        temporaryNextLightSpeedMultiplier = 1f;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
     }
 
-    // HEAVY ATK
-    void StartHeavyWindup()
+    private void StartHeavyWindup()
     {
         isChargingHeavy = true;
         heavyWindupTimer = 0f;
-        Debug.Log("[Weapon] Heavy attack windup started.");
     }
 
-    void UpdateHeavyWindup()
+    private void UpdateHeavyWindup()
     {
         heavyWindupTimer += Time.deltaTime;
-        if (atkAction.WasReleasedThisFrame())
+
+        if (attackAction.WasReleasedThisFrame())
         {
             isChargingHeavy = false;
-            Debug.Log("[Weapon] Heavy attack cancelled.");
+            nextHeavyWindupMultiplier = 1f;
             return;
         }
-        if (heavyWindupTimer >= heavyWindupDuration)
+
+        float effectiveWindup = heavyWindupDuration * Mathf.Clamp(nextHeavyWindupMultiplier, 0.1f, 1f);
+
+        if (heavyWindupTimer >= effectiveWindup)
         {
             isChargingHeavy = false;
+            nextHeavyWindupMultiplier = 1f;
             StartHeavySwing();
         }
     }
 
-    void StartHeavySwing()
+    private void StartHeavySwing()
     {
-        Debug.Log("[Weapon] Heavy swing fired.");
         isHeavySwinging = true;
         heavySwingTimer = 0f;
         heavySwingDirection *= -1;
-        if (wpnCollider != null) wpnCollider.enabled = true;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = true;
+        }
+
         ApplySwingAngle(-heavySwingHalfArc * heavySwingDirection);
     }
 
-    void UpdateHeavySwing()
+    private void UpdateHeavySwing()
     {
         heavySwingTimer += Time.deltaTime;
+
         float t = Mathf.Clamp01(heavySwingTimer / heavySwingDuration);
         float curved = heavySwingCurve.Evaluate(t);
         float angle = Mathf.Lerp(-heavySwingHalfArc, heavySwingHalfArc, curved) * heavySwingDirection;
+
         ApplySwingAngle(angle);
         Physics.SyncTransforms();
-        if (t >= 1f) EndHeavySwing();
+
+        if (t >= 1f)
+        {
+            EndHeavySwing();
+        }
     }
 
-    void EndHeavySwing()
+    private void EndHeavySwing()
     {
         isHeavySwinging = false;
-        if (wpnCollider != null) wpnCollider.enabled = false;
-        Debug.Log("[Weapon] Heavy swing ended.");
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
     }
 
-    void ApplySwingAngle(float angleDeg)
+    private void ApplySwingAngle(float angleDeg)
     {
-        Quaternion rot = Quaternion.AngleAxis(angleDeg, Vector3.up);
-        transform.localPosition = rot * readyLocalPosThing;
-        transform.localRotation = rot * readyLocalRotThing;
+        Quaternion rotation = Quaternion.AngleAxis(angleDeg, Vector3.up);
+        transform.localPosition = rotation * readyLocalPosition;
+        transform.localRotation = rotation * readyLocalRotation;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"[Weapon] Trigger entered by: {other.name} tag: {other.tag}");
-        if (other.CompareTag("Enemy"))
+        if (!other.CompareTag("Enemy"))
         {
-            float dmg = isHeavySwinging ? heavyDamageAmount : damageAmount;
-            other.gameObject.GetComponent<EnemyHP>().TakeDamage(dmg);
+            return;
+        }
 
-            if (isHeavySwinging)
-            {
-                // Direction away from player, flat on XZ
-                Vector3 knockDir = (other.transform.position - playerCapsule.position);
-                knockDir.y = 0f;
-                knockDir.Normalize();
+        EnemyHP enemy = other.GetComponentInParent<EnemyHP>();
 
-                EnemyPatrol ep = other.GetComponent<EnemyPatrol>();
-                if (ep != null)
-                    ep.TakeKnockback(knockDir, heavyKnockbackForce);
+        if (enemy == null)
+        {
+            Debug.LogWarning("[Weapon] Object tagged Enemy has no EnemyHP.");
+            return;
+        }
 
-                if (ScreenImpactEffect.Instance != null)
-                    ScreenImpactEffect.Instance.TriggerImpact();
-            }
+        bool isLightAttack = isSwinging && !isHeavySwinging;
+        bool isHeavyAttack = isHeavySwinging;
+
+        float finalDamage = isHeavyAttack ? heavyDamageAmount : damageAmount;
+
+        PlayerRareCardAbilityController rareCards =
+            GetComponentInParent<PlayerRareCardAbilityController>();
+
+        PlayerEpicCardAbilityController epicCards =
+            GetComponentInParent<PlayerEpicCardAbilityController>();
+
+        PlayerLegendaryCardAbilityController legendaryCards =
+            GetComponentInParent<PlayerLegendaryCardAbilityController>();
+
+        if (rareCards != null)
+        {
+            finalDamage = rareCards.ModifyOutgoingWeaponDamage(
+                finalDamage,
+                enemy,
+                isLightAttack,
+                isHeavyAttack
+            );
+        }
+
+        if (epicCards != null)
+        {
+            finalDamage = epicCards.ModifyOutgoingWeaponDamage(
+                finalDamage,
+                enemy,
+                isLightAttack,
+                isHeavyAttack
+            );
+        }
+
+        if (legendaryCards != null)
+        {
+            finalDamage = legendaryCards.ModifyOutgoingWeaponDamage(
+                finalDamage,
+                enemy,
+                isLightAttack,
+                isHeavyAttack
+            );
+        }
+
+        enemy.TakeDamage(finalDamage, playerCapsule.gameObject);
+
+        if (isHeavyAttack)
+        {
+            ApplyHeavyKnockback(other);
+        }
+
+        if (rareCards != null)
+        {
+            rareCards.OnWeaponHit(enemy, isLightAttack, isHeavyAttack);
+        }
+
+        if (epicCards != null)
+        {
+            epicCards.OnWeaponHit(enemy, finalDamage, isLightAttack, isHeavyAttack);
+        }
+
+        if (legendaryCards != null)
+        {
+            legendaryCards.OnWeaponHit(enemy, isLightAttack, isHeavyAttack);
         }
     }
 
-    // BLOCK
-    void UpdateBlock()
+    private void ApplyHeavyKnockback(Collider other)
     {
+        if (playerCapsule == null)
+        {
+            return;
+        }
+
+        Vector3 knockDirection = other.transform.position - playerCapsule.position;
+        knockDirection.y = 0f;
+
+        if (knockDirection.sqrMagnitude <= 0.001f)
+        {
+            return;
+        }
+
+        knockDirection.Normalize();
+
+        EnemyPatrol enemyPatrol = other.GetComponentInParent<EnemyPatrol>();
+
+        if (enemyPatrol != null)
+        {
+            enemyPatrol.TakeKnockback(knockDirection, heavyKnockbackForce);
+        }
+
+        if (ScreenImpactEffect.Instance != null)
+        {
+            ScreenImpactEffect.Instance.TriggerImpact();
+        }
+    }
+
+    private void UpdateBlock()
+    {
+        if (blockAction == null)
+        {
+            return;
+        }
+
         bool wantsBlock = blockAction.IsPressed();
-        bool canBlock = !isStunned && !isSwinging && !IsHeavyAttacking &&
-                          !isParrying && blockCooldownTimer <= 0f && blockMeter > 0f;
+
+        bool canBlock =
+            !isStunned &&
+            !isSwinging &&
+            !isChargingHeavy &&
+            !isHeavySwinging &&
+            !isParrying &&
+            blockCooldownTimer <= 0f &&
+            blockMeter > 0f;
 
         if (wantsBlock && canBlock)
         {
-            if (!isBlocking) StartBlock();
+            if (!isBlocking)
+            {
+                StartBlock();
+            }
 
             blockMeter -= blockMeterDrainRate * Time.deltaTime;
 
             if (blockMeter <= 0f)
             {
                 blockMeter = 0f;
-                ForceEndBlock(stun: true);
+                ForceEndBlock(true);
             }
         }
         else if (isBlocking)
         {
-            ForceEndBlock(stun: false);
+            ForceEndBlock(false);
         }
 
-        // Recharge meter while not blocking.
         if (!isBlocking && !isStunned)
-            blockMeter = Mathf.Min(blockMeter + blockMeterRechargeRate * Time.deltaTime, blockMeterMax);
-
-        if (isBlocking)
         {
-            transform.localPosition = readyLocalPosThing + readyLocalRotThing * blockPos.localPosition;
-            transform.localRotation = readyLocalRotThing * blockPos.localRotation;
+            blockMeter = Mathf.Min(blockMeter + blockMeterRechargeRate * Time.deltaTime, blockMeterMax);
         }
 
-        if (blockMeterSlider != null)
-            blockMeterSlider.value = blockMeter / blockMeterMax;
+        if (isBlocking && blockPos != null)
+        {
+            transform.localPosition = readyLocalPosition + readyLocalRotation * blockPos.localPosition;
+            transform.localRotation = readyLocalRotation * blockPos.localRotation;
+        }
     }
 
-    void StartBlock()
+    private void StartBlock()
     {
         isBlocking = true;
         isSwinging = false;
-        if (wpnCollider != null) wpnCollider.enabled = false;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
     }
 
-    void ForceEndBlock(bool stun)
+    private void ForceEndBlock(bool stun)
     {
         isBlocking = false;
         blockCooldownTimer = blockCooldown;
 
+        transform.localPosition = readyLocalPosition;
+        transform.localRotation = readyLocalRotation;
+
         if (stun)
         {
-            if (stunCoroutine != null) StopCoroutine(stunCoroutine);
-            stunCoroutine = StartCoroutine(StunRoutine(stunDuration));
-        }
+            if (stunCoroutine != null)
+            {
+                StopCoroutine(stunCoroutine);
+            }
 
-        transform.localPosition = readyLocalPosThing;
-        transform.localRotation = readyLocalRotThing;
+            stunCoroutine = StartCoroutine(StunRoutine(blockBreakStunDuration));
+        }
     }
 
-    // Duration-parameterised so block-break and parry-miss can use different lengths.
-    IEnumerator StunRoutine(float duration)
+    private IEnumerator StunRoutine(float duration)
     {
         isStunned = true;
+
         yield return new WaitForSeconds(duration);
+
         isStunned = false;
+        stunCoroutine = null;
     }
 
-    // Called from PlayerHP when a heavy projectile is absorbed.
-    private float blockDrainCooldown = 0.3f;
-    private float blockDrainCooldownTimer;
+    public void OnBlockedHit(float incomingDamage)
+    {
+        float drain = incomingDamage * blockMeterDrainPerDamage;
+        blockMeter = Mathf.Max(0f, blockMeter - drain);
+
+        PlayerEpicCardAbilityController epicCards =
+            GetComponentInParent<PlayerEpicCardAbilityController>();
+
+        PlayerLegendaryCardAbilityController legendaryCards =
+            GetComponentInParent<PlayerLegendaryCardAbilityController>();
+
+        if (epicCards != null)
+        {
+            epicCards.OnBlockHit();
+        }
+
+        if (legendaryCards != null)
+        {
+            legendaryCards.OnBlockHit();
+        }
+
+        if (blockMeter <= 0f)
+        {
+            ForceEndBlock(true);
+        }
+    }
 
     public void DrainBlockMeter(float amount)
     {
-        if (blockDrainCooldownTimer > 0f) return;
+        if (blockDrainCooldownTimer > 0f)
+        {
+            return;
+        }
 
         blockMeter = Mathf.Max(blockMeter - amount, 0f);
         blockDrainCooldownTimer = blockDrainCooldown;
 
         if (blockMeter <= 0f && isBlocking)
-            ForceEndBlock(stun: true);
+        {
+            ForceEndBlock(true);
+        }
     }
 
-    // 0 = busy/stunned, 0-1 = charging heavy, 1 = fully ready or mid-swing progress
+    private void UpdateParryInput()
+    {
+        if (attackAction == null || blockAction == null)
+        {
+            return;
+        }
+
+        bool parryPressed =
+            (attackAction.WasPressedThisFrame() && blockAction.IsPressed()) ||
+            (blockAction.WasPressedThisFrame() && attackAction.IsPressed());
+
+        bool busy =
+            isSwinging ||
+            isChargingHeavy ||
+            isHeavySwinging ||
+            isStunned ||
+            isParrying;
+
+        if (parryPressed && !busy)
+        {
+            StartParry();
+        }
+    }
+
+    private void StartParry()
+    {
+        isParrying = true;
+        parryTimer = 0f;
+        parryLanded = false;
+
+        isBlocking = false;
+        isSwinging = false;
+        isChargingHeavy = false;
+        isHeavySwinging = false;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
+
+        if (parryHitboxCollider != null)
+        {
+            parryHitboxCollider.enabled = true;
+        }
+
+        if (blockPos != null)
+        {
+            transform.localPosition = readyLocalPosition + readyLocalRotation * blockPos.localPosition;
+            transform.localRotation = readyLocalRotation * blockPos.localRotation;
+        }
+    }
+
+    private void UpdateParry()
+    {
+        parryTimer += Time.deltaTime;
+
+        if (parryTimer >= parryWindow)
+        {
+            EndParry(parryLanded);
+        }
+    }
+
+    private void EndParry(bool success)
+    {
+        isParrying = false;
+
+        if (parryHitboxCollider != null)
+        {
+            parryHitboxCollider.enabled = false;
+        }
+
+        if (success)
+        {
+            blockCooldownTimer = blockCooldown;
+        }
+        else
+        {
+            blockMeter = Mathf.Max(0f, blockMeter - parryMissBlockMeterCost);
+
+            if (stunCoroutine != null)
+            {
+                StopCoroutine(stunCoroutine);
+            }
+
+            stunCoroutine = StartCoroutine(StunRoutine(parryMissStunDuration));
+            blockCooldownTimer = blockCooldown;
+        }
+
+        transform.localPosition = readyLocalPosition;
+        transform.localRotation = readyLocalRotation;
+    }
+
+    public void OnParryContact(Collider other)
+    {
+        if (!isParrying)
+        {
+            return;
+        }
+
+        if (!other.CompareTag("EnemyProjectile"))
+        {
+            return;
+        }
+
+        parryLanded = true;
+
+        GameObject reflectedProjectile = ReflectProjectile(other.gameObject);
+
+        PlayerEpicCardAbilityController epicCards =
+            GetComponentInParent<PlayerEpicCardAbilityController>();
+
+        PlayerLegendaryCardAbilityController legendaryCards =
+            GetComponentInParent<PlayerLegendaryCardAbilityController>();
+
+        if (epicCards != null)
+        {
+            epicCards.OnParrySuccess();
+
+            if (reflectedProjectile != null)
+            {
+                epicCards.ModifyParriedProjectile(reflectedProjectile);
+            }
+        }
+
+        if (legendaryCards != null)
+        {
+            legendaryCards.OnParrySuccess();
+        }
+
+        EndParry(true);
+    }
+
+    private GameObject ReflectProjectile(GameObject projectile)
+    {
+        if (projectile == null)
+        {
+            return null;
+        }
+
+        if (parryProjectilePrefab == null)
+        {
+            Debug.LogWarning("[Weapon] parryProjectilePrefab is not assigned.");
+            return null;
+        }
+
+        Vector3 toPlayer = playerCapsule.position - projectile.transform.position;
+        toPlayer.y = 0f;
+
+        if (toPlayer.sqrMagnitude <= 0.001f)
+        {
+            toPlayer = -transform.forward;
+        }
+
+        toPlayer.Normalize();
+
+        Vector3 reflectDirection = -toPlayer;
+        Vector3 spawnPosition = projectile.transform.position;
+        Quaternion spawnRotation = Quaternion.LookRotation(reflectDirection, Vector3.up);
+
+        projectile.SetActive(false);
+        Destroy(projectile, 0.1f);
+
+        GameObject reflected = Instantiate(parryProjectilePrefab, spawnPosition, spawnRotation);
+        reflected.tag = "Weapon";
+
+        Rigidbody rb = reflected.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.linearVelocity = reflectDirection * 12f * parryReflectSpeedMultiplier;
+        }
+
+        reflected.SendMessage(
+            "SetReflectedDirection",
+            reflectDirection,
+            SendMessageOptions.DontRequireReceiver
+        );
+
+        reflected.SendMessage(
+            "MultiplySpeed",
+            parryReflectSpeedMultiplier,
+            SendMessageOptions.DontRequireReceiver
+        );
+
+        return reflected;
+    }
+
     public float AttackSliderNormalized
     {
         get
@@ -547,18 +813,175 @@ public class Weapon : MonoBehaviour
             if (isStunned) return 0f;
             if (isParrying) return 0f;
 
-            if (!isChargingHeavy && !isSwinging && !isHeavySwinging && atkAction.IsPressed())
+            if (!isChargingHeavy && !isSwinging && !isHeavySwinging && attackAction.IsPressed())
+            {
                 return 1f - Mathf.Clamp01(holdTimer / heavyWindupDuration);
+            }
 
             if (isChargingHeavy) return 0f;
 
             if (isSwinging)
+            {
                 return Mathf.Clamp01(swingTimer / swingDuration);
+            }
 
             if (isHeavySwinging)
+            {
                 return Mathf.Clamp01(heavySwingTimer / heavySwingDuration);
+            }
 
             return 1f;
         }
     }
+
+    // ------------------------------------------------------------
+    // Public methods used by stat cards
+    // ------------------------------------------------------------
+
+    public void AddLightDamage(float amount)
+    {
+        damageAmount += amount;
+        heavyDamageAmount = Mathf.Max(heavyDamageAmount, damageAmount * 2f);
+    }
+
+    public void AddHeavyDamage(float amount)
+    {
+        heavyDamageAmount += amount;
+    }
+
+    public void ReduceLightSwingDuration(float amount)
+    {
+        swingDuration = Mathf.Max(0.09f, swingDuration - amount);
+    }
+
+    public void ReduceHeavyWindup(float amount)
+    {
+        heavyWindupDuration = Mathf.Max(0.10f, heavyWindupDuration - amount);
+    }
+
+    public void ReduceHeavySwingDuration(float amount)
+    {
+        heavySwingDuration = Mathf.Max(0.05f, heavySwingDuration - amount);
+    }
+
+    public void IncreaseAttackArc(float amount)
+    {
+        swingHalfArc = Mathf.Min(swingHalfArc + amount, 135f);
+        heavySwingHalfArc = Mathf.Min(heavySwingHalfArc + amount, 180f);
+    }
+
+    public void IncreaseBlockMeterMax(float amount)
+    {
+        blockMeterMax += amount;
+        blockMeter = Mathf.Min(blockMeter + amount, blockMeterMax);
+    }
+
+    public void IncreaseBlockRecharge(float amount)
+    {
+        blockMeterRechargeRate += amount;
+    }
+
+    public void ReduceBlockDrain(float passiveAmount, float impactAmount)
+    {
+        blockMeterDrainRate = Mathf.Max(0.05f, blockMeterDrainRate - passiveAmount);
+        blockMeterDrainPerDamage = Mathf.Max(0.01f, blockMeterDrainPerDamage - impactAmount);
+    }
+
+    public void ReduceBlockCooldown(float amount)
+    {
+        blockCooldown = Mathf.Max(0.05f, blockCooldown - amount);
+    }
+
+    public void ReduceBlockBreakStun(float amount)
+    {
+        blockBreakStunDuration = Mathf.Max(0.10f, blockBreakStunDuration - amount);
+    }
+
+    public void IncreaseParryWindow(float amount)
+    {
+        parryWindow = Mathf.Min(parryWindow + amount, 0.55f);
+    }
+
+    public void ReduceParryMissStun(float amount)
+    {
+        parryMissStunDuration = Mathf.Max(0.25f, parryMissStunDuration - amount);
+    }
+
+    public void ReduceParryMissBlockMeterCost(float amount)
+    {
+        parryMissBlockMeterCost = Mathf.Max(0.25f, parryMissBlockMeterCost - amount);
+    }
+
+    public void IncreaseParryReflectSpeedMultiplier(float amount)
+    {
+        parryReflectSpeedMultiplier = Mathf.Min(parryReflectSpeedMultiplier + amount, 2.90f);
+    }
+
+    public void RestoreBlockMeter(float amount)
+    {
+        blockMeter = Mathf.Min(blockMeter + amount, blockMeterMax);
+    }
+
+    public void ClearBlockCooldown()
+    {
+        blockCooldownTimer = 0f;
+    }
+
+    public float GetCurrentBlockMeter()
+    {
+        return blockMeter;
+    }
+
+    public void ConsumeBlockMeter(float amount)
+    {
+        blockMeter = Mathf.Max(0f, blockMeter - amount);
+    }
+
+    public void ApplyTemporaryNextLightSpeedBoost(float multiplier)
+    {
+        temporaryNextLightSpeedMultiplier = Mathf.Clamp(multiplier, 0.1f, 1f);
+    }
+
+    public void ApplyNextHeavyWindupMultiplier(float multiplier)
+    {
+        nextHeavyWindupMultiplier = Mathf.Clamp(multiplier, 0.1f, 1f);
+    }
+
+    public void ResetRunWeaponState()
+    {
+        isSwinging = false;
+        isChargingHeavy = false;
+        isHeavySwinging = false;
+        isBlocking = false;
+        isStunned = false;
+        isParrying = false;
+
+        swingTimer = 0f;
+        heavyWindupTimer = 0f;
+        heavySwingTimer = 0f;
+        parryTimer = 0f;
+
+        blockCooldownTimer = 0f;
+        blockDrainCooldownTimer = 0f;
+        blockMeter = blockMeterMax;
+
+        temporaryNextLightSpeedMultiplier = 1f;
+        nextHeavyWindupMultiplier = 1f;
+
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
+
+        if (parryHitboxCollider != null)
+        {
+            parryHitboxCollider.enabled = false;
+        }
+
+        transform.localPosition = readyLocalPosition;
+        transform.localRotation = readyLocalRotation;
+
+        Debug.Log("[Weapon] Run weapon state reset.");
+    }
+
 }
