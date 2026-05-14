@@ -96,6 +96,14 @@ public class ParriedProjectile : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void SetReflectedDirection(Vector3 dir)
+{
+    direction = dir;
+    direction.y = 0f;
+    if (direction.sqrMagnitude > 0.001f)
+        direction.Normalize();
+}
+
     private EnemyHP FindNearestEnemy()
     {
         Collider[] hits = Physics.OverlapSphere(

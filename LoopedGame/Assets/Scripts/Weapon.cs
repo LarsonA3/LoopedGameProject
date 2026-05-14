@@ -753,10 +753,7 @@ public class Weapon : MonoBehaviour
 
     private GameObject ReflectProjectile(GameObject projectile)
     {
-        if (projectile == null)
-        {
-            return null;
-        }
+        if (projectile == null) return null;
 
         if (parryProjectilePrefab == null)
         {
@@ -764,19 +761,37 @@ public class Weapon : MonoBehaviour
             return null;
         }
 
-        Vector3 toPlayer = playerCapsule.position - projectile.transform.position;
-        toPlayer.y = 0f;
+        // Use actual incoming velocity for direction — more accurate than position delta
+        Rigidbody incomingRb = projectile.GetComponent<Rigidbody>();
+        Vector3 reflectDirection;
 
-        if (toPlayer.sqrMagnitude <= 0.001f)
+        if (incomingRb != null && incomingRb.linearVelocity.sqrMagnitude > 0.001f)
         {
-            toPlayer = -transform.forward;
+            reflectDirection = -incomingRb.linearVelocity.normalized;
+            reflectDirection.y = 0f;
+        }
+        else
+        {
+            Vector3 toPlayer = playerCapsule.position - projectile.transform.position;
+            toPlayer.y = 0f;
+            reflectDirection = toPlayer.sqrMagnitude > 0.001f ? -toPlayer.normalized : Vector3.zero;
         }
 
-        toPlayer.Normalize();
+        if (reflectDirection.sqrMagnitude <= 0.001f)
+        {
+            Vector3 f = playerCapsule.forward;
+            f.y = 0f;
+            reflectDirection = f.sqrMagnitude > 0.001f ? f.normalized : Vector3.forward;
+        }
+        else
+        {
+            reflectDirection.Normalize();
+        }
 
-        Vector3 reflectDirection = -toPlayer;
+
+        Quaternion spawnRotation = Quaternion.AngleAxis(180f, Vector3.up) * projectile.transform.rotation;
+
         Vector3 spawnPosition = projectile.transform.position;
-        Quaternion spawnRotation = Quaternion.LookRotation(reflectDirection, Vector3.up);
 
         projectile.SetActive(false);
         Destroy(projectile, 0.1f);
@@ -784,24 +799,19 @@ public class Weapon : MonoBehaviour
         GameObject reflected = Instantiate(parryProjectilePrefab, spawnPosition, spawnRotation);
         reflected.tag = "Weapon";
 
-        Rigidbody rb = reflected.GetComponent<Rigidbody>();
-
-        if (rb != null)
+        ParriedProjectile pp = reflected.GetComponent<ParriedProjectile>();
+        if (pp != null)
         {
-            rb.linearVelocity = reflectDirection * 12f * parryReflectSpeedMultiplier;
+            pp.direction = reflectDirection;
+            pp.speed = pp.speed * parryReflectSpeedMultiplier;
         }
 
-        reflected.SendMessage(
-            "SetReflectedDirection",
-            reflectDirection,
-            SendMessageOptions.DontRequireReceiver
-        );
+        Rigidbody rb = reflected.GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.linearVelocity = reflectDirection * pp.speed;
 
-        reflected.SendMessage(
-            "MultiplySpeed",
-            parryReflectSpeedMultiplier,
-            SendMessageOptions.DontRequireReceiver
-        );
+        reflected.SendMessage("SetReflectedDirection", reflectDirection, SendMessageOptions.DontRequireReceiver);
+        reflected.SendMessage("MultiplySpeed", parryReflectSpeedMultiplier, SendMessageOptions.DontRequireReceiver);
 
         return reflected;
     }
