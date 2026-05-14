@@ -238,6 +238,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4468316465710850875, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: dashCooldown
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4468316465710850875, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: dashChargesText
       value: 
       objectReference: {fileID: 1772463045}
@@ -1617,11 +1621,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2036500604593338748, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 589.1
+      value: 534.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2036500604593338748, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -519.82
       objectReference: {fileID: 0}
     - target: {fileID: 2242200519559006072, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3616868363553689918, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3616868363553689918, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 3897706512640155684, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2003,7 +2019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2832680781882265692, guid: d6273eb20f91cb04bb29dbb060414b1c, type: 3}
       propertyPath: height
-      value: 12
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2832680781882265692, guid: d6273eb20f91cb04bb29dbb060414b1c, type: 3}
       propertyPath: zOffset

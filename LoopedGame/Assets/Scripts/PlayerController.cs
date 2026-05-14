@@ -238,7 +238,7 @@ public class TopDownController : MonoBehaviour
     public void addDashCharge(float amount)
     {
         maxdashcharges = Mathf.Clamp(maxdashcharges + (int)amount, 1, absoluteMaxDashCharges);
-        currentDashCharges = Mathf.Clamp(currentDashCharges + (int)amount, 0, maxdashcharges);
+        currentDashCharges = maxdashcharges;
         UpdateDashUI();
     }
 
@@ -262,16 +262,15 @@ public class TopDownController : MonoBehaviour
     public void AddDashChargeProgress(int amount)
     {
         dashChargeProgress += amount;
-        
-        while (dashChargeProgress >= 5 && maxdashcharges < absoluteMaxDashCharges) 
+
+        while (dashChargeProgress >= 5 && maxdashcharges < absoluteMaxDashCharges)
         {
             dashChargeProgress -= 5;
             maxdashcharges++;
-            currentDashCharges++;
         }
 
         maxdashcharges = Mathf.Clamp(maxdashcharges, 1, absoluteMaxDashCharges);
-        currentDashCharges = Mathf.Clamp(currentDashCharges, 0, maxdashcharges);
+        currentDashCharges = maxdashcharges;
     }
 
     public void SetTemporaryMoveSpeedMultiplier(float multiplier, float duration)
