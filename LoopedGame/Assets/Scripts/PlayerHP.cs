@@ -21,6 +21,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
     private bool cardInvincible;
     private bool isDead;
     private float invincibilityTimer;
+    private GameObject hitParticlePrefab;
 
     private TopDownController controller;
     private Weapon weapon;
@@ -47,6 +48,10 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         OnHealthChanged += UpdateHealthSlider;
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        hitParticlePrefab = Resources.Load<GameObject>("Particles/hitParticlePLAYER");
+        if (hitParticlePrefab == null)
+            Debug.LogWarning("[PlayerHP] Could not find Resources/Particles/hitParticlePLAYER");
     }
 
     private void UpdateHealthSlider(float current, float max)
@@ -137,6 +142,14 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        if (hitParticlePrefab != null)
+        {
+            GameObject fx = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            ParticleSystem ps = fx.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+            Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
+        }
+
 
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 

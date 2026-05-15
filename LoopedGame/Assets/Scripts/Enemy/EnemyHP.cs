@@ -17,6 +17,8 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
     private bool isDead;
 
+    public GameObject hitParticlePrefab;
+
     public float CurrentHP => currentHealth;
     public float MaxHP => maxHealth;
     public bool IsDead => isDead;
@@ -26,6 +28,11 @@ public class EnemyHP : MonoBehaviour, IDamageable
         startingHealth = maxHealth;
         currentHealth = maxHealth;
         isDead = false;
+
+        hitParticlePrefab = Resources.Load<GameObject>("Particles/hitParticleENEMY");
+
+        if (hitParticlePrefab == null)
+            Debug.LogWarning("[EnemyHP] Could not find Resources/Particles/hitParticleENEMY");
     }
 
     private void OnEnable()
@@ -45,18 +52,19 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage, GameObject source)
     {
-        if (isDead)
-        {
-            return;
-        }
-
-        if (damage <= 0f)
-        {
-            return;
-        }
+        if (isDead) return;
+        if (damage <= 0f) return;
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        if (hitParticlePrefab != null)
+        {
+            GameObject fx = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            ParticleSystem ps = fx.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+            Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
+        }
 
         Debug.Log("[EnemyHP] " + gameObject.name + " took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
