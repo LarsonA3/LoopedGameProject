@@ -288,7 +288,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078416}
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078415}
+    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1406078414}
   m_SourcePrefab: {fileID: 100100000, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
 --- !u!65 &355205650 stripped
 BoxCollider:
@@ -1297,6 +1306,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ee2f5caf594f04eb6e590277d9b7e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseScript
+--- !u!114 &1406078414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f57b2eae055c11f48bed0c15f5098186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLegendaryCardAbilityController
+  cardRarity: 0
+--- !u!114 &1406078415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9192adf293cf11549977d98299cbfe8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEpicCardAbilityController
+--- !u!114 &1406078416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406078395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b24f4662d339548ae867d6d92cd2e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRareCardAbilityController
 --- !u!114 &1429526139 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8482553990445921460, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
@@ -1327,6 +1373,97 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FadeTransition
   blackImage: {fileID: 2030188536}
   fadeDuration: 0.3
+--- !u!1 &1559334715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1559334719}
+  - component: {fileID: 1559334718}
+  - component: {fileID: 1559334717}
+  - component: {fileID: 1559334716}
+  m_Layer: 0
+  m_Name: SystemsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1559334716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559334715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6db7a0c92526545992db30c94665f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardAbilityState
+--- !u!114 &1559334717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559334715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03a9f7ab157f189439d3fc353633e6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeState
+  lightAttackDamageBonus: 0
+  heavyAttackDamageBonus: 0
+  lightAttackSpeedIncrease: 0
+  heavyAttackWindupReduction: 0
+  heavyAttackSpeedIncrease: 0
+  attackArcBonus: 0
+  maxBlockMeterBonus: 0
+  blockRechargeBonus: 0
+  blockDrainReduction: 0
+  blockCooldownReduction: 0
+  blockBreakStunDuration: 0
+  moveSpeedBonus: 0
+  dashDistanceBonus: 0
+  dashCooldownReduction: 0
+  dashChargeProgress: 0
+  maxHPBonus: 0
+  invicibilityBonus: 0
+  parryWindowBonus: 0
+  parryMissStunReduction: 0
+  parryMissMeterCostReduction: 0
+  parryReflectSpeed: 0
+--- !u!114 &1559334718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559334715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83375d208171f4e44b0742db85304b1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathManager
+--- !u!4 &1559334719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559334715}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 722.17096, y: -0.00001, z: 8909.062}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1586430671 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 805347803314087266, guid: c9360f0c76f402e47a1a89a5e519514e, type: 3}
@@ -2562,3 +2699,4 @@ SceneRoots:
   - {fileID: 5122489105819892232}
   - {fileID: 3711875804752281233}
   - {fileID: 6559803971690968735}
+  - {fileID: 1559334719}
