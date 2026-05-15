@@ -54,6 +54,29 @@ public class Zone1Manager : MonoBehaviour
         {
             room1.SetActive(true);
         }
+        ApplyDifficulty();
+    }
+
+
+    //DIFFICULTY STUFF
+    private void ApplyDifficulty()
+    {
+        switch (DifficultySettings.Selected)
+        {
+            case Difficulty.Easy:
+                break;
+            case Difficulty.Medium:
+                intensity += 1;
+                break;
+            case Difficulty.Hard:
+                intensity += 3;
+                break;
+            case Difficulty.Nightmare:
+                intensity += 6;
+                break;
+        }
+
+        Debug.Log("[Zone1Manager] Difficulty: " + DifficultySettings.Selected + ", Starting intensity: " + intensity);
     }
 
     public void nextRoom()

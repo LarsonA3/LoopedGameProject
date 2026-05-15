@@ -43,9 +43,16 @@ public class HScore : MonoBehaviour
 
     public void IncreaseScore(int amount)
     {
-        pScore += amount;
-        //print($"Player: {pName}\nHigh Score: {pScore}\n");
-        //scoreBox.text = $"Score: {pScore}";
+        float multiplier = DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 1.15f,
+            Difficulty.Hard => 1.35f,
+            Difficulty.Nightmare => 1.6f,
+            _ => 1.0f
+        };
+
+        pScore += Mathf.RoundToInt(amount * multiplier);
     }
 
     public void FinalScore() //call this before sending to end screen

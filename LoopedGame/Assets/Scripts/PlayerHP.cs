@@ -43,6 +43,15 @@ public class PlayerHP : MonoBehaviour, IDamageable
             invincibilityTime += UpgradeState.Instance.invincibilityBonus;
         }
 
+        maxHealth *= DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 0.6f,
+            Difficulty.Hard => 0.4f,
+            Difficulty.Nightmare => 0.15f,
+            _ => 1.0f
+        };
+
         currentHealth = maxHealth;
         isDead = false;
 
