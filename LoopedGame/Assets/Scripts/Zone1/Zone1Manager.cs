@@ -47,6 +47,7 @@ public class Zone1Manager : MonoBehaviour
 
         currentRoom = 1;
         zone = 1;
+        ZoneBanner.Instance.Show(1);
         intensity = 1;
 
         if (room1 != null)
@@ -152,6 +153,7 @@ public class Zone1Manager : MonoBehaviour
         if (zone != 4)
         {
             zone += 1;
+            ZoneBanner.Instance.Show(zone);
         }
 
         roomToSwitchTo = zone switch
@@ -217,6 +219,7 @@ public class Zone1Manager : MonoBehaviour
         Time.timeScale = 1f;
 
         zone = 1;
+        ZoneBanner.Instance.Show(1);
         currentRoom = 1;
         intensity = 1;
 
