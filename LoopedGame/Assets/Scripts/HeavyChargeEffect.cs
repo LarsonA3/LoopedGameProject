@@ -12,6 +12,7 @@ public class HeavyChargeEffect : MonoBehaviour
     public Color chargeColor = new Color(1f, 0.15f, 0.15f, 1f);
     [Header("Parry Tint")]
     public Color parryColor = new Color(1f, 0.85f, 0.1f, 1f);
+    public Color parryFailColor = new Color(1f, 0.45f, 0f, 1f);
     [Header("Shared")]
     public float tintSpeed = 4f;
     private Weapon _weapon;
@@ -69,16 +70,19 @@ public class HeavyChargeEffect : MonoBehaviour
             visualRoot.localPosition = _visualOrigin;
         }
         // tints — parry snaps instantly, charge ramps, base lerps back
+        bool parryFailed = _weapon.IsParryStunned;
+
         int idx = 0;
         foreach (var matArr in _materials)
         {
             foreach (var mat in matArr)
             {
                 Color perMatTarget = parrying ? parryColor
+                                   : parryFailed ? parryFailColor
                                    : chargeT > 0f ? Color.Lerp(_baseColors[idx], chargeColor, chargeT)
                                    : _baseColors[idx];
 
-                mat.color = parrying
+                mat.color = (parrying || parryFailed)
                     ? perMatTarget
                     : Color.Lerp(mat.color, perMatTarget, Time.deltaTime * tintSpeed);
 

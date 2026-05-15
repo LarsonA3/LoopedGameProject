@@ -74,9 +74,12 @@ public class Weapon : MonoBehaviour
     private float blockCooldownTimer;
     private Coroutine stunCoroutine;
 
+
     private bool isParrying;
     private float parryTimer;
     private bool parryLanded;
+    private bool isParryStunned;
+    public bool IsParryStunned => isParryStunned;
 
     private float temporaryNextLightSpeedMultiplier = 1f;
     private float nextHeavyWindupMultiplier = 1f;
@@ -573,10 +576,9 @@ public class Weapon : MonoBehaviour
     private IEnumerator StunRoutine(float duration)
     {
         isStunned = true;
-
         yield return new WaitForSeconds(duration);
-
         isStunned = false;
+        isParryStunned = false;
         stunCoroutine = null;
     }
 
@@ -689,10 +691,7 @@ public class Weapon : MonoBehaviour
     {
         isParrying = false;
 
-        if (parryHitboxCollider != null)
-        {
-            parryHitboxCollider.enabled = false;
-        }
+        if (parryHitboxCollider != null) parryHitboxCollider.enabled = false;
 
         if (success)
         {
@@ -700,13 +699,9 @@ public class Weapon : MonoBehaviour
         }
         else
         {
+            isParryStunned = true;
             blockMeter = Mathf.Max(0f, blockMeter - parryMissBlockMeterCost);
-
-            if (stunCoroutine != null)
-            {
-                StopCoroutine(stunCoroutine);
-            }
-
+            if (stunCoroutine != null) StopCoroutine(stunCoroutine);
             stunCoroutine = StartCoroutine(StunRoutine(parryMissStunDuration));
             blockCooldownTimer = blockCooldown;
         }
