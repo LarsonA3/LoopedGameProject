@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Required for PlayerInput
+using UnityEngine.InputSystem;
 using System.Collections;
 
 public class DoorGoNextZone : MonoBehaviour
@@ -16,42 +16,34 @@ public class DoorGoNextZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!allowed || AreEnemiesPresent())
-        {
-            Debug.Log("Door is locked! Enemies still remain.");
-            return;
-        }
-
+        if (!allowed || AreEnemiesPresent()) { Debug.Log("Door is locked! Enemies still remain."); return; }
         if (allowed && !transitioning && other.CompareTag("Player"))
-        {
             StartCoroutine(HandleZoneTransition(other.gameObject));
-        }
     }
 
     private bool AreEnemiesPresent()
     {
-        // search for obj w enemy tag
-        GameObject enemy = GameObject.FindWithTag("Enemy");
-        return enemy != null;
+        return GameObject.FindWithTag("Enemy") != null;
     }
 
     IEnumerator HandleZoneTransition(GameObject player)
     {
         transitioning = true;
 
-        // Find the Player Input component on the Capsule child
         var input = player.GetComponentInChildren<PlayerInput>();
         if (input != null) input.enabled = false;
 
-        if (cardPicker != null) cardPicker.SetActive(true);
-
-        yield return new WaitUntil(() => cardPicker.activeSelf == false);
+        if (cardPicker != null)
+        {
+            cardPicker.SetActive(true);
+            yield return new WaitUntil(() => !cardPicker.activeSelf);
+        }
 
         if (input != null) input.enabled = true;
 
         HScore.pScore += 3000;
 
-        Zone1Manager.Instance.nextZone();
+        FadeTransition.Instance.StartFade(() => Zone1Manager.Instance.nextZone());
     }
 
     public void Open() { allowed = true; }
