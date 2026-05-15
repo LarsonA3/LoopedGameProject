@@ -43,6 +43,7 @@ public class DoorGoNextZone : MonoBehaviour
 
         HScore.pScore += 3000;
 
+        SoundManager.PlaySound("transition");
         FadeTransition.Instance.StartFade(() => Zone1Manager.Instance.nextZone());
     }
 

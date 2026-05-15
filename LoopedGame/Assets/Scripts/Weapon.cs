@@ -266,6 +266,7 @@ public class Weapon : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = true;
+            SoundManager.PlaySound("attack");
         }
 
         ApplySwingAngle(-swingHalfArc * swingDirection);
@@ -343,6 +344,7 @@ public class Weapon : MonoBehaviour
         {
             weaponCollider.enabled = true;
         }
+        SoundManager.PlaySound("heavyhit");
 
         ApplySwingAngle(-heavySwingHalfArc * heavySwingDirection);
     }
@@ -675,6 +677,7 @@ public class Weapon : MonoBehaviour
             transform.localPosition = readyLocalPosition + readyLocalRotation * blockPos.localPosition;
             transform.localRotation = readyLocalRotation * blockPos.localRotation;
         }
+        SoundManager.PlaySound("parry");
     }
 
     private void UpdateParry()

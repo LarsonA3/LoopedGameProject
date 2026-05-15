@@ -65,13 +65,14 @@ public class EnemyHP : MonoBehaviour, IDamageable
             if (ps != null) ps.Play();
             Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
         }
-
+        SoundManager.PlaySound("hitHurt (1)");
         Debug.Log("[EnemyHP] " + gameObject.name + " took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
         if (currentHealth <= 0f)
         {
             Die(source);
         }
+
     }
 
     private void Die(GameObject source)

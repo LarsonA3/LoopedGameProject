@@ -64,6 +64,7 @@ public class EnemyShooter : MonoBehaviour
         direction.y = 0f;
         EnemyProjectileBase projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
         projectile.Setup(direction, gameObject);
+        SoundManager.PlaySound("Fire");
 
         StartCoroutine(FadeBackToBase());
         StartCoroutine(FireCooldownRoutine());
