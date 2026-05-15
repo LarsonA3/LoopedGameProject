@@ -266,7 +266,7 @@ public class Weapon : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = true;
-            SoundManager.PlaySound("attack");
+            SoundManager.PlaySound("attack", 0.1f, 0.4f);
         }
 
         ApplySwingAngle(-swingHalfArc * swingDirection);
