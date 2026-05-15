@@ -1,66 +1,40 @@
-Shader "Custom/SaberBlade"
-{
-    Properties
-    {
-        _BaseColor("BaseColor", Color) = (1, 0, 0, 0.5)
-        //_Color("Color", Color) = (1, 0, 0, 1) 
-        _BaseMap("Base Map", 2D) = "white" {}
-
+Shader "Custom/SaberBlade" {
+  Properties {
+    _Color ("Color", 2D) = "white" {}
+  }
+  
+  SubShader {
+    Pass {
+      CGPROGRAM
+      #pragma target 3.0
+      #pragma glsl
+      #pragma vertex vert
+      #pragma fragment frag
+      #include "UNITYCG.cginc"
+      
+      struct appdata {
+        float4 vertex : POSITION;
+        float2 uv : TEXCOORD0;
+      };
+      
+      struct v2f {
+        float4 position : SV_POSITION;
+        float4 color : COLOR;
+      };
+      
+      sampler2D _VertColorPal;
+      
+      v2f vert(appdata v) {
+        v2f o;
+        o.color = float4(1,0,0,1);
+        o.position = UnityObjectToClipPos(v.vertex);
+        return o;
+      }
+      
+      fixed4 frag(v2f f) : COLOR {
+        return fixed4(f.color);
+      }
+      ENDCG
     }
-
-    SubShader
-    {
-        Tags { "RenderType" = "Transparent" }
-
-        Pass
-        {
-            HLSLPROGRAM
-
-            #pragma vertex vert
-            #pragma fragment frag
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            struct Attributes
-            {
-                float4 positionOS : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct Varyings
-            {
-                float4 positionHCS : SV_POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            TEXTURE2D(_BaseMap);
-            SAMPLER(sampler_BaseMap);
-
-            CBUFFER_START(UnityPerMaterial)
-                half4 _BaseColor;
-                float4 _BaseMap_ST;
-            CBUFFER_END
-
-            Varyings vert(Attributes IN)
-            {
-                Varyings OUT;
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = TRANSFORM_TEX(IN.uv, _BaseMap);
-                return OUT;
-            }
-
-            half4 frag(Varyings IN) : SV_Target
-            {
-                half4 color = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
-                return color;
-            }
-            ENDHLSL
-
-            Material 
-            {
-                Diffuse [_BaseColor]
-            }
-            //Lighting On
-        }
-    }
+  }
 }

@@ -13,7 +13,7 @@ public class HScore : MonoBehaviour
 
     void Start()
     {
-        HS.Init(this, "Looping Game (working title)");
+        HS.Init(this, "Reboot");
     }
 
     void Update()
