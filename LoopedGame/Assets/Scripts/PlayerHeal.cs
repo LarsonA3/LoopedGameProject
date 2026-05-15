@@ -12,9 +12,9 @@ public class PlayerHeal : MonoBehaviour
             float healAmount = DifficultySettings.Selected switch
             {
                 Difficulty.Easy => 6f,
-                Difficulty.Medium => 4f,
-                Difficulty.Hard => 2.5f,
-                Difficulty.Nightmare => 1f,
+                Difficulty.Medium => 3f,
+                Difficulty.Hard => 1f,
+                Difficulty.Nightmare => 0.25f,
                 _ => 6f
             };
 

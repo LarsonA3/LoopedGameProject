@@ -173,6 +173,19 @@ public class Weapon : MonoBehaviour
 
         blockMeter = blockMeterMax;
         heavyDamageAmount = Mathf.Max(heavyDamageAmount, damageAmount * 2f);
+        
+        // difficulty scaling
+        float damageMultiplier = DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 0.45f,
+            Difficulty.Hard => 0.25f,
+            Difficulty.Nightmare => 0.05f,
+            _ => 1.0f
+        };
+
+        damageAmount *= damageMultiplier;
+        heavyDamageAmount *= damageMultiplier;
     }
 
     private void Update()
