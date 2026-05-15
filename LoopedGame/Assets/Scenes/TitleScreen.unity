@@ -1534,7 +1534,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1849219017}
         m_TargetAssemblyTypeName: HScore, Assembly-CSharp
         m_MethodName: ChangeName
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

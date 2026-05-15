@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class HScore : MonoBehaviour
 {
     public TextMeshProUGUI scoreBox;
-    public TextMeshProUGUI nameBox;
-    public static string pName = "Schezo Wegey"; //
+    public TMP_InputField nameBox;
+    public static string pName = "Anonymous"; //
     public static int pScore = 0;
 
     void Start()
@@ -31,14 +31,10 @@ public class HScore : MonoBehaviour
 
     }
 
-    public void ChangeName()
+    public void ChangeName(string newName)
     {
-        if (nameBox != null)
-        {
-            pName = nameBox.text;    
-            print(pName);
-        }
-
+        pName = newName;
+        print(pName + " set as name for highscore");
     }
 
     public void IncreaseScore(int amount)

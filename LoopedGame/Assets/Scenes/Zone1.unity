@@ -1703,6 +1703,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7450247541162116613, guid: c78846eb0887c10409370b53fdba721c, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7954029437328598230, guid: c78846eb0887c10409370b53fdba721c, type: 3}
       propertyPath: m_Name
       value: FadeTransition
