@@ -270,6 +270,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
         }
 
         isDead = true;
+        FindObjectOfType<HScore>().FinalScore(); // CALL FINAL SCORE
         currentHealth = 0f;
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
