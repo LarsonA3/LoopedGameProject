@@ -87,7 +87,6 @@ public class Weapon : MonoBehaviour
     public float HeavyChargeNormalized => isChargingHeavy // handles wind up heavy atk efx
     ? Mathf.Clamp01(heavyWindupTimer / heavyWindupDuration)
     : 0f;
-
     public bool IsBlocking => isBlocking;
     public bool IsStunned => isStunned;
     public bool IsParrying => isParrying;
