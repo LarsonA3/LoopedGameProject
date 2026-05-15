@@ -237,6 +237,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4093881969060270626, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: maxShakeAmount
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4468316465710850875, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: dashCooldown
       value: 0.6

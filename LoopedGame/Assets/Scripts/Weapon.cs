@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
+
     [Header("References")]
     public Transform playerCapsule;
     public Transform blockPos;
@@ -82,6 +83,10 @@ public class Weapon : MonoBehaviour
 
     private float blockDrainCooldown = 0.3f;
     private float blockDrainCooldownTimer;
+
+    public float HeavyChargeNormalized => isChargingHeavy // handles wind up heavy atk efx
+    ? Mathf.Clamp01(heavyWindupTimer / heavyWindupDuration)
+    : 0f;
 
     public bool IsBlocking => isBlocking;
     public bool IsStunned => isStunned;

@@ -903,8 +903,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647bc0d0621c6d840af3202bcf82fc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  heavyKnockbackForce: 12
   playerCapsule: {fileID: 9087561472804851672}
+  blockPos: {fileID: 7410195966148075548}
   swingHalfArc: 60
   swingDuration: 0.25
   swingCurve:
@@ -931,14 +931,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  blockPos: {fileID: 7410195966148075548}
-  blockMeterSlider: {fileID: 0}
-  attackReadySlider: {fileID: 0}
-  blockMeterMax: 3
-  blockMeterRechargeRate: 1
-  blockMeterDrainRate: 0.4
-  blockCooldown: 0.5
-  stunDuration: 1
   heavyWindupDuration: 0.5
   heavySwingDuration: 0.12
   heavySwingHalfArc: 100
@@ -966,6 +958,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  heavyKnockbackForce: 12
+  damageAmount: 2
+  heavyDamageAmount: 4
+  blockMeterMax: 3
+  blockMeterRechargeRate: 1
+  blockMeterDrainRate: 0.4
+  blockCooldown: 0.5
+  blockBreakStunDuration: 1
   blockBrokenMoveMultiplier: 0.15
   blockMeterDrainPerDamage: 0.08
   parryHitboxCollider: {fileID: 8555596551800221837}
@@ -974,6 +974,8 @@ MonoBehaviour:
   parryProjectilePrefab: {fileID: 125204135747205892, guid: 6ac55e7cc1c9aeb459858fb9ce91109d, type: 3}
   parryReflectSpeedMultiplier: 1.4
   parryMissBlockMeterCost: 1.5
+  blockMeterSlider: {fileID: 0}
+  attackReadySlider: {fileID: 0}
 --- !u!65 &9133931739623780848
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1042,6 +1044,7 @@ GameObject:
   - component: {fileID: 8900498414262289665}
   - component: {fileID: 930281890772346221}
   - component: {fileID: 2308444394012964383}
+  - component: {fileID: 4093881969060270626}
   m_Layer: 6
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -1249,6 +1252,8 @@ MonoBehaviour:
   dashChargesText: {fileID: 0}
   maxdashcharges: 1
   cooldownAfterChargesExhausted: 3
+  absoluteMaxDashCharges: 5
+  dashChargeProgress: 0
 --- !u!114 &5662218482661770076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1276,11 +1281,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
   maxHealth: 100
-  baseInvincibilityTime: 0.3
-  projectileLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  heavyHitThreshold: 5
+  currentHealth: 100
+  healthSlider: {fileID: 0}
+  invincibilityTime: 0.5
   blockMeterDrainPerDamage: 0.2
 --- !u!54 &6995792346800491877
 Rigidbody:
@@ -1356,6 +1359,30 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.4860578
   m_Center: {x: 0, y: 0.98605776, z: 0}
+--- !u!114 &4093881969060270626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37e054ecac894e40815b4f3b7d1b182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyChargeEffect
+  visualRoot: {fileID: 5987708389210472031}
+  renderers:
+  - {fileID: 7651940328674928329}
+  - {fileID: 8636756830007068057}
+  - {fileID: 7247161952921658512}
+  - {fileID: 527613754493045316}
+  - {fileID: 7752737891096276493}
+  - {fileID: 1978091848500525484}
+  - {fileID: 5159414273147542252}
+  maxShakeAmount: 0.04
+  chargeColor: {r: 1, g: 0.15, b: 0.15, a: 1}
+  tintSpeed: 4
 --- !u!1001 &472289232873078433
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1485,9 +1512,44 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+--- !u!23 &527613754493045316 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 134999567129064677, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1978091848500525484 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2161288567825630989, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5159414273147542252 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4689376943323096141, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5987708389210472031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6166964458731077886, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7247161952921658512 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7070369837943036465, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7651940328674928329 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7835365746300655720, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7752737891096276493 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7861783597787975852, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
+  m_PrefabInstance: {fileID: 472289232873078433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8636756830007068057 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8166719500182633272, guid: 76e58e20669c5504e8919c31b09a8ecd, type: 3}
   m_PrefabInstance: {fileID: 472289232873078433}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &-5658260921126225263
