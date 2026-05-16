@@ -14,6 +14,7 @@ public class Zone1Manager : MonoBehaviour
     public GameObject player; // Set to player capsule.
 
     [Header("Zone 1 Rooms")]
+    public GameObject room1Prefab;
     public GameObject room1;
     public GameObject room2;
     public GameObject randomroom1;
@@ -50,9 +51,12 @@ public class Zone1Manager : MonoBehaviour
         ZoneBanner.Instance.Show(1);
         intensity = 1;
 
-        if (room1 != null)
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
+
+        if (roomToSwitchTo != null)
         {
-            room1.SetActive(true);
+            SwitchToRoom(roomToSwitchTo);
+            MovePlayerToRoomStart();
         }
         ApplyDifficulty();
     }
@@ -226,7 +230,7 @@ public class Zone1Manager : MonoBehaviour
         currentRoom = 1;
         intensity = 0;
 
-        roomToSwitchTo = room1;
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
 
         if (roomToSwitchTo != null)
         {
@@ -264,7 +268,7 @@ public class Zone1Manager : MonoBehaviour
         }
 
         // Load first room
-        roomToSwitchTo = room1;
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
 
         if (roomToSwitchTo != null)
         {
@@ -285,7 +289,7 @@ public class Zone1Manager : MonoBehaviour
 
             if (hp != null)
             {
-                hp.Heal(100f);
+                hp.ReviveAt(Vector3.zero, hp.MaxHP);
             }
 
             TopDownController controller = player.GetComponent<TopDownController>();

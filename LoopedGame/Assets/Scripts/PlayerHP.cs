@@ -295,15 +295,14 @@ public class PlayerHP : MonoBehaviour, IDamageable
             characterController.enabled = false;
         }
 
-        DeathManager deathManager = FindObjectOfType<DeathManager>();
-
-        if (deathManager != null)
+        if (Zone1Manager.Instance != null)
         {
-            deathManager.HandlePlayerDeath(this);
+            Zone1Manager.Instance.ResetAfterPlayerDeath();
         }
+
         else
         {
-            Debug.LogWarning("[PlayerHP] No DeathManager found. Player is dead but no reset behavior exists.");
+            Debug.LogWarning("[PlayerHP] Zone1Manager instance not found. Cannot reset run on death.");
         }
     }
 

@@ -19,7 +19,7 @@ public class EnemyShooter : MonoBehaviour
     private const float _tintFadeSpeed = 6f;
 
     private bool canFire = true;
-    public bool enable = false; //added to toggle shooting on and off outside of. this.
+    public bool enable = false;
     private EnemyStatus status;
 
     private void Awake()
@@ -39,7 +39,7 @@ public class EnemyShooter : MonoBehaviour
             if (canFire)
             {
                 FireAtTarget();
-            }   
+            }
         }
     }
 
@@ -54,14 +54,14 @@ public class EnemyShooter : MonoBehaviour
     {
         canFire = false;
 
-        // snapto red
-        foreach (var mat in _materials) mat.color = _telegraphColor;
+        foreach (var mat in _materials)
+            SetMaterialColor(mat, _telegraphColor);
 
         yield return new WaitForSeconds(_telegraphDuration);
 
-        // actually shoot
         Vector3 direction = firePoint.forward;
         direction.y = 0f;
+
         EnemyProjectileBase projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
         projectile.Setup(direction, gameObject);
         SoundManager.PlaySound("Fire");
@@ -74,17 +74,22 @@ public class EnemyShooter : MonoBehaviour
     {
         float elapsed = 0f;
         Color[] startColors = new Color[_materials.Length];
-        for (int i = 0; i < _materials.Length; i++) startColors[i] = _materials[i].color;
+
+        for (int i = 0; i < _materials.Length; i++)
+            startColors[i] = GetMaterialColor(_materials[i]);
 
         while (elapsed < 1f)
         {
             elapsed += Time.deltaTime * _tintFadeSpeed;
+
             for (int i = 0; i < _materials.Length; i++)
-                _materials[i].color = Color.Lerp(startColors[i], _baseColors[i], elapsed);
+                SetMaterialColor(_materials[i], Color.Lerp(startColors[i], _baseColors[i], elapsed));
+
             yield return null;
         }
 
-        for (int i = 0; i < _materials.Length; i++) _materials[i].color = _baseColors[i];
+        for (int i = 0; i < _materials.Length; i++)
+            SetMaterialColor(_materials[i], _baseColors[i]);
     }
 
     private IEnumerator FireCooldownRoutine()
@@ -98,32 +103,61 @@ public class EnemyShooter : MonoBehaviour
 
     //public void SetTarget(Transform t) => target = t;
 
-
     private void OnDestroy()
     {
         if (_materials == null) return;
+
         for (int i = 0; i < _materials.Length; i++)
-            if (_materials[i] != null) _materials[i].color = _baseColors[i];
+        {
+            if (_materials[i] != null)
+                SetMaterialColor(_materials[i], _baseColors[i]);
+        }
+    }
+
+    private Color GetMaterialColor(Material mat)
+    {
+        if (mat == null) return Color.white;
+
+        if (mat.HasProperty("_Color"))
+            return mat.GetColor("_Color");
+
+        if (mat.HasProperty("_BaseColor"))
+            return mat.GetColor("_BaseColor");
+
+        return Color.white;
+    }
+
+    private void SetMaterialColor(Material mat, Color color)
+    {
+        if (mat == null) return;
+
+        if (mat.HasProperty("_Color"))
+            mat.SetColor("_Color", color);
+        else if (mat.HasProperty("_BaseColor"))
+            mat.SetColor("_BaseColor", color);
     }
 
     private void CacheMaterialsForAtkIndicator()
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         int total = 0;
-        foreach (var r in renderers) total += r.materials.Length;
+
+        foreach (var r in renderers)
+            total += r.materials.Length;
 
         _materials = new Material[total];
         _baseColors = new Color[total];
 
         int idx = 0;
+
         foreach (var r in renderers)
+        {
             foreach (var mat in r.materials)
             {
                 _materials[idx] = mat;
-                _baseColors[idx] = mat.color;
+                _baseColors[idx] = GetMaterialColor(mat);
                 idx++;
             }
+        }
     }
-
-
 }
