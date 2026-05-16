@@ -126,6 +126,8 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (isFinal)
         {
+            HScore hScore = FindObjectOfType<HScore>();
+            if (hScore != null) hScore.FinalScore();
             SceneManager.LoadScene("WinGame");
             return;
         }
