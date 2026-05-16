@@ -30,6 +30,10 @@ public class DoorNextRoom : MonoBehaviour
     {
         done = true;
 
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
+            if (obj.transform.parent == null || obj.transform.parent.name != "DONOTDESTROY")
+                Destroy(obj);
+
         PlayerInput input = player.GetComponentInChildren<PlayerInput>();
         if (input != null) input.enabled = false;
 

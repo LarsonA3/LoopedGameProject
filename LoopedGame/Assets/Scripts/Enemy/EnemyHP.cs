@@ -8,6 +8,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
     [SerializeField] private float currentHealth;
 
     public GameObject healthPickup;
+    private static GameObject healthPickupTemplate;
     private float startingHealth;
     public bool isFinal = false;
 
@@ -33,6 +34,8 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (hitParticlePrefab == null)
             Debug.LogWarning("[EnemyHP] Could not find Resources/Particles/hitParticleENEMY");
+
+       
     }
 
     private void OnEnable()
@@ -43,6 +46,23 @@ public class EnemyHP : MonoBehaviour, IDamageable
         }
 
         isDead = false;
+    }
+    private void Start()
+    {
+        if (healthPickupTemplate == null)
+        {
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
+            {
+                if (obj.transform.parent != null && obj.transform.parent.name == "DONOTDESTROY")
+                {
+                    healthPickupTemplate = obj;
+                    break;
+                }
+            }
+
+            if (healthPickupTemplate == null)
+                Debug.LogWarning("[EnemyHP] Could not find Health pickup under DONOTDESTROY.");
+        }
     }
 
     public void TakeDamage(float damage)
@@ -77,6 +97,16 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
     private void Die(GameObject source)
     {
+        if (healthPickup != null)
+        {
+            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation);
+            Debug.Log("[EnemyHP] Spawned pickup: " + pickup.name + " at " + transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " — nothing to spawn.");
+        }   
+
         if (isDead)
         {
             return;
@@ -89,10 +119,8 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         Debug.Log("[EnemyHP] " + gameObject.name + " died.");
 
-        if (healthPickup != null)
-        {
-            Instantiate(healthPickup, transform.position, transform.rotation);
-        }
+        if (healthPickupTemplate != null)
+            Instantiate(healthPickupTemplate, transform.position, transform.rotation);
 
         HScore.pScore += (int)startingHealth * 5;
 
