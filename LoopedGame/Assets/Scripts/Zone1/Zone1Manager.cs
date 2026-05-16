@@ -277,7 +277,7 @@ public class Zone1Manager : MonoBehaviour
 
         // 4. Show tip
         if (tipUICanvas != null) tipUICanvas.SetActive(true);
-        if (gameUI != null) gameUI.SetActive(true);
+        if (gameUI != null) gameUI.SetActive(false);
 
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
             if (obj.transform.parent == null || obj.transform.parent.name != "DONOTDESTROY")
@@ -460,5 +460,28 @@ public class Zone1Manager : MonoBehaviour
         {
             hScore.IncreaseScore(amount);
         }
+    }
+
+    public void CheatSkipToPreFinal()
+    {
+        zone = 4;
+        currentRoom = 1;
+        intensity = 10;
+
+        
+
+        if (startroomzone4 == null)
+        {
+            Debug.LogWarning("[Zone1Manager] CheatSkipToPreFinal: startroomzone4 is not assigned.");
+            return;
+        }
+
+        for (int i = enemies.transform.childCount - 1; i >= 0; i--)
+            Destroy(enemies.transform.GetChild(i).gameObject);
+
+        SwitchToRoom(startroomzone4);
+        MovePlayerToRoomStart();
+
+        Debug.Log("[Zone1Manager] CHEAT: Skipped to zone 4 room 1.");
     }
 }

@@ -706,6 +706,24 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cheat1"",
+                    ""type"": ""Button"",
+                    ""id"": ""f44f3125-c0d7-42e0-98c8-aa3d8ecd33f0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cheat2"",
+                    ""type"": ""Button"",
+                    ""id"": ""7ae01489-dd7b-49df-ac34-602ca2670724"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1126,6 +1144,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3010d8ac-fec3-4095-a765-90042fd85dd4"",
+                    ""path"": ""<Keyboard>/numpad3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cheat1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0e33f68-fe05-4572-82eb-3dca8c236b40"",
+                    ""path"": ""<Keyboard>/numpad2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cheat2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1218,6 +1258,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_Cheat1 = m_UI.FindAction("Cheat1", throwIfNotFound: true);
+        m_UI_Cheat2 = m_UI.FindAction("Cheat2", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1515,6 +1557,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_ScrollWheel;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_Cheat1;
+    private readonly InputAction m_UI_Cheat2;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1566,6 +1610,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/TrackedDeviceOrientation".
         /// </summary>
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/Cheat1".
+        /// </summary>
+        public InputAction @Cheat1 => m_Wrapper.m_UI_Cheat1;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/Cheat2".
+        /// </summary>
+        public InputAction @Cheat2 => m_Wrapper.m_UI_Cheat2;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1622,6 +1674,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+            @Cheat1.started += instance.OnCheat1;
+            @Cheat1.performed += instance.OnCheat1;
+            @Cheat1.canceled += instance.OnCheat1;
+            @Cheat2.started += instance.OnCheat2;
+            @Cheat2.performed += instance.OnCheat2;
+            @Cheat2.canceled += instance.OnCheat2;
         }
 
         /// <summary>
@@ -1663,6 +1721,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
             @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
+            @Cheat1.started -= instance.OnCheat1;
+            @Cheat1.performed -= instance.OnCheat1;
+            @Cheat1.canceled -= instance.OnCheat1;
+            @Cheat2.started -= instance.OnCheat2;
+            @Cheat2.performed -= instance.OnCheat2;
+            @Cheat2.canceled -= instance.OnCheat2;
         }
 
         /// <summary>
@@ -1923,5 +1987,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Cheat1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheat1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Cheat2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheat2(InputAction.CallbackContext context);
     }
 }

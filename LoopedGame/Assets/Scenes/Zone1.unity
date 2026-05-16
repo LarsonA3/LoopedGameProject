@@ -1188,6 +1188,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1104491684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104491677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbd2711c0f1ab440a45c360fc3d1b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheatManager
 --- !u!114 &1193607306 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7472905242904289002, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
@@ -2354,6 +2366,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[[ GAME UI ]]'
       objectReference: {fileID: 0}
+    - target: {fileID: 7791592242723803069, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8583119675820093666, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2732,6 +2748,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 733772542274298836, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1104491681}
+    - targetCorrespondingSourceObject: {fileID: 733772542274298836, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1104491684}
   m_SourcePrefab: {fileID: 100100000, guid: 41684a330503bb34b8f4bbb517847c94, type: 3}
 --- !u!1001 &8911080140536802711
 PrefabInstance:
