@@ -46,9 +46,9 @@ public class PlayerHP : MonoBehaviour, IDamageable
         maxHealth *= DifficultySettings.Selected switch
         {
             Difficulty.Easy => 1.0f,
-            Difficulty.Medium => 0.6f,
+            Difficulty.Medium => 0.7f,
             Difficulty.Hard => 0.4f,
-            Difficulty.Nightmare => 0.15f,
+            Difficulty.Nightmare => 0.25f,
             _ => 1.0f
         };
 

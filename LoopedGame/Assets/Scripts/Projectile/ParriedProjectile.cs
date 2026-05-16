@@ -89,7 +89,17 @@ public class ParriedProjectile : MonoBehaviour
             return;
         }
 
-        float finalDamage = baseDamage * damageMultiplier;
+        // diff scaling
+        float difficultyMultiplier = DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 0.85f,
+            Difficulty.Hard => 0.7f,
+            Difficulty.Nightmare => 0.5f,
+            _ => 1.0f
+        };
+
+        float finalDamage = baseDamage * damageMultiplier * difficultyMultiplier;
 
         enemy.TakeDamage(finalDamage, gameObject);
 

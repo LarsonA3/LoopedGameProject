@@ -178,9 +178,9 @@ public class Weapon : MonoBehaviour
         float damageMultiplier = DifficultySettings.Selected switch
         {
             Difficulty.Easy => 1.0f,
-            Difficulty.Medium => 0.45f,
-            Difficulty.Hard => 0.25f,
-            Difficulty.Nightmare => 0.05f,
+            Difficulty.Medium => 0.75f,
+            Difficulty.Hard => 0.5f,
+            Difficulty.Nightmare => 0.25f,
             _ => 1.0f
         };
 

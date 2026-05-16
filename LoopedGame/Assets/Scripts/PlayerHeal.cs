@@ -13,8 +13,8 @@ public class PlayerHeal : MonoBehaviour
             {
                 Difficulty.Easy => 6f,
                 Difficulty.Medium => 3f,
-                Difficulty.Hard => 1f,
-                Difficulty.Nightmare => 0.25f,
+                Difficulty.Hard => 2f,
+                Difficulty.Nightmare => 1f,
                 _ => 6f
             };
 
