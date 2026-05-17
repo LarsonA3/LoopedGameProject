@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d95f97c463a30fc46be051765f3826a7, type: 2}
+  - {fileID: 2100000, guid: 17d14f9b96418b34eb0996f4f7a195ef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 5779428012526883367}
   - component: {fileID: 2618033398909451401}
   m_Layer: 0
-  m_Name: Cannon
+  m_Name: Gold Cannon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,7 +219,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d95f97c463a30fc46be051765f3826a7, type: 2}
+  - {fileID: 2100000, guid: 17d14f9b96418b34eb0996f4f7a195ef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 7965025951535975887, guid: 5de27c7a8e5ac5747aaea88e5860aa61, type: 3}
   firePoint: {fileID: 545870820212648004}
-  fireCooldown: 1.5
+  fireCooldown: 0.7
   fireAutomatically: 1
   enable: 0
 --- !u!114 &6164780932488994360
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  maxHealth: 8
+  maxHealth: 12
   currentHealth: 0
   healthPickup: {fileID: 0}
   isFinal: 0

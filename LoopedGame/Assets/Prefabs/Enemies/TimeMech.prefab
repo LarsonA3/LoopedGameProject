@@ -179,8 +179,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  health: 150
+  maxHealth: 10
+  currentHealth: 0
+  healthPickup: {fileID: 0}
   isFinal: 1
+  isBoss: 1
+  hitParticlePrefab: {fileID: 0}
 --- !u!1 &2811554008053042000
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,7 +557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 6344190561046740604}
-  fireCooldown: 2
+  fireCooldown: 8
   fireAutomatically: 1
   enable: 0
 --- !u!114 &8555239482304656835
@@ -570,7 +574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 2205765798318709262, guid: 68665910ff62a684ebfb8814f5be9da8, type: 3}
   firePoint: {fileID: 4213616459719310517}
-  fireCooldown: 4
+  fireCooldown: 10
   fireAutomatically: 1
   enable: 0
 --- !u!54 &681265572589189695

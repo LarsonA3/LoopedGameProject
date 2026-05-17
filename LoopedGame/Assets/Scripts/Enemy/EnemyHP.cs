@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class EnemyHP : MonoBehaviour, IDamageable
 {
     [Header("Health")]
-    public float maxHealth = 10f;
+    public float maxHealth;
     [SerializeField] private float currentHealth;
 
     public GameObject healthPickup;
@@ -101,12 +101,12 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0f)
         {
-            Die(source);
+            Die();
         }
 
     }
 
-    private void Die(GameObject source)
+    private void Die()
     {
         if (healthPickup != null)
         {

@@ -183,7 +183,8 @@ MonoBehaviour:
   currentHealth: 0
   healthPickup: {fileID: 0}
   isFinal: 1
-  isBoss: 0
+  isBoss: 1
+  hitParticlePrefab: {fileID: 0}
 --- !u!1 &2811554008053042000
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +445,6 @@ GameObject:
   - component: {fileID: 6947084638962337020}
   - component: {fileID: 8555239482304656835}
   - component: {fileID: 681265572589189695}
-  - component: {fileID: 778254052348813638}
   m_Layer: 8
   m_Name: TimeMech
   m_TagString: Enemy
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 6344190561046740604}
-  fireCooldown: 2
+  fireCooldown: 8
   fireAutomatically: 1
   enable: 0
 --- !u!114 &8555239482304656835
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 2205765798318709262, guid: 68665910ff62a684ebfb8814f5be9da8, type: 3}
   firePoint: {fileID: 4213616459719310517}
-  fireCooldown: 4
+  fireCooldown: 10
   fireAutomatically: 1
   enable: 0
 --- !u!54 &681265572589189695
@@ -604,23 +604,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &778254052348813638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5812563665938058151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  maxHealth: 124
-  currentHealth: 0
-  healthPickup: {fileID: 0}
-  isFinal: 1
-  isBoss: 1
 --- !u!1 &8314898664540024398
 GameObject:
   m_ObjectHideFlags: 0
