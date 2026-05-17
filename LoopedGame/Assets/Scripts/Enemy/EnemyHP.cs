@@ -11,6 +11,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
     private static GameObject healthPickupTemplate;
     private float startingHealth;
     public bool isFinal = false;
+    private GameObject roomParent;
 
     [Header("Enemy Type")]
     public bool isBoss;
@@ -49,6 +50,16 @@ public class EnemyHP : MonoBehaviour, IDamageable
     }
     private void Start()
     {
+        //get room category
+        foreach (GameObject root in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (root.name == "[[ Rooms ]]")
+            {
+                roomParent = root;
+                break;
+            }
+        }
+
         if (healthPickupTemplate == null)
         {
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
@@ -99,12 +110,12 @@ public class EnemyHP : MonoBehaviour, IDamageable
     {
         if (healthPickup != null)
         {
-            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation);
+            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation, roomParent.GetComponent<Transform>());
             Debug.Log("[EnemyHP] Spawned pickup: " + pickup.name + " at " + transform.position);
         }
         else
         {
-            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " — nothing to spawn.");
+            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " ï¿½ nothing to spawn.");
         }   
 
         if (isDead)
