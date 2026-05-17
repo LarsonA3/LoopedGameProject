@@ -20,6 +20,7 @@ Shader "Custom/SaberBlade" {
       struct v2f {
         float4 position : SV_POSITION;
         float4 color : COLOR;
+        //float4 normal : 
       };
       
       sampler2D _VertColorPal;

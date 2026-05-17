@@ -193,6 +193,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1984650526773476037, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: m_WrapMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1984650526773476037, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1984650526773476037, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
+      propertyPath: 'm_Animations.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7400000, guid: 8c48bf09542a22e458a8ea9642c9e4e6, type: 2}
     - target: {fileID: 2542520660723433126, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -281,7 +293,8 @@ PrefabInstance:
       propertyPath: pauseScreen
       value: 
       objectReference: {fileID: 424564040}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2573953341430790846, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

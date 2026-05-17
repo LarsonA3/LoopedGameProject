@@ -185,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPatrol
   nodeHost: {fileID: 0}
   target: {fileID: 0}
+  knockbackDuration: 0.6
 --- !u!114 &7023790743486928272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +200,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 5596717738003571588}
-  target: {fileID: 0}
   fireCooldown: 3
   fireAutomatically: 1
   enable: 0
@@ -215,8 +215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  health: 25
+  maxHealth: 15
+  currentHealth: 0
+  healthPickup: {fileID: 0}
   isFinal: 0
+  isBoss: 0
 --- !u!64 &5380002622365042904
 MeshCollider:
   m_ObjectHideFlags: 0
