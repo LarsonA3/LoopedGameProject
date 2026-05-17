@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class HScore : MonoBehaviour
 {
     public TextMeshProUGUI scoreBox;
-    public TextMeshProUGUI nameBox;
-    public static string pName = "Player 1"; //
+    public TMP_InputField nameBox;
+    public static string pName = "Anonymous"; //
     public static int pScore = 0;
     private string[] funNames = {"Arle Nadja", "Rulue", "Schezo Wegey", "Dark Prince"};
     private System.Random rand = new System.Random();
@@ -33,21 +33,24 @@ public class HScore : MonoBehaviour
 
     }
 
-    public void ChangeName()
+    public void ChangeName(string newName)
     {
-        if (nameBox != null)
-        {
-            pName = nameBox.text;    
-            print(pName);
-        }
-
+        pName = newName;
+        print(pName + " set as name for highscore");
     }
 
     public void IncreaseScore(int amount)
     {
-        pScore += amount;
-        //print($"Player: {pName}\nHigh Score: {pScore}\n");
-        //scoreBox.text = $"Score: {pScore}";
+        float multiplier = DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 1.15f,
+            Difficulty.Hard => 1.35f,
+            Difficulty.Nightmare => 1.6f,
+            _ => 1.0f
+        };
+
+        pScore += Mathf.RoundToInt(amount * multiplier);
     }
 
     public void FinalScore() //call this before sending to end screen

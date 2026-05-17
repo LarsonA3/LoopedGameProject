@@ -21,6 +21,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
     private bool cardInvincible;
     private bool isDead;
     private float invincibilityTimer;
+    private GameObject hitParticlePrefab;
 
     private TopDownController controller;
     private Weapon weapon;
@@ -42,11 +43,24 @@ public class PlayerHP : MonoBehaviour, IDamageable
             invincibilityTime += UpgradeState.Instance.invincibilityBonus;
         }
 
+        maxHealth *= DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 0.7f,
+            Difficulty.Hard => 0.4f,
+            Difficulty.Nightmare => 0.25f,
+            _ => 1.0f
+        };
+
         currentHealth = maxHealth;
         isDead = false;
 
         OnHealthChanged += UpdateHealthSlider;
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        hitParticlePrefab = Resources.Load<GameObject>("Particles/hitParticlePLAYER");
+        if (hitParticlePrefab == null)
+            Debug.LogWarning("[PlayerHP] Could not find Resources/Particles/hitParticlePLAYER");
     }
 
     private void UpdateHealthSlider(float current, float max)
@@ -137,6 +151,15 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        if (hitParticlePrefab != null)
+        {
+            GameObject fx = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            ParticleSystem ps = fx.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+            Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
+        }
+        SoundManager.PlaySound("Playerhit");
+
 
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
@@ -248,6 +271,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
         }
 
         isDead = true;
+        FindObjectOfType<HScore>().FinalScore(); // CALL FINAL SCORE
         currentHealth = 0f;
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
@@ -271,15 +295,14 @@ public class PlayerHP : MonoBehaviour, IDamageable
             characterController.enabled = false;
         }
 
-        DeathManager deathManager = FindObjectOfType<DeathManager>();
-
-        if (deathManager != null)
+        if (Zone1Manager.Instance != null)
         {
-            deathManager.HandlePlayerDeath(this);
+            Zone1Manager.Instance.ResetAfterPlayerDeath();
         }
+
         else
         {
-            Debug.LogWarning("[PlayerHP] No DeathManager found. Player is dead but no reset behavior exists.");
+            Debug.LogWarning("[PlayerHP] Zone1Manager instance not found. Cannot reset run on death.");
         }
     }
 

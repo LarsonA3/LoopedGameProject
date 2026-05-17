@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Auxiliary Dash Capacitor", menuName = "Cards/Stats/Auxiliary Dash Capacitor")]
-public class AuxiliaryDashCapacitorCard : StatCardEffect
+public class AuxiliaryDashCapacitorCard2 : StatCardEffect
 {
     protected override StatUpgradeType StatType => StatUpgradeType.DashCharges;
 

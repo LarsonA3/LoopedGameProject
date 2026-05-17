@@ -44,8 +44,6 @@ public class UpgradeState : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        Load();
     }
 
     public float AddStat(StatUpgradeType type, float amount, float cap)
@@ -55,8 +53,6 @@ public class UpgradeState : MonoBehaviour
         float actuallyAdded = newValue - current;
 
         SetStat(type, newValue);
-        Save();
-
         return actuallyAdded;
     }
 
@@ -245,63 +241,5 @@ public class UpgradeState : MonoBehaviour
         parryMissStunReduction = 0f;
         parryMissMeterCostReduction = 0f;
         parryReflectSpeed = 0f;
-
-        Save();
-    }
-
-    private void Save()
-    {
-        PlayerPrefs.SetFloat("lightAttackDamageBonus", lightAttackDamageBonus);
-        PlayerPrefs.SetFloat("heavyAttackDamageBonus", heavyAttackDamageBonus);
-        PlayerPrefs.SetFloat("lightAttackSpeedIncrease", lightAttackSpeedIncrease);
-        PlayerPrefs.SetFloat("heavyAttackWindupReduction", heavyAttackWindupReduction);
-        PlayerPrefs.SetFloat("heavyAttackSpeedIncrease", heavyAttackSpeedIncrease);
-        PlayerPrefs.SetFloat("attackArcBonus", attackArcBonus);
-
-        PlayerPrefs.SetFloat("maxBlockMeterBonus", maxBlockMeterBonus);
-        PlayerPrefs.SetFloat("blockRechargeBonus", blockRechargeBonus);
-        PlayerPrefs.SetFloat("blockDrainReduction", blockDrainReduction);
-        PlayerPrefs.SetFloat("blockCooldownReduction", blockCooldownReduction);
-        PlayerPrefs.SetFloat("blockBreakStunDuration", blockBreakStunDuration);
-
-        PlayerPrefs.SetFloat("moveSpeedBonus", moveSpeedBonus);
-        PlayerPrefs.SetFloat("dashDistanceBonus", dashDistanceBonus);
-        PlayerPrefs.SetFloat("dashCooldownReduction", dashCooldownReduction);
-        PlayerPrefs.SetFloat("dashChargeProgress", dashChargeProgress);
-
-        PlayerPrefs.SetFloat("maxHPBonus", maxHPBonus);
-        PlayerPrefs.SetFloat("invicibilityBonus", invicibilityBonus);
-
-        PlayerPrefs.SetFloat("parryWindowBonus", parryWindowBonus);
-        PlayerPrefs.SetFloat("parryMissStunReduction", parryMissStunReduction);
-        PlayerPrefs.SetFloat("parryMissMeterCostReduction", parryMissMeterCostReduction);
-        PlayerPrefs.SetFloat("parryReflectSpeed", parryReflectSpeed);
-
-        PlayerPrefs.Save();
-    }
-
-    private void Load()
-    {
-        lightAttackDamageBonus = PlayerPrefs.GetFloat("lightAttackDamageBonus", 0f);
-        heavyAttackDamageBonus = PlayerPrefs.GetFloat("heavyAttackDamageBonus", 0f);
-        lightAttackSpeedIncrease = PlayerPrefs.GetFloat("lightAttackSpeedIncrease", 0f);
-        heavyAttackWindupReduction = PlayerPrefs.GetFloat("heavyAttackWindupReduction", 0f);
-        heavyAttackSpeedIncrease = PlayerPrefs.GetFloat("heavyAttackSpeedIncrease", 0f);
-        attackArcBonus = PlayerPrefs.GetFloat("attackArcBonus", 0f);
-        maxBlockMeterBonus = PlayerPrefs.GetFloat("maxBlockMeterBonus", 0f);
-        blockRechargeBonus = PlayerPrefs.GetFloat("blockRechargeBonus", 0f);
-        blockDrainReduction = PlayerPrefs.GetFloat("blockDrainReduction", 0f);
-        blockCooldownReduction = PlayerPrefs.GetFloat("blockCooldownReduction", 0f);
-        blockBreakStunDuration = PlayerPrefs.GetFloat("blockBreakStunDuration", 0f);
-        moveSpeedBonus = PlayerPrefs.GetFloat("moveSpeedBonus", 0f);
-        dashDistanceBonus = PlayerPrefs.GetFloat("dashDistanceBonus", 0f);
-        dashCooldownReduction = PlayerPrefs.GetFloat("dashCooldownReduction", 0f);
-        dashChargeProgress = PlayerPrefs.GetFloat("dashChargeProgress", 0f);
-        maxHPBonus = PlayerPrefs.GetFloat("maxHPBonus", 0f);
-        invicibilityBonus = PlayerPrefs.GetFloat("invicibilityBonus", 0f);
-        parryWindowBonus = PlayerPrefs.GetFloat("parryWindowBonus", 0f);
-        parryMissStunReduction = PlayerPrefs.GetFloat("parryMissStunReduction", 0f);
-        parryMissMeterCostReduction = PlayerPrefs.GetFloat("parryMissMeterCostReduction", 0f);
-        parryReflectSpeed = PlayerPrefs.GetFloat("parryReflectSpeed", 0f);
     }
 }

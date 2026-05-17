@@ -105,6 +105,8 @@ public class UpgradeManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
+        SoundManager.PlaySound("blipSelect (1)");
+
         gameObject.SetActive(false);
     }
 

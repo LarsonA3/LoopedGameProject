@@ -9,8 +9,17 @@ public class PlayerHeal : MonoBehaviour
         if (collision.CompareTag("Health"))
         {
             Destroy(collision.gameObject);
-            SendMessage("Heal", 6);
-            print("Player healed for 6");
+            float healAmount = DifficultySettings.Selected switch
+            {
+                Difficulty.Easy => 6f,
+                Difficulty.Medium => 3f,
+                Difficulty.Hard => 2f,
+                Difficulty.Nightmare => 1f,
+                _ => 6f
+            };
+
+            SendMessage("Heal", healAmount);
+            print("Player healed for " + healAmount);
         }
     }
 }

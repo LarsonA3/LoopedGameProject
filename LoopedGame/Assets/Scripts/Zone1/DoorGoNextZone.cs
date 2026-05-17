@@ -30,6 +30,11 @@ public class DoorGoNextZone : MonoBehaviour
     {
         transitioning = true;
 
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
+            if (obj.transform.parent == null || obj.transform.parent.name != "DONOTDESTROY")
+                Destroy(obj);
+
         var input = player.GetComponentInChildren<PlayerInput>();
         if (input != null) input.enabled = false;
 
@@ -43,6 +48,7 @@ public class DoorGoNextZone : MonoBehaviour
 
         HScore.pScore += 3000;
 
+        SoundManager.PlaySound("transition");
         FadeTransition.Instance.StartFade(() => Zone1Manager.Instance.nextZone());
     }
 

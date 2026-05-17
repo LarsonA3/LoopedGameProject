@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CardAbilityState : MonoBehaviour
@@ -18,9 +19,14 @@ public class CardAbilityState : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private Dictionary<AbilityUpgradeType, int> abilityStacks = new Dictionary<AbilityUpgradeType, int>();
     public int GetStacks(AbilityUpgradeType ability)
     {
-        return PlayerPrefs.GetInt(GetKey(ability), 0);
+        if (!abilityStacks.ContainsKey(ability))
+        {
+            return 0;
+        }
+        return abilityStacks[ability];
     }
 
     public int AddStack(AbilityUpgradeType ability)
@@ -32,29 +38,18 @@ public class CardAbilityState : MonoBehaviour
         }
 
         int newValue = Mathf.Min(currentStacks + 1, MaxStacks);
-        PlayerPrefs.SetInt(GetKey(ability), newValue);
+        abilityStacks[ability] = newValue;
         return newValue;
     }
 
-        public bool HasAbility(AbilityUpgradeType ability)
-        {
-            return GetStacks(ability) > 0;
-        }
-    
+    public bool HasAbility(AbilityUpgradeType ability)
+    {
+        return GetStacks(ability) > 0;
+    }
+
     public void ResetAbilityStacks()
     {
-        foreach (AbilityUpgradeType ability in System.Enum.GetValues(typeof(AbilityUpgradeType)))
-        {
-            PlayerPrefs.SetInt(GetKey(ability), 0);
-        }
+        abilityStacks.Clear();
 
-        PlayerPrefs.Save();
     }
-
-    private string GetKey(AbilityUpgradeType ability)
-    {
-        return "Ability_" + ability;
-    }
-
 }
-

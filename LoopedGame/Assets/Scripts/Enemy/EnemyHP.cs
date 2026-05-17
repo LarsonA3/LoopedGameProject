@@ -8,6 +8,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
     [SerializeField] private float currentHealth;
 
     public GameObject healthPickup;
+    private static GameObject healthPickupTemplate;
     private float startingHealth;
     public bool isFinal = false;
 
@@ -16,6 +17,8 @@ public class EnemyHP : MonoBehaviour, IDamageable
     public bool IsBoss => isBoss;
 
     private bool isDead;
+
+    public GameObject hitParticlePrefab;
 
     public float CurrentHP => currentHealth;
     public float MaxHP => maxHealth;
@@ -26,6 +29,13 @@ public class EnemyHP : MonoBehaviour, IDamageable
         startingHealth = maxHealth;
         currentHealth = maxHealth;
         isDead = false;
+
+        hitParticlePrefab = Resources.Load<GameObject>("Particles/hitParticleENEMY");
+
+        if (hitParticlePrefab == null)
+            Debug.LogWarning("[EnemyHP] Could not find Resources/Particles/hitParticleENEMY");
+
+       
     }
 
     private void OnEnable()
@@ -37,6 +47,23 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         isDead = false;
     }
+    private void Start()
+    {
+        if (healthPickupTemplate == null)
+        {
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
+            {
+                if (obj.transform.parent != null && obj.transform.parent.name == "DONOTDESTROY")
+                {
+                    healthPickupTemplate = obj;
+                    break;
+                }
+            }
+
+            if (healthPickupTemplate == null)
+                Debug.LogWarning("[EnemyHP] Could not find Health pickup under DONOTDESTROY.");
+        }
+    }
 
     public void TakeDamage(float damage)
     {
@@ -45,29 +72,41 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage, GameObject source)
     {
-        if (isDead)
-        {
-            return;
-        }
-
-        if (damage <= 0f)
-        {
-            return;
-        }
+        if (isDead) return;
+        if (damage <= 0f) return;
 
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
+        if (hitParticlePrefab != null)
+        {
+            GameObject fx = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            ParticleSystem ps = fx.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+            Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
+        }
+        SoundManager.PlaySound("hitHurt (1)");
         Debug.Log("[EnemyHP] " + gameObject.name + " took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);
 
         if (currentHealth <= 0f)
         {
             Die(source);
         }
+
     }
 
     private void Die(GameObject source)
     {
+        if (healthPickup != null)
+        {
+            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation);
+            Debug.Log("[EnemyHP] Spawned pickup: " + pickup.name + " at " + transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " — nothing to spawn.");
+        }   
+
         if (isDead)
         {
             return;
@@ -80,15 +119,15 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         Debug.Log("[EnemyHP] " + gameObject.name + " died.");
 
-        if (healthPickup != null)
-        {
-            Instantiate(healthPickup, transform.position, transform.rotation);
-        }
+        if (healthPickupTemplate != null)
+            Instantiate(healthPickupTemplate, transform.position, transform.rotation);
 
         HScore.pScore += (int)startingHealth * 5;
 
         if (isFinal)
         {
+            HScore hScore = FindObjectOfType<HScore>();
+            if (hScore != null) hScore.FinalScore();
             SceneManager.LoadScene("WinGame");
             return;
         }

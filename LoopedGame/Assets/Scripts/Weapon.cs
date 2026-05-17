@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
+
     [Header("References")]
     public Transform playerCapsule;
     public Transform blockPos;
@@ -73,9 +74,12 @@ public class Weapon : MonoBehaviour
     private float blockCooldownTimer;
     private Coroutine stunCoroutine;
 
+
     private bool isParrying;
     private float parryTimer;
     private bool parryLanded;
+    private bool isParryStunned;
+    public bool IsParryStunned => isParryStunned;
 
     private float temporaryNextLightSpeedMultiplier = 1f;
     private float nextHeavyWindupMultiplier = 1f;
@@ -83,6 +87,9 @@ public class Weapon : MonoBehaviour
     private float blockDrainCooldown = 0.3f;
     private float blockDrainCooldownTimer;
 
+    public float HeavyChargeNormalized => isChargingHeavy // handles wind up heavy atk efx
+    ? Mathf.Clamp01(heavyWindupTimer / heavyWindupDuration)
+    : 0f;
     public bool IsBlocking => isBlocking;
     public bool IsStunned => isStunned;
     public bool IsParrying => isParrying;
@@ -166,6 +173,19 @@ public class Weapon : MonoBehaviour
 
         blockMeter = blockMeterMax;
         heavyDamageAmount = Mathf.Max(heavyDamageAmount, damageAmount * 2f);
+        
+        // difficulty scaling
+        float damageMultiplier = DifficultySettings.Selected switch
+        {
+            Difficulty.Easy => 1.0f,
+            Difficulty.Medium => 0.75f,
+            Difficulty.Hard => 0.5f,
+            Difficulty.Nightmare => 0.25f,
+            _ => 1.0f
+        };
+
+        damageAmount *= damageMultiplier;
+        heavyDamageAmount *= damageMultiplier;
     }
 
     private void Update()
@@ -259,6 +279,7 @@ public class Weapon : MonoBehaviour
         if (weaponCollider != null)
         {
             weaponCollider.enabled = true;
+            SoundManager.PlaySound("attack", 0.1f, 0.4f);
         }
 
         ApplySwingAngle(-swingHalfArc * swingDirection);
@@ -336,6 +357,7 @@ public class Weapon : MonoBehaviour
         {
             weaponCollider.enabled = true;
         }
+        SoundManager.PlaySound("heavyhit");
 
         ApplySwingAngle(-heavySwingHalfArc * heavySwingDirection);
     }
@@ -569,10 +591,9 @@ public class Weapon : MonoBehaviour
     private IEnumerator StunRoutine(float duration)
     {
         isStunned = true;
-
         yield return new WaitForSeconds(duration);
-
         isStunned = false;
+        isParryStunned = false;
         stunCoroutine = null;
     }
 
@@ -669,6 +690,7 @@ public class Weapon : MonoBehaviour
             transform.localPosition = readyLocalPosition + readyLocalRotation * blockPos.localPosition;
             transform.localRotation = readyLocalRotation * blockPos.localRotation;
         }
+        SoundManager.PlaySound("parry");
     }
 
     private void UpdateParry()
@@ -685,10 +707,7 @@ public class Weapon : MonoBehaviour
     {
         isParrying = false;
 
-        if (parryHitboxCollider != null)
-        {
-            parryHitboxCollider.enabled = false;
-        }
+        if (parryHitboxCollider != null) parryHitboxCollider.enabled = false;
 
         if (success)
         {
@@ -696,13 +715,9 @@ public class Weapon : MonoBehaviour
         }
         else
         {
+            isParryStunned = true;
             blockMeter = Mathf.Max(0f, blockMeter - parryMissBlockMeterCost);
-
-            if (stunCoroutine != null)
-            {
-                StopCoroutine(stunCoroutine);
-            }
-
+            if (stunCoroutine != null) StopCoroutine(stunCoroutine);
             stunCoroutine = StartCoroutine(StunRoutine(parryMissStunDuration));
             blockCooldownTimer = blockCooldown;
         }

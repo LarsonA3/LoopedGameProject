@@ -105,7 +105,9 @@ public class TopDownController : MonoBehaviour
         cc.enabled = true;
 
         lastDashTime = Time.time;
+        SoundManager.PlaySound("dash");
         isDashing = false;
+
 
         currentDashCharges -= 1;
         if (currentDashCharges <= 0)

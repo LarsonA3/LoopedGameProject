@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Zone1Manager : MonoBehaviour
 {
@@ -14,6 +17,7 @@ public class Zone1Manager : MonoBehaviour
     public GameObject player; // Set to player capsule.
 
     [Header("Zone 1 Rooms")]
+    public GameObject room1Prefab;
     public GameObject room1;
     public GameObject room2;
     public GameObject randomroom1;
@@ -39,7 +43,16 @@ public class Zone1Manager : MonoBehaviour
     public GameObject startroomzone4;
     public GameObject finalroom4;
 
+
     private GameObject roomToSwitchTo;
+
+
+
+    public Transform playerVisualRoot;
+    public GameObject tipUICanvas;
+    public GameObject deathWhitePrefab;
+    public float deathSequenceDuration = 2f;
+    public GameObject gameUI;
 
     private void Start()
     {
@@ -50,10 +63,36 @@ public class Zone1Manager : MonoBehaviour
         ZoneBanner.Instance.Show(1);
         intensity = 1;
 
-        if (room1 != null)
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
+
+        if (roomToSwitchTo != null)
         {
-            room1.SetActive(true);
+            SwitchToRoom(roomToSwitchTo);
+            MovePlayerToRoomStart();
         }
+        ApplyDifficulty();
+    }
+
+
+    //DIFFICULTY STUFF
+    private void ApplyDifficulty()
+    {
+        switch (DifficultySettings.Selected)
+        {
+            case Difficulty.Easy:
+                break;
+            case Difficulty.Medium:
+                intensity += 1;
+                break;
+            case Difficulty.Hard:
+                intensity += 3;
+                break;
+            case Difficulty.Nightmare:
+                intensity += 6;
+                break;
+        }
+
+        Debug.Log("[Zone1Manager] Difficulty: " + DifficultySettings.Selected + ", Starting intensity: " + intensity);
     }
 
     public void nextRoom()
@@ -203,7 +242,7 @@ public class Zone1Manager : MonoBehaviour
         currentRoom = 1;
         intensity = 0;
 
-        roomToSwitchTo = room1;
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
 
         if (roomToSwitchTo != null)
         {
@@ -214,93 +253,94 @@ public class Zone1Manager : MonoBehaviour
 
     public void ResetAfterPlayerDeath()
     {
-        Debug.Log("[Zone1Manager] Player death reset started.");
+        StartCoroutine(DeathSequence());
+    }
 
-        Time.timeScale = 1f;
+    private IEnumerator DeathSequence()
+    {
+        Debug.Log("[Zone1Manager] Death sequence started.");
 
-        zone = 1;
-        ZoneBanner.Instance.Show(1);
-        currentRoom = 1;
-        intensity = 1;
+        // 1. Play tick sound
+        SoundManager.PlaySound("4seconds");
 
+        // 2. Clear enemies and room immediately
         for (int i = enemies.transform.childCount - 1; i >= 0; i--)
             Destroy(enemies.transform.GetChild(i).gameObject);
 
-        // Clear score/run-only state if desired
-        HScore hScore = null;
+        for (int i = rooms.transform.childCount - 1; i >= 0; i--)
+            Destroy(rooms.transform.GetChild(i).gameObject);
 
-        if (player != null)
+        // 3. Flash white
+        GameObject whiteFlash = null;
+        if (deathWhitePrefab != null)
+            whiteFlash = Instantiate(deathWhitePrefab);
+
+        // 4. Show tip
+        if (tipUICanvas != null) tipUICanvas.SetActive(true);
+        if (gameUI != null) gameUI.SetActive(false);
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
+            if (obj.transform.parent == null || obj.transform.parent.name != "DONOTDESTROY")
+                Destroy(obj);
+
+        // 5. Shake visual root for deathSequenceDuration
+        if (playerVisualRoot != null)
         {
-            hScore = player.GetComponentInChildren<HScore>();
+            Vector3 origin = playerVisualRoot.localPosition;
+            float elapsed = 0f;
+            float mag = 0.08f;
+
+            while (elapsed < deathSequenceDuration)
+            {
+                elapsed += Time.deltaTime;
+                playerVisualRoot.localPosition = origin + new Vector3(
+                    Random.Range(-mag, mag),
+                    Random.Range(-mag, mag),
+                    Random.Range(-mag, mag)
+                );
+                yield return null;
+            }
+
+            playerVisualRoot.localPosition = origin;
+        }
+        else
+        {
+            yield return new WaitForSeconds(deathSequenceDuration);
         }
 
-        if (hScore != null)
-        {
-            hScore.FinalScore();
-            hScore.ResetScore();
-        }
+        // 6. Destroy white flash
+        if (whiteFlash != null)
+            Destroy(whiteFlash);
 
-        // Load first room
-        roomToSwitchTo = room1;
+        // 7. Hide tip
+        if (tipUICanvas != null) tipUICanvas.SetActive(false);
+        if (gameUI != null) gameUI.SetActive(true);
 
+        // ---- existing reset logic unchanged below ----
+
+        Debug.Log("[Zone1Manager] Player death reset started.");
+        Time.timeScale = 1f;
+
+        zone = 1;
+        ZoneBanner.Instance?.Show(1);
+        currentRoom = 1;
+        intensity = 1;
+
+        HScore hScore = player != null ? player.GetComponentInChildren<HScore>() : null;
+        if (hScore != null) { hScore.FinalScore(); hScore.ResetScore(); }
+
+        roomToSwitchTo = room1Prefab != null ? room1Prefab : room1;
         if (roomToSwitchTo != null)
         {
             SwitchToRoom(roomToSwitchTo);
             MovePlayerToRoomStart();
         }
-        else
-        {
-            Debug.LogWarning("[Zone1Manager] Room1 is not assigned.");
-        }
+        else Debug.LogWarning("[Zone1Manager] Room1 is not assigned.");
 
-
-
-        // Reset player health/movement/weapon
         if (player != null)
         {
             PlayerHP hp = player.GetComponent<PlayerHP>();
-
-            if (hp != null)
-            {
-                hp.Heal(100f);
-            }
-
-            TopDownController controller = player.GetComponent<TopDownController>();
-
-            if (controller != null)
-            {
-                //controller.ResetRunMovementState();
-            }
-
-            Weapon weapon = player.GetComponentInChildren<Weapon>();
-
-            if (weapon != null)
-            {
-                //weapon.ResetRunWeaponState();
-            }
-
-            /*
-            //PlayerRareCardAbilityController rareCards = player.GetComponent<PlayerRareCardAbilityController>();
-
-            if (rareCards != null)
-            {
-                rareCards.ResetRunState();
-            }
-
-            //PlayerEpicCardAbilityController epicCards = player.GetComponent<PlayerEpicCardAbilityController>();
-
-            if (epicCards != null)
-            {
-                epicCards.ResetRunState();
-            }
-
-            //PlayerLegendaryCardAbilityController legendaryCards = player.GetComponent<PlayerLegendaryCardAbilityController>();
-
-            if (legendaryCards != null)
-            {
-                legendaryCards.ResetRunLegendaryFlags();
-            }
-            */
+            if (hp != null) hp.ReviveAt(Vector3.zero, hp.MaxHP);
         }
 
         Debug.Log("[Zone1Manager] Player death reset complete.");
@@ -420,5 +460,28 @@ public class Zone1Manager : MonoBehaviour
         {
             hScore.IncreaseScore(amount);
         }
+    }
+
+    public void CheatSkipToPreFinal()
+    {
+        zone = 4;
+        currentRoom = 1;
+        intensity = 10;
+
+        
+
+        if (startroomzone4 == null)
+        {
+            Debug.LogWarning("[Zone1Manager] CheatSkipToPreFinal: startroomzone4 is not assigned.");
+            return;
+        }
+
+        for (int i = enemies.transform.childCount - 1; i >= 0; i--)
+            Destroy(enemies.transform.GetChild(i).gameObject);
+
+        SwitchToRoom(startroomzone4);
+        MovePlayerToRoomStart();
+
+        Debug.Log("[Zone1Manager] CHEAT: Skipped to zone 4 room 1.");
     }
 }

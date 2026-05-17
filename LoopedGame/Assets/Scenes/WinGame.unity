@@ -11399,7 +11399,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ac9db7752f3682c4d8cdcca1fb220d08, type: 2}
+  - {fileID: 2100000, guid: 461a36b1468ac7a439a3e7a414c11e9a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11865,6 +11865,7 @@ GameObject:
   - component: {fileID: 871555818168083819}
   - component: {fileID: 4151577901525438999}
   - component: {fileID: 5641638023335164069}
+  - component: {fileID: 6044998493640036746}
   m_Layer: 5
   m_Name: '[[ MENU CANVAS ]]'
   m_TagString: Untagged
@@ -11872,6 +11873,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &6044998493640036746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044998493640036745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1152f88c7f6be9468819d69a5deba4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinScreen
+  scoreText: {fileID: 419448711}
 --- !u!4 &6122600068434091538
 Transform:
   m_ObjectHideFlags: 0
@@ -13137,7 +13151,7 @@ MonoBehaviour:
   isPaintingEnabled: 0
   currentEditor: 
   materials:
-  - {fileID: 2100000, guid: ac9db7752f3682c4d8cdcca1fb220d08, type: 2}
+  - {fileID: 2100000, guid: 461a36b1468ac7a439a3e7a414c11e9a, type: 2}
   materialsPath:
   - Assets/Unity-UModelerX/Editor/Resources/Materials/UModelerX_Gray_URP.mat
   currentMaterialIndex: -1
