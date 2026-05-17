@@ -70,10 +70,12 @@ public class EnemyShooter : MonoBehaviour
     private IEnumerator TelegraphAndFire()
     {
         canFire = false;
-
-        foreach (var mat in _materials) mat.color = _telegraphColor;
-
-        yield return new WaitForSeconds(_telegraphDuration);
+        bool isSlime = gameObject.name.Contains("Slime");
+        if (!isSlime)
+        {
+            foreach (var mat in _materials) mat.color = _telegraphColor;
+            yield return new WaitForSeconds(_telegraphDuration);
+        }
 
         Vector3 direction = firePoint.forward;
         direction.y = 0f;
