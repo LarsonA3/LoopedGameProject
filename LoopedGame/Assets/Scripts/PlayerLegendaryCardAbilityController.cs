@@ -465,12 +465,13 @@ public class PlayerLegendaryCardAbilityController : MonoBehaviour
     {
         int stacks = GetStacks(AbilityUpgradeType.PerfectCounterchain);
         if (stacks <= 0) return;
+        if (weapon == null) return;
 
         perfectCounterchainReady = true;
         perfectCounterchainEndTime = Time.time + 2f;
 
-        float pulseDamage = 10f + 5f * (stacks - 1);
-        pulseDamage = Mathf.Min(pulseDamage, 55f);
+        float pulseDamage = weapon.damageAmount * (1.5f + 0.5f * (stacks - 1));
+        pulseDamage = Mathf.Min(pulseDamage, weapon.damageAmount * 4f);
 
         perfectCounterchainPulseDamage = pulseDamage;
     }
