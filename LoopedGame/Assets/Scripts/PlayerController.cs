@@ -83,7 +83,7 @@ public class TopDownController : MonoBehaviour
     private bool isDashing;
     private int currentDashCharges;
     public float cooldownAfterChargesExhausted = 3f;
-    public int absoluteMaxDashCharges = 5; // hard cap prevents any UI overflow
+    public int absoluteMaxDashCharges = 9; // hard cap prevents any UI overflow
     public int dashChargeProgress;
     private float temporaryMoveSpeedMultiplier = 1f;
     private float temporaryMoveSpeedEndTime;
