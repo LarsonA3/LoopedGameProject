@@ -169,7 +169,11 @@ public class RoomHandler : MonoBehaviour
                 if (roll < cursor) { chosen = p.type; break; }
             }
 
-            int chosenCost = chosen switch { 1 => 1, 2 => 2, 3 => 3, _ => 99 };
+            int chosenCost = 1;
+            foreach (var e in enemyTable)
+            {
+                if (e.type == chosen) { chosenCost = e.cost; break; }
+            }
 
             SpawnEnemy(chosen);
             spawnedTypes.Add(chosen);
