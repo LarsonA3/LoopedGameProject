@@ -4,13 +4,14 @@ using UnityEngine.SceneManagement;
 public class EnemyHP : MonoBehaviour, IDamageable
 {
     [Header("Health")]
-    public float maxHealth = 10f;
+    public float maxHealth;
     [SerializeField] private float currentHealth;
 
     public GameObject healthPickup;
     private static GameObject healthPickupTemplate;
     private float startingHealth;
     public bool isFinal = false;
+    private GameObject roomParent;
 
     [Header("Enemy Type")]
     public bool isBoss;
@@ -49,6 +50,16 @@ public class EnemyHP : MonoBehaviour, IDamageable
     }
     private void Start()
     {
+        //get room category
+        foreach (GameObject root in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (root.name == "[[ Rooms ]]")
+            {
+                roomParent = root;
+                break;
+            }
+        }
+
         if (healthPickupTemplate == null)
         {
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Health"))
@@ -90,21 +101,21 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0f)
         {
-            Die(source);
+            Die();
         }
 
     }
 
-    private void Die(GameObject source)
+    private void Die()
     {
         if (healthPickup != null)
         {
-            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation);
+            GameObject pickup = Instantiate(healthPickup, transform.position, transform.rotation, roomParent.GetComponent<Transform>());
             Debug.Log("[EnemyHP] Spawned pickup: " + pickup.name + " at " + transform.position);
         }
         else
         {
-            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " — nothing to spawn.");
+            Debug.LogWarning("[EnemyHP] healthPickup is null on " + gameObject.name + " ï¿½ nothing to spawn.");
         }   
 
         if (isDead)
@@ -126,6 +137,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (isFinal)
         {
+            PostProcessingEffects.Instance.TriggerParryBloom();
             HScore hScore = FindObjectOfType<HScore>();
             if (hScore != null) hScore.FinalScore();
             SceneManager.LoadScene("WinGame");

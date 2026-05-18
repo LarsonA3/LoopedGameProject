@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Collision Override
   m_EditorClassIdentifier: Assembly-CSharp::CollisionOverrideCard
   cardName: Collision Override
-  description: Dashing into an enemy deals damage and lightly knocks them back.
+  cardRarity: 1
+  description: Dashing into an enemy deals damage.

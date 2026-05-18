@@ -26,6 +26,8 @@ public class PlayerHP : MonoBehaviour, IDamageable
     private TopDownController controller;
     private Weapon weapon;
 
+    private CameraMoveWithPlayer cam;
+
     public float CurrentHP => currentHealth;
     public float MaxHP => maxHealth;
     public bool IsDead => isDead;
@@ -36,6 +38,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
     {
         controller = GetComponent<TopDownController>();
         weapon = GetComponentInChildren<Weapon>();
+        cam = FindObjectOfType<CameraMoveWithPlayer>();
 
         if (UpgradeState.Instance != null)
         {
@@ -159,6 +162,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
             Destroy(fx, ps != null ? ps.main.duration + ps.main.startLifetime.constantMax : 2f);
         }
         SoundManager.PlaySound("Playerhit");
+        if (cam != null) cam.TriggerShake();
 
 
         Debug.Log("[PlayerHP] Player took " + damage + " damage. HP: " + currentHealth + "/" + maxHealth);

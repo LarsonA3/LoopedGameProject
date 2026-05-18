@@ -16,7 +16,6 @@ public class RoomHandler : MonoBehaviour
 
     private GameObject player;
     private GameObject nodeHost;
-    private GameObject healthItem; //added for health restoration
 
     private bool isBoss = false;
 
@@ -40,15 +39,6 @@ public class RoomHandler : MonoBehaviour
         else
             print("Could not find ([[ Enemies ]]) in root of scene pls place it there or dont delete it");
 
-        //get health pickup
-        foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
-        {
-            if (root.name == "HealthDrop")
-            {
-                healthItem = root;
-                break;
-            }
-        }
 
         // get player
         foreach (GameObject root in UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects())
@@ -137,9 +127,12 @@ public class RoomHandler : MonoBehaviour
         //added wieghts here for variety
         var enemyTable = new (int type, int cost, int weight, int unlock)[]
         {
-        (1, 1, 40, 1),
-        (2, 2, 35, 3),
-        (3, 3, 25, 5),
+            (1, 1, 40, 1),   // Slime
+            (2, 2, 35, 3),   // Cannon
+            (3, 3, 25, 5),   // Launcher
+            (4, 2, 28, 5),   // Purple Slime
+            (5, 3, 22, 7),   // Gold Cannon
+            (6, 5, 15, 9),   // Big Launcher
         };
 
         System.Collections.Generic.List<int> spawnedTypes = new();
@@ -176,7 +169,11 @@ public class RoomHandler : MonoBehaviour
                 if (roll < cursor) { chosen = p.type; break; }
             }
 
-            int chosenCost = chosen switch { 1 => 1, 2 => 2, 3 => 3, _ => 99 };
+            int chosenCost = 1;
+            foreach (var e in enemyTable)
+            {
+                if (e.type == chosen) { chosenCost = e.cost; break; }
+            }
 
             SpawnEnemy(chosen);
             spawnedTypes.Add(chosen);
@@ -197,6 +194,9 @@ public class RoomHandler : MonoBehaviour
             1 => "Slime",
             2 => "Cannon",
             3 => "Launcher",
+            4 => "Purple Slime",
+            5 => "Gold Cannon",
+            6 => "Big Launcher",
             _ => null
         };
 
@@ -228,20 +228,6 @@ public class RoomHandler : MonoBehaviour
             patrol.nodeHost = nodeHost;
             patrol.target = player;
         }
-
-        //adds health pickup prefab to load on enemy death
-        EnemyHP enemyHP = enemy.GetComponent<EnemyHP>();
-        if (enemyHP != null)
-        {
-            enemyHP.healthPickup = healthItem;
-        }
-
-        //removed target system from EnemyShooter (unused for the forseeable future)
-        /* 
-        EnemyShooter shooter = enemy.GetComponent<EnemyShooter>();
-        if (shooter != null)
-            shooter.SetTarget(player.transform);
-        */
     }
 
     bool TryGetSpawnPoint(out Vector3 result, int maxAttempts = 30)

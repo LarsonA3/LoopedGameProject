@@ -830,7 +830,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d00cc7852fd00f34ab640c61e9a92e23, type: 2}
+  - {fileID: 2100000, guid: 110f44da90287bc43b88010c0c15a7fd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1045,6 +1045,9 @@ GameObject:
   - component: {fileID: 930281890772346221}
   - component: {fileID: 2308444394012964383}
   - component: {fileID: 4093881969060270626}
+  - component: {fileID: 7321566201888320257}
+  - component: {fileID: 3755995929998168195}
+  - component: {fileID: 1482860861643749272}
   m_Layer: 6
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -1382,7 +1385,46 @@ MonoBehaviour:
   - {fileID: 5159414273147542252}
   maxShakeAmount: 0.04
   chargeColor: {r: 1, g: 0.15, b: 0.15, a: 1}
+  parryColor: {r: 1, g: 0.85, b: 0.1, a: 1}
+  parryFailColor: {r: 1, g: 0.45, b: 0, a: 1}
   tintSpeed: 4
+--- !u!114 &7321566201888320257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b24f4662d339548ae867d6d92cd2e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRareCardAbilityController
+--- !u!114 &3755995929998168195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9192adf293cf11549977d98299cbfe8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEpicCardAbilityController
+--- !u!114 &1482860861643749272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168806091702625043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f57b2eae055c11f48bed0c15f5098186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLegendaryCardAbilityController
+  cardRarity: 3
 --- !u!1001 &472289232873078433
 PrefabInstance:
   m_ObjectHideFlags: 0

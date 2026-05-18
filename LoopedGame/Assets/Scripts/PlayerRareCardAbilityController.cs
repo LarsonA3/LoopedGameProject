@@ -41,7 +41,6 @@ public class PlayerRareCardAbilityController : MonoBehaviour
     private void Update()
     {
         UpdateArmorChecksum();
-        UpdateShieldedDiagnostics();
         UpdateKineticBrake();
         CleanupContactMarks();
     }
@@ -250,10 +249,10 @@ public class PlayerRareCardAbilityController : MonoBehaviour
         if (stacks <= 0) return;
         if (playerHP == null) return;
 
-        float heal = 5f + 2.5f * (stacks - 1);
-        heal = Mathf.Min(heal, 27.5f);
+        float percent = 0.03f + 0.01f * (stacks - 1);
+        percent = Mathf.Min(percent, 0.08f);
 
-        playerHP.Heal(heal);
+        playerHP.Heal(playerHP.MaxHP * percent);
     }
 
     private void HandleImpactMemoryBuffer(float damageTaken)
@@ -347,9 +346,10 @@ public class PlayerRareCardAbilityController : MonoBehaviour
         int stacks = GetStacks(AbilityUpgradeType.CollisionOverride);
         if (stacks <= 0) return;
         if (enemy == null) return;
+        if (weapon == null) return;
 
-        float damage = 5f + 5f * (stacks - 1);
-        damage = Mathf.Min(damage, 50f);
+        float damage = weapon.damageAmount * (0.75f + 0.25f * (stacks - 1));
+        damage = Mathf.Min(damage, weapon.damageAmount * 3f);
 
         enemy.TakeDamage(damage, gameObject);
         enemy.KnockbackFrom(transform.position, 3f);
@@ -387,11 +387,12 @@ public class PlayerRareCardAbilityController : MonoBehaviour
     {
         int stacks = GetStacks(AbilityUpgradeType.OverheatVent);
         if (stacks <= 0) return;
+        if (weapon == null) return;
 
         if (weaponHitCounter % 5 != 0) return;
 
-        float damage = 3f * stacks;
-        damage = Mathf.Min(damage, 30f);
+        float damage = weapon.damageAmount * (0.5f + 0.25f * (stacks - 1));
+        damage = Mathf.Min(damage, weapon.damageAmount * 2f);
 
         DamageEnemiesAround(transform.position, 3f, damage);
     }
@@ -432,24 +433,6 @@ public class PlayerRareCardAbilityController : MonoBehaviour
         return damage * (1f - reactiveArmorReduction);
     }
 
-    private void UpdateShieldedDiagnostics()
-    {
-        int stacks = GetStacks(AbilityUpgradeType.ShieldedDiagnostics);
-        if (stacks <= 0) return;
-        if (weapon == null) return;
-        if (playerHP == null) return;
-        if (!weapon.IsBlocking) return;
-
-        if (Time.time - lastDamageTakenTime < 3f)
-        {
-            return;
-        }
-
-        float healRate = 0.25f * stacks;
-        healRate = Mathf.Min(healRate, 2.5f);
-
-        playerHP.Heal(healRate * Time.deltaTime);
-    }
 
     private void HandleContactDebugger(EnemyHP enemy, bool isLightAttack)
     {

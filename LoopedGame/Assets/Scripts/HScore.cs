@@ -10,6 +10,8 @@ public class HScore : MonoBehaviour
     public TMP_InputField nameBox;
     public static string pName = "Anonymous"; //
     public static int pScore = 0;
+    private string[] funNames = {"Arle Nadja", "Rulue", "Schezo Wegey", "Dark Prince"};
+    private System.Random rand = new System.Random();
 
     void Start()
     {
@@ -42,9 +44,9 @@ public class HScore : MonoBehaviour
         float multiplier = DifficultySettings.Selected switch
         {
             Difficulty.Easy => 1.0f,
-            Difficulty.Medium => 1.15f,
-            Difficulty.Hard => 1.35f,
-            Difficulty.Nightmare => 1.6f,
+            Difficulty.Medium => 1.5f,
+            Difficulty.Hard => 2.0f,
+            Difficulty.Nightmare => 3.0f,
             _ => 1.0f
         };
 
@@ -53,6 +55,11 @@ public class HScore : MonoBehaviour
 
     public void FinalScore() //call this before sending to end screen
     {
+        if (pName == null)
+        {
+            //UnityEngine.Random.
+            pName = funNames[rand.Next(0, 2)]; //picks a random name from the fun list of names if an empty name is submitted
+        }
         HS.SubmitHighScore(this, pName, pScore);
         print($"Player: {pName}\nHigh Score: {pScore}\n");
     }

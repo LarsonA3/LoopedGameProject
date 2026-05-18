@@ -739,7 +739,7 @@ public class Weapon : MonoBehaviour
         }
 
         parryLanded = true;
-
+        if (PostProcessingEffects.Instance != null) PostProcessingEffects.Instance.TriggerParryBloom();
         GameObject reflectedProjectile = ReflectProjectile(other.gameObject);
 
         PlayerEpicCardAbilityController epicCards =
@@ -819,6 +819,8 @@ public class Weapon : MonoBehaviour
         {
             pp.direction = reflectDirection;
             pp.speed = pp.speed * parryReflectSpeedMultiplier;
+            pp.targetNearestEnemy = true;
+            pp.baseDamage = damageAmount * 3f;
         }
 
         Rigidbody rb = reflected.GetComponent<Rigidbody>();

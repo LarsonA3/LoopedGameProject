@@ -49,7 +49,7 @@ public class EnemyPatrol : MonoBehaviour
         distToPlayer = Vector3.Distance(gameObject.transform.position, targetPos.position);
 
 
-        if ((distToPlayer <= 5 && State == State.PATROL) | isBoss == true)
+        if ((distToPlayer <= 7 && State == State.PATROL) | isBoss == true)
         {
             State = State.ATTACK;
         }
@@ -90,7 +90,7 @@ public class EnemyPatrol : MonoBehaviour
         if (isBoss) {
             enemyNav.stoppingDistance = 20;
         } else {  
-            enemyNav.stoppingDistance = 6;
+            enemyNav.stoppingDistance = 7;
         }
     }
 

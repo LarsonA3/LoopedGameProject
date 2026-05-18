@@ -87,26 +87,20 @@ public class UpgradeManager : MonoBehaviour
 
     public void SelectCard(int index)
     {
-        print("button clicked: " + index);
+        if (index < 0 || index >= currentRoll.Count) return;
+        if (player == null) return;
 
-        if (index < 0 || index >= currentRoll.Count)
+        GameObject actualPlayer = player.GetComponentInChildren<TopDownController>()?.gameObject;
+        if (actualPlayer == null)
         {
+            Debug.LogError("TopDownController not found in player or children!");
             return;
         }
 
-        if (player == null)
-        {
-            print("ERROR: UpgradeManager has no player assigned.");
-            return;
-        }
-
-        currentRoll[index].Apply(player, rarityRoll[index]);
-
+        currentRoll[index].Apply(actualPlayer, rarityRoll[index]);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
         SoundManager.PlaySound("blipSelect (1)");
-
         gameObject.SetActive(false);
     }
 

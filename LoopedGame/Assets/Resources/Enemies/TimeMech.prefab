@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6254149498003028357}
   - component: {fileID: 2047858809035609391}
   - component: {fileID: 3845008287714136700}
+  - component: {fileID: 4706192007201965771}
   m_Layer: 8
   m_Name: Clock
   m_TagString: Enemy
@@ -179,8 +180,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  health: 150
+  maxHealth: 80
+  currentHealth: 0
+  healthPickup: {fileID: 0}
   isFinal: 1
+  isBoss: 1
+  hitParticlePrefab: {fileID: 0}
+--- !u!95 &4706192007201965771
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122250883302475349}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e0c140a541663f643845c84742e69af1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2811554008053042000
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +219,7 @@ GameObject:
   - component: {fileID: 1216899132660498240}
   - component: {fileID: 6023836504333434634}
   - component: {fileID: 1972681826574253112}
+  - component: {fileID: 8145191948098983162}
   m_Layer: 8
   m_Name: Hour
   m_TagString: Untagged
@@ -271,6 +299,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &8145191948098983162
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2811554008053042000}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 0bcdf3904fc8e2644baecc935f9a2df0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 0bcdf3904fc8e2644baecc935f9a2df0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &3204441522247927267
 GameObject:
   m_ObjectHideFlags: 0
@@ -553,7 +598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 6344190561046740604}
-  fireCooldown: 2
+  fireCooldown: 8
   fireAutomatically: 1
   enable: 0
 --- !u!114 &8555239482304656835
@@ -570,7 +615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
   projectilePrefab: {fileID: 2205765798318709262, guid: 68665910ff62a684ebfb8814f5be9da8, type: 3}
   firePoint: {fileID: 4213616459719310517}
-  fireCooldown: 4
+  fireCooldown: 10
   fireAutomatically: 1
   enable: 0
 --- !u!54 &681265572589189695
@@ -611,6 +656,7 @@ GameObject:
   - component: {fileID: 7080691650909694342}
   - component: {fileID: 5232462159713800863}
   - component: {fileID: 8433807940309935965}
+  - component: {fileID: 1074839675198751972}
   m_Layer: 8
   m_Name: Minute
   m_TagString: Untagged
@@ -690,6 +736,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &1074839675198751972
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8314898664540024398}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e3eaf11f6777c314faac95c64bf4cb44, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e3eaf11f6777c314faac95c64bf4cb44, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &8899368097464968956
 GameObject:
   m_ObjectHideFlags: 0

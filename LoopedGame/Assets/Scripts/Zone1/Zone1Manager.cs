@@ -8,7 +8,7 @@ public class Zone1Manager : MonoBehaviour
     public static Zone1Manager Instance;
 
     private int currentRoom;
-    private int intensity = 1;
+    public int intensity = 1;
     private int zone = 1;
     public GameObject enemies;
 
