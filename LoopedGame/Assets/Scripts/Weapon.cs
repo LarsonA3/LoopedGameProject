@@ -819,6 +819,8 @@ public class Weapon : MonoBehaviour
         {
             pp.direction = reflectDirection;
             pp.speed = pp.speed * parryReflectSpeedMultiplier;
+            pp.targetNearestEnemy = true;
+            pp.baseDamage = damageAmount * 3f;
         }
 
         Rigidbody rb = reflected.GetComponent<Rigidbody>();

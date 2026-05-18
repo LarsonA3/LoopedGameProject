@@ -127,9 +127,12 @@ public class RoomHandler : MonoBehaviour
         //added wieghts here for variety
         var enemyTable = new (int type, int cost, int weight, int unlock)[]
         {
-        (1, 1, 40, 1),
-        (2, 2, 35, 3),
-        (3, 3, 25, 5),
+            (1, 1, 40, 1),   // Slime
+            (2, 2, 35, 3),   // Cannon
+            (3, 3, 25, 5),   // Launcher
+            (4, 2, 28, 5),   // Purple Slime
+            (5, 3, 22, 7),   // Gold Cannon
+            (6, 5, 15, 9),   // Big Launcher
         };
 
         System.Collections.Generic.List<int> spawnedTypes = new();
@@ -187,6 +190,9 @@ public class RoomHandler : MonoBehaviour
             1 => "Slime",
             2 => "Cannon",
             3 => "Launcher",
+            4 => "Purple Slime",
+            5 => "Gold Cannon",
+            6 => "Big Launcher",
             _ => null
         };
 
