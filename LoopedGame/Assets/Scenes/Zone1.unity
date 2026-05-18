@@ -342,16 +342,7 @@ PrefabInstance:
     - {fileID: 2573953341430790846, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1406078416}
-    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1406078415}
-    - targetCorrespondingSourceObject: {fileID: 9168806091702625043, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1406078414}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fc1bd371031d1b41b7c999fa3d62d88, type: 3}
 --- !u!65 &355205650 stripped
 BoxCollider:
@@ -1377,43 +1368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ee2f5caf594f04eb6e590277d9b7e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseScript
---- !u!114 &1406078414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406078395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f57b2eae055c11f48bed0c15f5098186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerLegendaryCardAbilityController
-  cardRarity: 0
---- !u!114 &1406078415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406078395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9192adf293cf11549977d98299cbfe8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerEpicCardAbilityController
---- !u!114 &1406078416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406078395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47b24f4662d339548ae867d6d92cd2e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerRareCardAbilityController
 --- !u!114 &1429526139 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8482553990445921460, guid: 7a62fb23516ba064c9bfba6ec562d1fb, type: 3}

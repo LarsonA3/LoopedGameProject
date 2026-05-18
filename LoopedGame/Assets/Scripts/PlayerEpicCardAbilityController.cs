@@ -40,7 +40,6 @@ public class PlayerEpicCardAbilityController : MonoBehaviour
 
     private void Update()
     {
-        UpdateSelfMaintenanceFunction();
         UpdateDamageOverTime();
         UpdateGrazeMomentumTimer();
     }
@@ -124,33 +123,7 @@ public class PlayerEpicCardAbilityController : MonoBehaviour
     // 1. Self-Maintenance Function
     // ------------------------------------------------------------
 
-    private void UpdateSelfMaintenanceFunction()
-    {
-        int stacks = GetStacks(AbilityUpgradeType.SelfMaintenanceFunction);
-        if (stacks <= 0) return;
-        if (playerHP == null) return;
-
-        if (playerHP.CurrentHP >= playerHP.MaxHP * 0.5f)
-        {
-            return;
-        }
-
-        float healRate = 1f + 0.5f * (stacks - 1);
-        healRate = Mathf.Min(healRate, 5f);
-
-        float halfHP = playerHP.MaxHP * 0.5f;
-        float healAmount = healRate * Time.deltaTime;
-
-        if (playerHP.CurrentHP + healAmount > halfHP)
-        {
-            healAmount = halfHP - playerHP.CurrentHP;
-        }
-
-        if (healAmount > 0f)
-        {
-            playerHP.Heal(healAmount);
-        }
-    }
+    //gone do not bring it back pls
 
     // ------------------------------------------------------------
     // 2. Enhanced Interrogation Techniques
@@ -315,10 +288,10 @@ public class PlayerEpicCardAbilityController : MonoBehaviour
         if (stacks <= 0) return;
         if (playerHP == null) return;
 
-        float healing = 2f + 1f * (stacks - 1);
-        healing = Mathf.Min(healing, 11f);
+        float percent = 0.01f + 0.005f * (stacks - 1);
+        percent = Mathf.Min(percent, 0.04f);
 
-        playerHP.Heal(healing);
+        playerHP.Heal(playerHP.MaxHP * percent);
     }
 
     // ------------------------------------------------------------
@@ -329,9 +302,10 @@ public class PlayerEpicCardAbilityController : MonoBehaviour
     {
         int stacks = GetStacks(AbilityUpgradeType.DashShockwave);
         if (stacks <= 0) return;
+        if (weapon == null) return;
 
-        float damage = 5f + 3f * (stacks - 1);
-        damage = Mathf.Min(damage, 32f);
+        float damage = weapon.damageAmount * (0.5f + 0.25f * (stacks - 1));
+        damage = Mathf.Min(damage, weapon.damageAmount * 2f);
 
         DamageEnemiesAround(transform.position, 2.5f, damage);
     }
@@ -471,9 +445,10 @@ public class PlayerEpicCardAbilityController : MonoBehaviour
     {
         int stacks = GetStacks(AbilityUpgradeType.Counterpulse);
         if (stacks <= 0) return;
+        if (weapon == null) return;
 
-        float damage = 10f + 5f * (stacks - 1);
-        damage = Mathf.Min(damage, 55f);
+        float damage = weapon.damageAmount * (1.5f + 0.5f * (stacks - 1));
+        damage = Mathf.Min(damage, weapon.damageAmount * 4f);
 
         DamageEnemiesAround(transform.position, 3f, damage);
     }
