@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 1216899132660498240}
   - component: {fileID: 6023836504333434634}
   - component: {fileID: 1972681826574253112}
+  - component: {fileID: 6859437465037309399}
   m_Layer: 8
   m_Name: Hour
   m_TagString: Untagged
@@ -275,6 +276,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &6859437465037309399
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2811554008053042000}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 0bcdf3904fc8e2644baecc935f9a2df0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 0bcdf3904fc8e2644baecc935f9a2df0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &3204441522247927267
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,6 +633,7 @@ GameObject:
   - component: {fileID: 7080691650909694342}
   - component: {fileID: 5232462159713800863}
   - component: {fileID: 8433807940309935965}
+  - component: {fileID: 6651652142113230543}
   m_Layer: 8
   m_Name: Minute
   m_TagString: Untagged
@@ -694,6 +713,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!111 &6651652142113230543
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8314898664540024398}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e3eaf11f6777c314faac95c64bf4cb44, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e3eaf11f6777c314faac95c64bf4cb44, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &8899368097464968956
 GameObject:
   m_ObjectHideFlags: 0
