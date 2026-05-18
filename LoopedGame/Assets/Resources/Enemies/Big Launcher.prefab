@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a86819e3341bb448bc5ad7ff8df40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 663017674171140813}
   fireCooldown: 3.5
   fireAutomatically: 1
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a86819e3341bb448bc5ad7ff8df40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 6987370536708480523}
   fireCooldown: 3.5
   fireAutomatically: 1
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a86819e3341bb448bc5ad7ff8df40c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyShooter
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 5847924519129975397, guid: d7a1427cabe0cdd48b38570a6e7e3c77, type: 3}
   firePoint: {fileID: 7108360771222751340}
   fireCooldown: 3.5
   fireAutomatically: 1
@@ -267,7 +267,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 0.06
-  m_BaseOffset: 0.029016674
+  m_BaseOffset: 0.01
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
 --- !u!114 &7821434254057356217
