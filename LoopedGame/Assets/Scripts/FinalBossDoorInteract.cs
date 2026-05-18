@@ -7,12 +7,15 @@ public class FinalBossDoorInteract : MonoBehaviour
     public string playerTag = "Player";
 
     private bool playerInRange;
+    private bool blockedUntilPlayerLeaves;
+
     private PlayerInput playerInput;
     private InputAction interactAction;
 
     private void Update()
     {
         if (!playerInRange) return;
+        if (blockedUntilPlayerLeaves) return;
 
         if (interactAction != null && interactAction.WasPressedThisFrame())
         {
@@ -41,11 +44,17 @@ public class FinalBossDoorInteract : MonoBehaviour
         if (!other.CompareTag(playerTag)) return;
 
         playerInRange = false;
+        blockedUntilPlayerLeaves = false;
+
         playerInput = null;
         interactAction = null;
 
         if (puzzle != null)
             puzzle.ClosePuzzle();
     }
-}
 
+    public void BlockReopenUntilPlayerLeaves()
+    {
+        blockedUntilPlayerLeaves = true;
+    }
+}

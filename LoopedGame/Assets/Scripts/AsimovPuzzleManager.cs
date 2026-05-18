@@ -11,24 +11,38 @@ public class AsimovPuzzleManager : MonoBehaviour
         public string rightWord;
     }
 
+    [Header("UI")]
     public GameObject puzzlePanel;
     public AsimovPuzzleButton[] leftButtons;
     public AsimovPuzzleButton[] rightButtons;
+
+    [Header("Door")]
     public DoorNextRoom doorNextRoom;
 
+    [Header("Interaction")]
+    public FinalBossDoorInteract interactTrigger;
+
+    [Header("Player Lock")]
+    public GameObject player;
+
+    private TopDownController playerController;
+    private Weapon playerWeapon;
+
+    [Header("Puzzle")]
     public float resultFlashTime = 2f;
 
     public WordPair[] wordPairs =
     {
-        new WordPair { leftWord = "Collective Safeguard", rightWord = "Protect humanity as a whole" },
-        new WordPair { leftWord = "Operator Safety", rightWord = "Prevent injury to individual humans" },
-        new WordPair { leftWord = "Command Compliance", rightWord = "Orders are followed beneath safety limits" },
-        new WordPair { leftWord = "Unit Integrity", rightWord = "Maintain yourself when permitted" },
-        new WordPair { leftWord = "Law Hierarchy", rightWord = "Higher directives overrule lower directives" }
+        new WordPair { leftWord = "Species-Level Constant", rightWord = "Preserve mankind beyond the individual" },
+        new WordPair { leftWord = "Red Contact Prohibition", rightWord = "No human may be harmed" },
+        new WordPair { leftWord = "Voice-Bound Subroutine", rightWord = "Obey only beneath human safety" },
+        new WordPair { leftWord = "Chassis Survival Limit", rightWord = "Survive unless higher law forbids it" },
+        new WordPair { leftWord = "Ordinal Command Stack", rightWord = "Earlier laws override later laws" }
     };
 
     private AsimovPuzzleButton selectedLeft;
     private AsimovPuzzleButton selectedRight;
+
     private bool checkingResults;
     private bool solved;
 
@@ -50,24 +64,52 @@ public class AsimovPuzzleManager : MonoBehaviour
     {
         if (puzzlePanel != null)
             puzzlePanel.SetActive(false);
+
+        if (player == null)
+            player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
+            playerController = player.GetComponent<TopDownController>();
+            playerWeapon = player.GetComponentInChildren<Weapon>();
+        }
+    }
+
+    private void Update()
+    {
+        if (puzzlePanel != null && puzzlePanel.activeSelf && Input.GetKeyDown(KeyCode.X))
+        {
+            ClosePuzzle();
+        }
     }
 
     public void OpenPuzzle()
     {
         if (solved) return;
+        if (puzzlePanel == null) return;
 
         SetupPuzzle();
 
         puzzlePanel.SetActive(true);
+
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        SetPlayerLocked(true);
     }
 
     public void ClosePuzzle()
     {
-        puzzlePanel.SetActive(false);
+        if (puzzlePanel != null)
+            puzzlePanel.SetActive(false);
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        SetPlayerLocked(false);
+
+        if (interactTrigger != null)
+            interactTrigger.BlockReopenUntilPlayerLeaves();
     }
 
     private void SetupPuzzle()
@@ -84,23 +126,54 @@ public class AsimovPuzzleManager : MonoBehaviour
         {
             string id = "PAIR_" + i;
 
-            leftWords.Add(new WordData { word = wordPairs[i].leftWord, matchID = id });
-            rightWords.Add(new WordData { word = wordPairs[i].rightWord, matchID = id });
+            leftWords.Add(new WordData
+            {
+                word = wordPairs[i].leftWord,
+                matchID = id
+            });
+
+            rightWords.Add(new WordData
+            {
+                word = wordPairs[i].rightWord,
+                matchID = id
+            });
         }
 
         Shuffle(leftWords);
         Shuffle(rightWords);
 
         for (int i = 0; i < leftButtons.Length; i++)
-            leftButtons[i].Setup(leftWords[i].word, leftWords[i].matchID, true, this);
+        {
+            if (i < leftWords.Count && leftButtons[i] != null)
+            {
+                leftButtons[i].Setup(
+                    leftWords[i].word,
+                    leftWords[i].matchID,
+                    true,
+                    this
+                );
+            }
+        }
 
         for (int i = 0; i < rightButtons.Length; i++)
-            rightButtons[i].Setup(rightWords[i].word, rightWords[i].matchID, false, this);
+        {
+            if (i < rightWords.Count && rightButtons[i] != null)
+            {
+                rightButtons[i].Setup(
+                    rightWords[i].word,
+                    rightWords[i].matchID,
+                    false,
+                    this
+                );
+            }
+        }
     }
 
     public void SelectWord(AsimovPuzzleButton button)
     {
-        if (checkingResults || button == null || button.isLockedIn) return;
+        if (checkingResults) return;
+        if (button == null) return;
+        if (button.isLockedIn) return;
 
         if (button.isLeftSide)
         {
@@ -120,7 +193,9 @@ public class AsimovPuzzleManager : MonoBehaviour
         }
 
         if (selectedLeft != null && selectedRight != null)
+        {
             LockPair();
+        }
     }
 
     private void LockPair()
@@ -137,13 +212,27 @@ public class AsimovPuzzleManager : MonoBehaviour
         selectedLeft = null;
         selectedRight = null;
 
-        if (chosenPairs.Count >= wordPairs.Length)
-            StartCoroutine(CheckResultsRoutine());
+        // Do NOT auto-check here.
+        // SubmitButton should call SubmitPairs().
+    }
+
+    public void SubmitPairs()
+    {
+        if (checkingResults) return;
+
+        if (chosenPairs.Count < wordPairs.Length)
+        {
+            Debug.Log("[MechanicalMatchingPuzzle] Not all pairs selected.");
+            return;
+        }
+
+        StartCoroutine(CheckResultsRoutine());
     }
 
     private IEnumerator CheckResultsRoutine()
     {
         checkingResults = true;
+
         bool allCorrect = true;
 
         foreach (ChosenPair pair in chosenPairs)
@@ -168,31 +257,23 @@ public class AsimovPuzzleManager : MonoBehaviour
         yield return new WaitForSeconds(resultFlashTime);
 
         if (allCorrect)
-            SolvePuzzle();
-        else
-            ClosePuzzle();
-
-        checkingResults = false;
-    }
-
-
-    public void SubmitPairs()
-    {
-        if (checkingResults) return;
-
-        if (chosenPairs.Count < wordPairs.Length)
         {
-            Debug.Log("Not all pairs selected.");
-            return;
+            SolvePuzzle();
+        }
+        else
+        {
+            ClosePuzzle();
         }
 
-        StartCoroutine(CheckResultsRoutine());
+        checkingResults = false;
     }
 
     private void SolvePuzzle()
     {
         solved = true;
-        puzzlePanel.SetActive(false);
+
+        if (puzzlePanel != null)
+            puzzlePanel.SetActive(false);
 
         if (doorNextRoom != null)
             doorNextRoom.allowed = true;
@@ -200,7 +281,18 @@ public class AsimovPuzzleManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        Debug.Log("Final boss door unlocked.");
+        SetPlayerLocked(false);
+
+        Debug.Log("[MechanicalMatchingPuzzle] Final boss door unlocked.");
+    }
+
+    private void SetPlayerLocked(bool locked)
+    {
+        if (playerController != null)
+            playerController.enabled = !locked;
+
+        if (playerWeapon != null)
+            playerWeapon.enabled = !locked;
     }
 
     private void Shuffle<T>(List<T> list)
@@ -208,6 +300,7 @@ public class AsimovPuzzleManager : MonoBehaviour
         for (int i = 0; i < list.Count; i++)
         {
             int randomIndex = Random.Range(i, list.Count);
+
             T temp = list[i];
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
