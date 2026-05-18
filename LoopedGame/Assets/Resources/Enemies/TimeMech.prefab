@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340faecab35724d4388633917403de1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
-  maxHealth: 10
+  maxHealth: 80
   currentHealth: 0
   healthPickup: {fileID: 0}
   isFinal: 1
