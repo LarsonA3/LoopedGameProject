@@ -44,9 +44,9 @@ public class HScore : MonoBehaviour
         float multiplier = DifficultySettings.Selected switch
         {
             Difficulty.Easy => 1.0f,
-            Difficulty.Medium => 1.15f,
-            Difficulty.Hard => 1.35f,
-            Difficulty.Nightmare => 1.6f,
+            Difficulty.Medium => 1.5f,
+            Difficulty.Hard => 2.0f,
+            Difficulty.Nightmare => 3.0f,
             _ => 1.0f
         };
 
