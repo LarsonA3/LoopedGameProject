@@ -106,6 +106,7 @@ public class TopDownController : MonoBehaviour
 
         lastDashTime = Time.time;
         SoundManager.PlaySound("dash");
+        if (PostProcessingEffects.Instance != null) PostProcessingEffects.Instance.TriggerDashCA();
         isDashing = false;
 
 

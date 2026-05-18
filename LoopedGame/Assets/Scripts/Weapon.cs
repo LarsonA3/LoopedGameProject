@@ -739,7 +739,7 @@ public class Weapon : MonoBehaviour
         }
 
         parryLanded = true;
-
+        if (PostProcessingEffects.Instance != null) PostProcessingEffects.Instance.TriggerParryBloom();
         GameObject reflectedProjectile = ReflectProjectile(other.gameObject);
 
         PlayerEpicCardAbilityController epicCards =

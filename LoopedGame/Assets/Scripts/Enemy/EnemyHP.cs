@@ -137,6 +137,7 @@ public class EnemyHP : MonoBehaviour, IDamageable
 
         if (isFinal)
         {
+            PostProcessingEffects.Instance.TriggerParryBloom();
             HScore hScore = FindObjectOfType<HScore>();
             if (hScore != null) hScore.FinalScore();
             SceneManager.LoadScene("WinGame");
