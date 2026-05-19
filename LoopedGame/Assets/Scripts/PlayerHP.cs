@@ -122,7 +122,7 @@ public class PlayerHP : MonoBehaviour, IDamageable
 
         if (weapon != null && weapon.IsBlocking && !weapon.IsStunned)
         {
-            weapon.DrainBlockMeter(damage * blockMeterDrainPerDamage);
+            //weapon.DrainBlockMeter(damage * blockMeterDrainPerDamage);
             weapon.OnBlockedHit(damage);
 
             Debug.Log("[PlayerHP] Damage blocked. Incoming damage: " + damage);
