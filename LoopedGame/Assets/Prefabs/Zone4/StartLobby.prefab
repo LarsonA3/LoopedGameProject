@@ -604,7 +604,7 @@ GameObject:
   - component: {fileID: 7867238710696904177}
   - component: {fileID: 8943487269106305962}
   m_Layer: 5
-  m_Name: AsImovPuzzleCanvas
+  m_Name: AsimovPuzzleCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2621,7 +2621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6929458960467680318}
   - component: {fileID: 1719822412170612100}
-  - component: {fileID: 119268694482367768}
+  - component: {fileID: 3334615405644463071}
   m_Layer: 0
   m_Name: AsimovPuzzleInteractTrigger
   m_TagString: Untagged
@@ -2665,7 +2665,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4, y: 3, z: 1.5}
   m_Center: {x: 0.928805, y: 1.081293, z: -4.75}
---- !u!114 &119268694482367768
+--- !u!114 &3334615405644463071
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2674,9 +2674,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3182206877610349090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b843618c7d0c97e42a4bd99c4bdbde01, type: 3}
+  m_Script: {fileID: 11500000, guid: fad61125e6168c740ae80a330703fd83, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FinalBossDoorInteract
+  m_EditorClassIdentifier: Assembly-CSharp::AsimovPuzzleInteractTrigger
   puzzle: {fileID: 5324676891609016921}
   playerTag: Player
 --- !u!1 &3488635475958509181

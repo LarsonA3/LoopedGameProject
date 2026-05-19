@@ -20,7 +20,7 @@ public class AsimovPuzzleManager : MonoBehaviour
     public DoorNextRoom doorNextRoom;
 
     [Header("Interaction")]
-    public FinalBossDoorInteract interactTrigger;
+    public AsimovPuzzleInteractTrigger interactTrigger;
 
     [Header("Player Lock")]
     public GameObject player;

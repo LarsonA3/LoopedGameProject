@@ -5,7 +5,7 @@ public class PuzzleSystemDebugValidator : MonoBehaviour
 {
     [Header("Main References")]
     public AsimovPuzzleManager asimovPuzzleManager;
-    public FinalBossDoorInteract asimovPuzzleInteractTrigger;
+    public AsimovPuzzleInteractTrigger asimovPuzzleInteractTrigger;
 
     [Header("Optional")]
     public bool runOnStart = true;
@@ -34,7 +34,7 @@ public class PuzzleSystemDebugValidator : MonoBehaviour
 
         if (asimovPuzzleInteractTrigger == null)
         {
-            asimovPuzzleInteractTrigger = FindObjectOfType<FinalBossDoorInteract>();
+            asimovPuzzleInteractTrigger = FindObjectOfType<AsimovPuzzleInteractTrigger>();
         }
 
         if (asimovPuzzleManager == null)
@@ -55,7 +55,7 @@ public class PuzzleSystemDebugValidator : MonoBehaviour
         }
         else
         {
-            Debug.Log("[Puzzle Debug] Found FinalBossDoorInteract on: " + asimovPuzzleInteractTrigger.gameObject.name);
+            Debug.Log("[Puzzle Debug] Found AsimovPuzzleInteractTrigger on: " + asimovPuzzleInteractTrigger.gameObject.name);
             ValidateInteractTrigger(asimovPuzzleInteractTrigger, ref allGood);
         }
 
@@ -167,7 +167,7 @@ public class PuzzleSystemDebugValidator : MonoBehaviour
         }
     }
 
-    private void ValidateInteractTrigger(FinalBossDoorInteract triggerToCheck, ref bool allGood)
+    private void ValidateInteractTrigger(AsimovPuzzleInteractTrigger triggerToCheck, ref bool allGood)
     {
         Collider triggerCollider = triggerToCheck.GetComponent<Collider>();
 
